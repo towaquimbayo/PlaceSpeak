@@ -1,7 +1,9 @@
+import Layout from "../components/Layout";
+
 export default function Achievements() {
-    return (
-        <div>
-            <h1>Achievements Page</h1>
-        </div>
-    );
+  return (
+    <Layout title="Achievements">
+      <h1>Achievements Page</h1>
+    </Layout>
+  );
 }

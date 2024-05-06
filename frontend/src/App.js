@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import "./css/global.css";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Achievements from "./pages/Achievements";
