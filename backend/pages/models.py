@@ -16,12 +16,18 @@ class User(models.Model):
 	facebook 			= 		models.CharField(max_length=255, blank=True)
 	verified 			= 		models.BooleanField()
 	# user can have multiple addresses (Home, School, Work etc.)
-	addresses 		= 		models.ManyToManyField('Address')
+	addresses = models.ManyToManyField('Address', related_name='users')
 
+	# single achivement record
 	achievement = models.OneToOneField('Achievement', on_delete=models.CASCADE, null=True, blank=True)  # OneToOneField to Achievement
 
+	# Many-to-Many relationship with Badges through User_Badge bridge table
+	badges = models.ManyToManyField('Badge', through='User_Badge')
+
 class Achievement(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)  # User model (assuming it's defined elsewhere)
+	user = models.OneToOneField(
+    User, on_delete=models.CASCADE, related_name='achievement'
+	)  # User model (assuming it's defined elsewhere)
 	quest_points = models.IntegerField()
 	num_badges = models.IntegerField()
 	days_active = models.IntegerField()
@@ -43,7 +49,26 @@ class Address(models.Model):
 	zip_code 				= 		models.CharField(max_length=6)
 	primary_address =			models.BooleanField(default=False) # flag for primary address
 	address_type 		= 		models.CharField(max_length=50, choices=AddressType.choices, default=AddressType.HOME)
+	users = models.ManyToManyField('User', related_name='addresses')
 
+class Badge(models.Model):
+    badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key
+    name = models.CharField(max_length=255)
+    img_link = models.CharField(max_length=255)
+    rarity = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    points = models.IntegerField()
+    category = models.CharField(max_length=255)
+
+    # Many-to-Many relationship with Users through User_Badge bridge table
+    users = models.ManyToManyField(User, through='User_Badge')
+
+class User_Badge(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    granted_date = models.DateTimeField()
+    expiry_date = models.DateTimeField(null=True, blank=True)  # Optional expiry date
+    active = models.BooleanField(default=True)  # Flag for active/inactive badges
 
 
 
