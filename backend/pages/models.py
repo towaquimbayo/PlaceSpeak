@@ -19,15 +19,15 @@ class User(models.Model):
 	addresses = models.ManyToManyField('Address', related_name='users')
 
 	# single achivement record
-	achievement = models.OneToOneField('Achievement', on_delete=models.CASCADE, null=True, blank=True)  # OneToOneField to Achievement
+	achievement = models.OneToOneField('Achievement', on_delete=models.CASCADE, null=True, blank=True, related_name='user')  # OneToOneField to Achievement
 
 	# Many-to-Many relationship with Badges through User_Badge bridge table
 	badges = models.ManyToManyField('Badge', through='User_Badge')
 
 class Achievement(models.Model):
-	user = models.OneToOneField(
-    User, on_delete=models.CASCADE, related_name='achievement'
-	)  # User model (assuming it's defined elsewhere)
+	# user = models.OneToOneField(
+  #   User, on_delete=models.CASCADE, related_name='achievement'
+	# )  # User model (assuming it's defined elsewhere)
 	quest_points = models.IntegerField()
 	num_badges = models.IntegerField()
 	days_active = models.IntegerField()
@@ -49,7 +49,7 @@ class Address(models.Model):
 	zip_code 				= 		models.CharField(max_length=6)
 	primary_address =			models.BooleanField(default=False) # flag for primary address
 	address_type 		= 		models.CharField(max_length=50, choices=AddressType.choices, default=AddressType.HOME)
-	users = models.ManyToManyField('User', related_name='addresses')
+	# users = models.ManyToManyField('User', related_name='addresses')
 
 class Badge(models.Model):
     badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key
