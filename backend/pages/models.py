@@ -1,3 +1,3 @@
 from django.db import models
 
-# Create your models here.
+# initial commit - beginning work on DB object models 
