@@ -14,7 +14,11 @@ class User(models.Model):
 	linkedin 			= 		models.CharField(max_length=255, blank=True)
 	twitter 			= 		models.CharField(max_length=255, blank=True)
 	facebook 			= 		models.CharField(max_length=255, blank=True)
-	verified 			= 		models.BooleanField()
+
+	verified_email 		= 		models.BooleanField(default=False)
+	verified_phone 		= 		models.BooleanField(default=False)
+	verified_address 	= 		models.BooleanField(default=False)
+
 	# user can have multiple addresses (Home, School, Work etc.)
 	addresses = models.ManyToManyField('Address', related_name='users')
 
@@ -69,12 +73,4 @@ class User_Badge(models.Model):
     granted_date = models.DateTimeField()
     expiry_date = models.DateTimeField(null=True, blank=True)  # Optional expiry date
     active = models.BooleanField(default=True)  # Flag for active/inactive badges
-
-
-
-
-
-
-	
-
 
