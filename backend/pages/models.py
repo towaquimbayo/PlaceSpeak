@@ -4,7 +4,7 @@ from django.db import models
 
 # User object model
 class User(models.Model):
-	user_id 			= 		models.CharField(max_length=255, primary_key=True)
+	user_id 			= 		models.AutoField(primary_key=True)
 	first_name 		= 		models.CharField(max_length=255)
 	last_name  		=  		models.CharField(max_length=255)
 	phone_number 	= 		models.CharField(max_length=10) # store phone number as a chara string instead of number
@@ -14,6 +14,8 @@ class User(models.Model):
 	linkedin 			= 		models.CharField(max_length=255, blank=True)
 	twitter 			= 		models.CharField(max_length=255, blank=True)
 	facebook 			= 		models.CharField(max_length=255, blank=True)
+
+	pfp_link      =     models.CharField(max_length=255, blank=True)
 
 	verified_email 		= 		models.BooleanField(default=False)
 	verified_phone 		= 		models.BooleanField(default=False)
@@ -27,6 +29,41 @@ class User(models.Model):
 
 	# Many-to-Many relationship with Badges through User_Badge bridge table
 	badges = models.ManyToManyField('Badge', through='User_Badge')
+
+
+	def add_address(self, street_address, city, province, zip_code, primary_address=False, address_type=None):
+		"""
+		Adds a new address to the user's addresses.
+
+		Args:
+				street_address (str): The street address of the user.
+				city (str): The city of the user's address.
+				province (str): The province of the user's address.
+				zip_code (str): The zip code of the user's address.
+				primary_address (bool, optional): Flag indicating if it's the primary address. Defaults to False.
+				address_type (models.TextChoices, optional): The type of address (e.g., HOME, WORK). Defaults to None.
+		"""
+		address = Address.objects.create(
+				street_address=street_address,
+				city=city,
+				province=province,
+				zip_code=zip_code,
+		)
+
+		if address_type:
+			address.address_type = address_type
+
+		self.addresses.add(address)
+
+		if primary_address:
+			self.addresses.set([address])  # Set the primary address
+
+		return address
+	
+
+
+	def __str__(self):
+		return f"{self.first_name} {self.last_name} ({self.email}, pfp_link: {self.pfp_link})"
 
 class Achievement(models.Model):
 	# user = models.OneToOneField(
@@ -46,7 +83,7 @@ class AddressType(models.TextChoices):
 	OTHER = 'OTHER', 'Other'
 
 class Address(models.Model):
-	address_id 			= 		models.CharField(max_length=255, primary_key=True)
+	address_id 			= 		models.AutoField(primary_key=True)
 	street_address	= 		models.CharField(max_length=255)
 	city 						=			models.CharField(max_length=20)
 	province 				= 		models.CharField(max_length=10)
@@ -54,6 +91,13 @@ class Address(models.Model):
 	primary_address =			models.BooleanField(default=False) # flag for primary address
 	address_type 		= 		models.CharField(max_length=50, choices=AddressType.choices, default=AddressType.HOME)
 	# users = models.ManyToManyField('User', related_name='addresses')
+
+
+	
+
+
+	def __str__(self) -> str:
+		return f"{self.street_address}, {self.city}, {self.province}"
 
 class Badge(models.Model):
     badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key
