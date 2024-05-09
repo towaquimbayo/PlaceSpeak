@@ -198,6 +198,31 @@
   .dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
     height: 1.75rem;
   }
+  .dashboardContainer {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .dashboardContainer .sideNav {
+    width: 30%;
+    padding: 1rem 0.5rem;
+  }
+  .dashboardContainer .sideNav h3 {
+    font-size: 0.8rem;
+  }
+  .dashboardContainer .sideNav .sideNavLinks .sideNavLink {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .dashboardContainer .dashboardContent {
+    width: 70%;
+    padding: 1.5rem 1.5rem;
+  }
+  .dashboardContainer .dashboardContent h2 {
+    font-size: 1.5rem;
+  }
+  .dashboardContainer .dashboardContent .description {
+    font-size: 0.9rem;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -230,5 +255,12 @@
   }
   .dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
     height: 1.5rem;
+  }
+  .dashboardContainer .sideNav {
+    display: none;
+  }
+  .dashboardContainer .dashboardContent {
+    width: 100%;
+    padding: 1rem 1rem;
   }
 }
