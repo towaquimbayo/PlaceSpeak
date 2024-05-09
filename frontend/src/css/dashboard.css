@@ -85,6 +85,74 @@
   color: #858585;
 }
 
+.dashboardContainer {
+  display: flex;
+  width: 100%;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.dashboardContainer .sideNav {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem 1rem;
+  gap: 1rem;
+}
+
+.dashboardContainer .sideNav h3 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: black;
+  margin-bottom: 0.5rem;
+}
+
+.dashboardContainer .sideNav .sideNavLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboardContainer .sideNav .sideNavLinks .sideNavLink {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #858585;
+  gap: 0.75rem;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  -webkit-transition: all ease-in-out 0.3s;
+  -moz-transition: all ease-in-out 0.3s;
+  -ms-transition: all ease-in-out 0.3s;
+  -o-transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.dashboardContainer .sideNav .sideNavLinks .sideNavLink svg {
+  width: 1.25rem;
+  height: auto;
+  fill: #858585;
+}
+
+.dashboardContainer .sideNav .sideNavLinks .sideNavLink.active {
+  color: var(--primaryColor);
+  background: rgba(73, 144, 226, 0.2);
+  font-weight: 600;
+}
+
+.dashboardContainer .sideNav .sideNavLinks .sideNavLink.active svg {
+  fill: var(--primaryColor);
+}
+
+.dashboardContainer .sideNav .sideNavLinks .sideNavLink:hover {
+  opacity: 0.7;
+}
+
 @media screen and (max-width: 992px) {
   .dashboardHeaderContainer {
     padding-top: 10rem;

@@ -210,7 +210,7 @@ input.searchBar {
 
 #wrapper {
   max-width: 1600px;
-  margin: 15vh auto 0;
+  margin: 15vh auto 3rem;
   padding: 0 7rem;
   min-height: 85vh;
 }
