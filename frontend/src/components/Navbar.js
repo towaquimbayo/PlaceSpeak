@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSession } from "../redux/actions/UserAction";
+import { clearSession, setUser } from "../redux/actions/UserAction";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -10,7 +10,9 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navContainer">
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", marginRight: "1rem" }}
+        >
           <Link to="/" className="logo">
             <img src="./logo.svg" alt="PlaceSpeak Logo" />
           </Link>
@@ -35,9 +37,12 @@ export default function Navbar() {
               Logout
             </Link>
           ) : (
-            <NavLink className="navLink" to="/login" activeclassname="active">
+            <Link
+              className="navLink"
+              onClick={async () => dispatch(setUser(true))}
+            >
               Login
-            </NavLink>
+            </Link>
           )}
         </div>
       </div>
