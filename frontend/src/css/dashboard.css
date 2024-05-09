@@ -1,0 +1,142 @@
+.dashboardHeaderContainer {
+  background-image: url("../../public/vancouver-maps.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 0.5rem;
+  padding-top: 12rem;
+}
+
+.dashboardHeaderContainer .dashboardInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  background-color: white;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardDescription {
+  display: flex;
+  align-items: center;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardSocials {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
+  height: 2rem;
+  width: auto;
+}
+
+.dashboardHeaderContainer .dashboardInfo .profileImage {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  border: solid 0.25rem white;
+  object-fit: cover;
+  object-position: center center;
+  margin-top: -4rem;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardNameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1rem;
+}
+.dashboardHeaderContainer
+  .dashboardInfo
+  .dashboardNameContainer
+  .dashboardName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboardHeaderContainer
+  .dashboardInfo
+  .dashboardNameContainer
+  .dashboardName
+  svg {
+  width: 1.5rem;
+  height: auto;
+  fill: var(--primaryColor);
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardNameContainer h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: black;
+}
+
+.dashboardHeaderContainer .dashboardInfo .dashboardNameContainer p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #858585;
+}
+
+@media screen and (max-width: 992px) {
+  .dashboardHeaderContainer {
+    padding-top: 10rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo {
+    padding: 0.5rem 1rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .profileImage {
+    width: 8rem;
+    height: 8rem;
+    margin-top: -3rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardNameContainer h1 {
+    font-size: 1.25rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardNameContainer p {
+    font-size: 0.9rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
+    height: 1.75rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboardHeaderContainer {
+    padding-top: 5rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo {
+    padding: 0.5rem 1rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .profileImage {
+    width: 6rem;
+    height: 6rem;
+    margin-top: -2rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardNameContainer h1 {
+    font-size: 1.1rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardNameContainer p {
+    font-size: 0.8rem;
+  }
+  .dashboardHeaderContainer
+    .dashboardInfo
+    .dashboardNameContainer
+    .dashboardName
+    svg {
+    width: 1.25rem;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardSocials button {
+    display: none;
+  }
+  .dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
+    height: 1.5rem;
+  }
+}

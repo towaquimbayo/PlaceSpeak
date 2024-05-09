@@ -1,6 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import Navbar from "./Navbar";
+import "../css/dashboard.css";
 
 export default function Layout({ title, isLandingPage = false, children }) {
   if (title && typeof document !== "undefined") {
