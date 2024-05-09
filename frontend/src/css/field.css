@@ -52,6 +52,20 @@
   min-height: 100px;
 }
 
+.accountForm .formGroup .passwordField input {
+  width: 100%;
+  padding-right: 3rem;
+}
+
+.accountForm .formGroup .passwordField svg {
+  position: absolute;
+  margin-left: -2.5rem;
+  margin-top: 6px;
+  width: 1.5rem;
+  height: auto;
+  cursor: pointer;
+}
+
 .accountForm .formGroup input:focus,
 .accountForm .formGroup textarea:focus {
   outline: none;

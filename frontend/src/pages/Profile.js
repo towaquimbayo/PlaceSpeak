@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import DashboardHeader from "../components/DashboardHeader";
-import { Field, Textarea } from "../components/Field";
+import { Field, Password, Textarea } from "../components/Field";
 import Layout from "../components/Layout";
 import SideNav from "../components/SidenNav";
 import AlertMessage from "../components/AlertMessage";
@@ -83,9 +83,8 @@ export default function Profile() {
               />
             </div>
             <div className="formRow">
-              <Field
+              <Password
                 label="Password"
-                type="password"
                 name="password"
                 placeholder="********"
                 value={form.password}
