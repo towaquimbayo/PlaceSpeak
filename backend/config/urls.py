@@ -20,7 +20,7 @@ from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationSt
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("hello/", views.HelloWorldView.as_view()),
+    # path("hello/", views.HelloWorldView.as_view()),
 
     # Verification endpoints
     path('api/users/<str:user_id>/update-email-verification/', UpdateEmailVerificationStatus.as_view(), name='update_email_verification'),
