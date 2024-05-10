@@ -5,9 +5,7 @@ import { Field, Password, Textarea } from "../components/Field";
 import Layout from "../components/Layout";
 import SideNav from "../components/SidenNav";
 import AlertMessage from "../components/AlertMessage";
-
-const api_link = "http://127.0.0.1:8000";
-const hardcoded_email = "abhishekchouhannk@gmail.com"
+import { config } from "../config";
 
 export default function Profile() {
   const [form, setForm] = useState({
@@ -22,38 +20,34 @@ export default function Profile() {
     facebook: "",
   });
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    const fetchUserDetails = async() => {
-      setLoading(true);
+    const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`${api_link}/api/users`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email : `${hardcoded_email}`}),
+        const endpoint = config.url;
+        const hardcoded_email = "abhishekchouhannk@gmail.com";
+        const response = await fetch(`${endpoint}/api/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: `${hardcoded_email}` }),
         });
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-  
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+
         const data = await response.json();
-
         console.log(data);
-
         setForm(data);
-      }
-      catch (error) {
-      setErrorMsg(error.message);
+      } catch (error) {
+        setErrorMsg(error.message);
       } finally {
-      setLoading(false);
+        setFetching(false);
       }
     };
-    
+
     fetchUserDetails();
   }, []);
-
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -86,6 +80,7 @@ export default function Profile() {
             badge!
           </p>
           {errorMsg && <AlertMessage type="error" message={errorMsg} />}
+          {fetching && <p>Loading...</p>}
 
           <form className="accountForm" onSubmit={handleSubmit}>
             <div className="formRow">
@@ -96,8 +91,13 @@ export default function Profile() {
                 value={form.firstName}
                 onChange={handleOnChange}
               />
-              <Field label="Last Name" name="lastName" placeholder="Doe" value={form.lastName}
-                onChange={handleOnChange}/>
+              <Field
+                label="Last Name"
+                name="lastName"
+                placeholder="Doe"
+                value={form.lastName}
+                onChange={handleOnChange}
+              />
             </div>
             <div className="formRow">
               <Field
