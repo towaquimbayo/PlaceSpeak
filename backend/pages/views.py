@@ -64,6 +64,57 @@ class UserAPI(APIView):
         }
 
         return Response(serialized_data, status=status.HTTP_200_OK)
+    
+class UpdateUserAPI(APIView):
+    def post(self, request):
+        """
+        API endpoint to update a user's details.
+
+        Args:
+            request (Request): Incoming HTTP request containing user details in JSON format.
+
+        Returns:
+            Response: JSON response with success message or error details.
+        """
+
+        try:
+            # Validate request data as a dictionary
+            user_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['firstName', 'lastName', 'email', 'phone', 'about', 'linkedIn', 'twitter', 'facebook']
+        missing_fields = [field for field in required_fields if field not in user_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Hardcoded user ID for demonstration (replace with appropriate logic)
+        user_id = 1
+
+        try:
+            user = User.objects.get(pk=user_id)  # Use primary key (pk) for retrieval
+        except User.DoesNotExist:
+            return Response(
+                {'error': f"User with ID {user_id} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Update user fields with data from request
+        user.first_name = user_data['firstName']
+        user.last_name = user_data['lastName']
+        user.email = user_data['email']  # Update email if allowed (security considerations)
+        user.phone_number = user_data['phone']
+        user.about = user_data['about']
+        user.linkedin = user_data['linkedIn']
+        user.twitter = user_data['twitter']
+        user.facebook = user_data['facebook']
+        # Update other relevant fields as needed
+
+        user.save()  # Save changes to the database
+
+        return Response({'message': 'User details updated successfully.'}, status=status.HTTP_200_OK)
 
 
 
