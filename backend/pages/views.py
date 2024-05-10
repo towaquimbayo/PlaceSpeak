@@ -1,10 +1,11 @@
+import datetime
 from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import User
+from .models import User, Badge, User_Badge
 
 # Create your views here.
 
@@ -14,7 +15,11 @@ class HelloWorldView(APIView):
     message = "Hello, world!"
     return Response(data={'message': message})
 
+"""
+UpdateEmailVerificationStatus class
 
+This class is used to update the email verification status of a user.
+"""
 class UpdateEmailVerificationStatus(APIView):
     def post(self, request, user_id):
         user = get_object_or_404(User, user_id=user_id)
@@ -138,3 +143,26 @@ class PopulateBadges(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class VerifyTrustedNeighbourBadge(APIView):
+    def post(self, request, user_id):
+        try:
+            # Retrieve the user object based on the user_id
+            user = User.objects.get(id=user_id)
+
+            # Check if the user's identity and address have been verified
+            if user.verified_email and user.verified_phone and user.verified_address:
+                # Create or update User_Badge entry for Trusted Neighbour Badge
+                trusted_neighbour_badge = Badge.objects.get(name="Trusted Neighbour Badge") # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=trusted_neighbour_badge)
+
+                # Set the granted date of the badge
+                user_badge.granted_date = datetime.now()
+                user_badge.save()
+
+                return Response({"message": "User meets the requirements for Trusted Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "User does not meet the requirements for Trusted Neighbour Badge"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
