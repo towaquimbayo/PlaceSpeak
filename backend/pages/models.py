@@ -60,8 +60,6 @@ class User(models.Model):
 
 		return address
 	
-
-
 	def __str__(self):
 		return f"{self.first_name} {self.last_name} ({self.email}, pfp_link: {self.pfp_link})"
 
