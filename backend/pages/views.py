@@ -43,3 +43,20 @@ class UpdatePhoneVerificationStatus(APIView):
             return Response({'error': 'Verified phone status not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+"""
+UpdateAddressVerificationStatus class
+
+This class is used to update the address verification status of a user.
+"""
+class UpdateAddressVerificationStatus(APIView):
+    def post(self, request, user_id):
+        user = get_object_or_404(User, user_id=user_id)
+        verified_address = request.data.get('verified_address')
+        if verified_address is not None:
+            user.verified_address = verified_address
+            user.save()
+            return Response({'message': 'Address verification status updated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Verified address status not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
