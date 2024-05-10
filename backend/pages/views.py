@@ -45,13 +45,13 @@ class UserAPI(APIView):
       
         serialized_data = {
             "id": user.user_id,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "phone_number": user.phone_number,
+            "firstName": user.first_name,
+            "lastName": user.last_name,
             "email": user.email,
+            "phone": user.phone_number,
             "password": user.password,
-
-            "linkedin": user.linkedin,
+            "about": "Hardcoded Description here",
+            "linkedIn": user.linkedin,
             "twitter": user.twitter,
             "facebook": user.facebook,
             "pfp_link": user.pfp_link,
