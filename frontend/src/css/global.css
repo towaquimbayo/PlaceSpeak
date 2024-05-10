@@ -191,6 +191,24 @@ input.searchBar {
   animation: btnSpinner 1s infinite linear;
 }
 
+#loadingText {
+  color: #6e6e6e;
+  animation: fadeIn 1s ease-in-out infinite alternate;
+  -webkit-animation: fadeIn 1s ease-in-out infinite alternate;
+  -moz-animation: fadeIn 1s ease-in-out infinite alternate;
+  -ms-animation: fadeIn 1s ease-in-out infinite alternate;
+  -o-animation: fadeIn 1s ease-in-out infinite alternate;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes btnSpinner {
   from {
     -webkit-transform: rotate(0deg);

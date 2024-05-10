@@ -33,19 +33,21 @@ export default function Profile() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: `${hardcoded_email}` }),
         });
-
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+        if (!response.ok) throw new Error(`Error: ${response.statusText}`)
 
         const data = await response.json();
-        console.log(data);
+        console.log("Data:", data);
         setForm(data);
       } catch (error) {
-        setErrorMsg(error.message);
+        console.error("Error:", error);
+        if (error.message) setErrorMsg(error.message);
+        else {
+          setErrorMsg("An unexpected error occurred. Please try again later.");
+        }
       } finally {
         setFetching(false);
       }
     };
-
     fetchUserDetails();
   }, []);
 
@@ -67,6 +69,99 @@ export default function Profile() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  function accountForm() {
+    return (
+      <form className="accountForm" onSubmit={handleSubmit}>
+        <div className="formRow">
+          <Field
+            label="First Name"
+            name="firstName"
+            placeholder="John"
+            value={form.firstName}
+            onChange={handleOnChange}
+          />
+          <Field
+            label="Last Name"
+            name="lastName"
+            placeholder="Doe"
+            value={form.lastName}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div className="formRow">
+          <Field
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="johndoe@gmail.com"
+            value={form.email}
+            onChange={handleOnChange}
+          />
+          <Field
+            label="Phone"
+            type="tel"
+            name="phone"
+            placeholder="(XXX) XXX - XXXX"
+            value={form.phone}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div className="formRow">
+          <Password
+            label="Password"
+            name="password"
+            placeholder="********"
+            value={form.password}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div className="formRow">
+          <Textarea
+            label="About Me"
+            name="about"
+            placeholder="Tell us about yourself..."
+            value={form.about}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div className="formRow">
+          <Field
+            label="LinkedIn"
+            name="linkedIn"
+            placeholder="https://linkedin.com/in/johndoe"
+            value={form.linkedIn}
+            onChange={handleOnChange}
+          />
+          <Field
+            label="X / Twitter"
+            name="twitter"
+            placeholder="https://twitter.com/johndoe"
+            value={form.twitter}
+            onChange={handleOnChange}
+          />
+        </div>
+        <div className="formRow">
+          <Field
+            label="Facebook"
+            name="facebook"
+            placeholder="https://facebook.com/johndoe"
+            value={form.facebook}
+            onChange={handleOnChange}
+            halfWidth
+          />
+        </div>
+        <div style={{ marginTop: "1rem" }}>
+          <Button
+            title="Save Changes"
+            text="Save Changes"
+            type="submit"
+            loading={loading}
+          />
+        </div>
+      </form>
+    );
+  }
+
   return (
     <Layout title="Profile">
       <DashboardHeader />
@@ -79,97 +174,8 @@ export default function Profile() {
             to verify your email, address, and phone number for a verified
             badge!
           </p>
-          {errorMsg && <AlertMessage type="error" message={errorMsg} />}
-          {fetching && <p>Loading...</p>}
-
-          <form className="accountForm" onSubmit={handleSubmit}>
-            <div className="formRow">
-              <Field
-                label="First Name"
-                name="firstName"
-                placeholder="John"
-                value={form.firstName}
-                onChange={handleOnChange}
-              />
-              <Field
-                label="Last Name"
-                name="lastName"
-                placeholder="Doe"
-                value={form.lastName}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="formRow">
-              <Field
-                label="Email"
-                type="email"
-                name="email"
-                placeholder="johndoe@gmail.com"
-                value={form.email}
-                onChange={handleOnChange}
-              />
-              <Field
-                label="Phone"
-                type="tel"
-                name="phone"
-                placeholder="(XXX) XXX - XXXX"
-                value={form.phone}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="formRow">
-              <Password
-                label="Password"
-                name="password"
-                placeholder="********"
-                value={form.password}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="formRow">
-              <Textarea
-                label="About Me"
-                name="about"
-                placeholder="Tell us about yourself..."
-                value={form.about}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="formRow">
-              <Field
-                label="LinkedIn"
-                name="linkedIn"
-                placeholder="https://linkedin.com/in/johndoe"
-                value={form.linkedIn}
-                onChange={handleOnChange}
-              />
-              <Field
-                label="X / Twitter"
-                name="twitter"
-                placeholder="https://twitter.com/johndoe"
-                value={form.twitter}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="formRow">
-              <Field
-                label="Facebook"
-                name="facebook"
-                placeholder="https://facebook.com/johndoe"
-                value={form.facebook}
-                onChange={handleOnChange}
-                halfWidth
-              />
-            </div>
-            <div style={{ marginTop: "1rem" }}>
-              <Button
-                title="Save Changes"
-                text="Save Changes"
-                type="submit"
-                loading={loading}
-              />
-            </div>
-          </form>
+          {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
+          {fetching ? <p id="loadingText">Loading...</p> : accountForm()}
         </div>
       </div>
     </Layout>
