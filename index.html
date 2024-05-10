@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Details API</title>
+</head>
+<body>
+  <h1>Fetch User Details</h1>
+  <label for="user-email">Email:</label>
+  <input type="text" id="user-email" placeholder="Enter user email">
+  <button id="fetch-button">Get Details</button>
+  <br>
+  <br>
+  <textarea id="user-details" rows="10" cols="50" readonly></textarea>
+
+  <script>
+    const userEmailInput = document.getElementById('user-email');
+    const fetchButton = document.getElementById('fetch-button');
+    const userDetailsText = document.getElementById('user-details');
+
+    fetchButton.addEventListener('click', async () => {
+      const userEmail = userEmailInput.value.trim();
+
+      if (!userEmail) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: userEmail }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error fetching user details: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        userDetailsText.value = JSON.stringify(data, null, 2);  // Pretty print JSON
+
+      } catch (error) {
+        console.error('Error:', error);
+        userDetailsText.value = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

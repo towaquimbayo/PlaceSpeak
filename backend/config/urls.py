@@ -16,8 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages import views
-from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge
+from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge, UserAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,4 +32,7 @@ urlpatterns = [
 
     # Badge check/unlock endpoints
     path('api/<str:user_id>/verify-trusted-neighbour/', VerifyTrustedNeighbourBadge.as_view(), name='verify_trusted_neighbour'),
+
+    # User endpoints
+	path('api/users', UserAPI.as_view())
 ]
