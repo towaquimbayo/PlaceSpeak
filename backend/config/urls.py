@@ -16,13 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages import views
-from pages.views import UpdateEmailVerificationStatus
-from pages.views import UserAPI
+from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge, UserAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("hello/", views.HelloWorldView.as_view()),
+
+    # Verification endpoints
     path('api/users/<str:user_id>/update-email-verification/', UpdateEmailVerificationStatus.as_view(), name='update_email_verification'),
+    path('api/users/<str:user_id>/update-phone-verification/', UpdatePhoneVerificationStatus.as_view(), name='update_phone_verification'),
+    path('api/users/<str:user_id>/update-address-verification/', UpdateAddressVerificationStatus.as_view(), name='update_address_verification'),
+
+    # Population endpoints
+    path('api/populate/badges/', PopulateBadges.as_view(), name='populate_badges'),
+
+    # Badge check/unlock endpoints
+    path('api/<str:user_id>/verify-trusted-neighbour/', VerifyTrustedNeighbourBadge.as_view(), name='verify_trusted_neighbour'),
+
+    # User endpoints
 	path('api/users', UserAPI.as_view())
 ]
