@@ -12,12 +12,31 @@
   <button id="fetch-button">Get Details</button>
   <br>
   <br>
-  <textarea id="user-details" rows="10" cols="50" readonly></textarea>
+  <div id="user-details">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName"><br>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName"><br>
+    <label for="email">Email:</label>
+    <input type="text" id="email"><br>
+    <label for="phone">Phone:</label>
+    <input type="text" id="phone"><br>
+    <label for="about">About:</label>
+    <textarea id="about" rows="4" cols="50"></textarea><br>
+    <label for="linkedIn">LinkedIn:</label>
+    <input type="text" id="linkedIn"><br>
+    <label for="twitter">Twitter:</label>
+    <input type="text" id="twitter"><br>
+    <label for="facebook">Facebook:</label>
+    <input type="text" id="facebook"><br>
+    <button id="save-button">Save Changes</button>
+  </div>
 
   <script>
     const userEmailInput = document.getElementById('user-email');
     const fetchButton = document.getElementById('fetch-button');
-    const userDetailsText = document.getElementById('user-details');
+    const userDetails = document.getElementById('user-details');
+    const saveButton = document.getElementById('save-button');
 
     fetchButton.addEventListener('click', async () => {
       const userEmail = userEmailInput.value.trim();
@@ -41,11 +60,53 @@
         }
 
         const data = await response.json();
-        userDetailsText.value = JSON.stringify(data, null, 2);  // Pretty print JSON
+
+        // Populate fields with fetched data
+        document.getElementById('firstName').value = data.firstName;
+        document.getElementById('lastName').value = data.lastName;
+        document.getElementById('email').value = data.email;
+        document.getElementById('phone').value = data.phone;
+        document.getElementById('about').value = data.about;
+        document.getElementById('linkedIn').value = data.linkedIn;
+        document.getElementById('twitter').value = data.twitter;
+        document.getElementById('facebook').value = data.facebook;
 
       } catch (error) {
         console.error('Error:', error);
-        userDetailsText.value = `Error: ${error.message}`;
+        alert(`Error: ${error.message}`);
+      }
+    });
+
+    saveButton.addEventListener('click', async () => {
+      // Collect updated user details
+      const updatedUser = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        about: document.getElementById('about').value,
+        linkedIn: document.getElementById('linkedIn').value,
+        twitter: document.getElementById('twitter').value,
+        facebook: document.getElementById('facebook').value,
+      };
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/user_update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedUser),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error updating user details: ${response.statusText}`);
+        }
+
+        alert('User details updated successfully!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`Error: ${error.message}`);
       }
     });
   </script>

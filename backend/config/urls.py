@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge, UserAPI
+from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge, UserAPI, UpdateUserAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,5 +34,6 @@ urlpatterns = [
     path('api/<str:user_id>/verify-trusted-neighbour/', VerifyTrustedNeighbourBadge.as_view(), name='verify_trusted_neighbour'),
 
     # User endpoints
-	path('api/users', UserAPI.as_view())
+	path('api/users', UserAPI.as_view()),
+	path('api/update_user', UpdateUserAPI.as_view())
 ]

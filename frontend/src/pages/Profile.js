@@ -27,7 +27,7 @@ export default function Profile() {
     const fetchUserDetails = async () => {
       try {
         const endpoint = config.url;
-        const hardcoded_email = "abhishekchouhannk@gmail.com";
+        const hardcoded_email = "colleen@gmail.com";
         const response = await fetch(`${endpoint}/api/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,18 +51,31 @@ export default function Profile() {
     fetchUserDetails();
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
 
-    // TODO: Validate form data
-    // TODO: Show loading spinner
-    // TODO: Send form data to the server
-    // fetch("/api/profile", { method: "POST", body: JSON.stringify(form) });
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/update_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
 
-    console.log("Sending Form to Server!", form);
-    setTimeout(() => setLoading(false), 1000);
+      if (!response.ok) {
+        throw new Error(`Error updating user details: ${response.statusText}`);
+      }
+
+      alert('User details updated successfully!');
+    } catch (error) {
+      console.error('Error:', error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleOnChange(e) {

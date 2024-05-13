@@ -51,7 +51,7 @@ class UserAPI(APIView):
             "email": user.email,
             "phone": user.phone_number,
             "password": user.password,
-            "about": "Hardcoded Description here",
+            "about": user.about,
             "linkedIn": user.linkedin,
             "twitter": user.twitter,
             "facebook": user.facebook,

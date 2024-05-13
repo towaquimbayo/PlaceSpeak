@@ -10,6 +10,7 @@ class User(models.Model):
 	phone_number 	= 		models.CharField(max_length=10) # store phone number as a chara string instead of number
 	email 				= 		models.CharField(max_length=255, unique=True)
 	password 			= 		models.CharField(max_length=255) # should be hashed
+	about  				=     models.CharField(max_length=255, blank=True)  # user description
 	# socials below
 	linkedin 			= 		models.CharField(max_length=255, blank=True)
 	twitter 			= 		models.CharField(max_length=255, blank=True)
