@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertMessage from "../components/AlertMessage";
 import DashboardHeader from "../components/DashboardHeader";
 import Layout from "../components/Layout";
 import SideNav from "../components/SidenNav";
 import "../css/achievements.css";
+import { config } from "../config";
 
 export default function Achievements() {
   const totalAchievements = 180;
@@ -24,6 +25,32 @@ export default function Achievements() {
       </div>
     );
   }
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const endpoint = config.url;
+        const hardcoded_email = "colleen@gmail.com";
+        // const response = await fetch(`${endpoint}/api/users`, {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({ email: `${hardcoded_email}` }),
+        // });
+        // if (!response.ok) {
+        //   throw new Error(
+        //     `Error fetching user details: ${response.statusText}`
+        //   );
+        // }
+
+        // const data = await response.json();
+        // console.log("Data:", data);
+      } catch (error) {
+        console.error("Error:", error);
+        setErrorMsg("An unexpected error occurred. Please try again later.");
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <Layout title="Achievements">

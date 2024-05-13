@@ -24,7 +24,7 @@ export default function Profile() {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    const fetchUser = async () => {
       try {
         const endpoint = config.url;
         const hardcoded_email = "colleen@gmail.com";
@@ -49,7 +49,7 @@ export default function Profile() {
         setFetching(false);
       }
     };
-    fetchUserDetails();
+    fetchUser();
   }, []);
 
   async function handleSubmit(e) {
