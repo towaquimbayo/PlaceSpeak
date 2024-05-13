@@ -33,17 +33,18 @@ export default function Profile() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: `${hardcoded_email}` }),
         });
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`)
+        if (!response.ok) {
+          throw new Error(
+            `Error fetching user details: ${response.statusText}`
+          );
+        }
 
         const data = await response.json();
         console.log("Data:", data);
         setForm(data);
       } catch (error) {
         console.error("Error:", error);
-        if (error.message) setErrorMsg(error.message);
-        else {
-          setErrorMsg("An unexpected error occurred. Please try again later.");
-        }
+        setErrorMsg("An unexpected error occurred. Please try again later.");
       } finally {
         setFetching(false);
       }
@@ -57,11 +58,10 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/update_user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const endpoint = config.url;
+      const response = await fetch(`${endpoint}/api/update_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
@@ -69,10 +69,10 @@ export default function Profile() {
         throw new Error(`Error updating user details: ${response.statusText}`);
       }
 
-      alert('User details updated successfully!');
+      alert("User details updated successfully!");
     } catch (error) {
-      console.error('Error:', error);
-      alert(`Error: ${error.message}`);
+      console.error("Error:", error);
+      setErrorMsg("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }

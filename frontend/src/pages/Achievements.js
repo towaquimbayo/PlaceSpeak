@@ -6,9 +6,24 @@ import SideNav from "../components/SidenNav";
 import "../css/achievements.css";
 
 export default function Achievements() {
-  const totalAchieve = 180;
-  const completedAchieve = 152;
+  const totalAchievements = 180;
+  const userAchievements = 152;
+  const badges = 3;
+  const questPoints = 589;
+  const daysActive = 462;
   const [errorMsg, setErrorMsg] = useState("");
+
+  function Badge({ imgSrc, imgAlt, title, description, locked }) {
+    return (
+      <div className={`badge ${locked ? "locked" : ""}`}>
+        <img src={imgSrc} alt={imgAlt} />
+        <div className="badgeInfo">
+          <h4>{title}</h4>
+          <p>{description}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Layout title="Achievements">
@@ -19,17 +34,17 @@ export default function Achievements() {
           <div className="headingContainer">
             <div className="achievementsHeading">
               <h2>My Achievements</h2>
-              <p className="achievementsCount">{completedAchieve}</p>
+              <p className="achievementsCount">{userAchievements}</p>
             </div>
             <div className="progressBarContainer">
               <span>
-                {completedAchieve}/{totalAchieve}
+                {userAchievements}/{totalAchievements}
               </span>
               <div className="progressBar">
                 <div
                   className="progressFill"
                   style={{
-                    width: (completedAchieve / totalAchieve) * 100 + "%",
+                    width: (userAchievements / totalAchievements) * 100 + "%",
                   }}
                 ></div>
               </div>
@@ -43,20 +58,70 @@ export default function Achievements() {
           {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
           <div className="achievementsContainer">
             <div className="achievement">
-              <h4 className="achievementNumber">152</h4>
+              <h4 className="achievementNumber">{userAchievements}</h4>
               <p className="achievementTitle">Achievements</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">3</h4>
+              <h4 className="achievementNumber">{badges}</h4>
               <p className="achievementTitle">Badges</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">589</h4>
+              <h4 className="achievementNumber">{questPoints}</h4>
               <p className="achievementTitle">Quest Points</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">462</h4>
+              <h4 className="achievementNumber">{daysActive}</h4>
               <p className="achievementTitle">Days Active</p>
+            </div>
+          </div>
+          <div className="badgesList">
+            <div className="badgeRow">
+              <Badge
+                imgSrc="./img/topic.svg"
+                imgAlt="Welcome Badge"
+                title="Welcome Badge"
+                description="Awarded to those who have recently joined Placespeak."
+                locked={false}
+              />
+              <Badge
+                imgSrc="./img/id.svg"
+                imgAlt="Verification Badge"
+                title="Verification Badge"
+                description="This badge signifies that a user's identity and address have been verified, enhancing the trustworthiness and authenticity of their contributions."
+                locked={false}
+              />
+            </div>
+            <div className="badgeRow">
+              <Badge
+                imgSrc="./img/connector.svg"
+                imgAlt="Invitation Badge"
+                title="Invitation Badge"
+                description="Awarded for inviting their first neighbor to PlaceSpeak to participate in a poll or discussion."
+                locked={true}
+              />
+              <Badge
+                imgSrc="./img/lock.svg"
+                imgAlt="Long-Time User Badge"
+                title="Long-Time User Badge"
+                description="Long-time users consistently participating over the years. Their stories and contributions become legendary within the community."
+                locked={false}
+              />
+            </div>
+            <div className="badgeRow">
+              <Badge
+                imgSrc="./img/comment.svg"
+                imgAlt="Comment Badge"
+                title="Comment Badge"
+                description="Awarded after their first insightful comment or question. This badge acknowledges the initiation into the realm of discussions."
+                locked={true}
+              />
+              <Badge
+                imgSrc="./img/debate.svg"
+                imgAlt="Participating Poll Badge"
+                title="Participating Poll Badge"
+                description="Celebrating your inaugural participation! This badge acknowledges your initial step in voicing your opinion and contributing to the community's collective decision-making."
+                locked={true}
+              />
             </div>
           </div>
         </div>

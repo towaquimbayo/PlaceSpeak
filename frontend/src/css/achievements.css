@@ -47,7 +47,11 @@
   background-color: #e6e6e6;
 }
 
-.dashboardContent .headingContainer .progressBarContainer .progressBar .progressFill {
+.dashboardContent
+  .headingContainer
+  .progressBarContainer
+  .progressBar
+  .progressFill {
   height: 100%;
   width: 0%;
   border-radius: 10px;
@@ -88,4 +92,65 @@
 .dashboardContent .achievementsContainer .achievement h4 {
   font-size: 2rem;
   font-weight: 700;
+}
+
+.badgesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.badgesList .badgeRow {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.badgesList .badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: solid 1px #858585;
+  width: 100%;
+}
+
+.badgesList .badge img {
+  width: 100px;
+  height: 100px;
+}
+
+.badgesList .badge .badgeInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.badgesList .badge .badgeInfo h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.badgesList .badge .badgeInfo p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #858585;
+}
+
+.badgesList .badge.locked {
+  background-color: #dcdcdc;
+}
+
+.badgesList .badge.locked img {
+  filter: grayscale(100%);
+}
+
+.badgesList .badge.locked .badgeInfo h4 {
+  color: #858585;
 }
