@@ -9,7 +9,7 @@ export default function DashboardHeader() {
     <div className="dashboardHeaderContainer">
       <div className="dashboardInfo">
         <div className="dashboardDescription">
-          <img className="profileImage" src="./profile-pic.jpg" alt="Profile" />
+          <img className="profileImage" src="./img/profile-pic.jpg" alt="Profile" />
           <div className="dashboardNameContainer">
             <div className="dashboardName">
               <h1>Colleen Hardwick</h1>
