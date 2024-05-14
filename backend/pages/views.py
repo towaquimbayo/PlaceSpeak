@@ -117,7 +117,7 @@ class UpdateUserAPI(APIView):
 
         return Response({'message': 'User details updated successfully.'}, status=status.HTTP_200_OK)
     
-class AchivementAPI(APIView):
+class UserAchievementAPI(APIView):
     def post(self, request):
         """
         API endpoint to fetch a user's details by email address.
@@ -145,22 +145,14 @@ class AchivementAPI(APIView):
                 {"error": "User with email '{}' not found.".format(user_email)},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        
+        achievement_rec = user.achievement
       
         serialized_data = {
-            "id": user.user_id,
-            "firstName": user.first_name,
-            "lastName": user.last_name,
-            "email": user.email,
-            "phone": user.phone_number,
-            "password": user.password,
-            "about": user.about,
-            "linkedIn": user.linkedin,
-            "twitter": user.twitter,
-            "facebook": user.facebook,
-            "pfp_link": user.pfp_link,
-            "verified_email": user.verified_email,
-            "verified_phone": user.verified_phone,
-            "verified_address": user.verified_address,
+            "quest_points": achievement_rec.quest_points,
+            "num_badges": achievement_rec.num_badges,
+            "days_active" : achievement_rec.days_active,
+	        "num_achievements" : achievement_rec.num_achievements
 
             # we can add more fields to return as required later
         }

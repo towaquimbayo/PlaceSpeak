@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge, UserAPI, UpdateUserAPI
+from pages.views import UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, VerifyTrustedNeighbourBadge
+from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -35,5 +36,6 @@ urlpatterns = [
 
     # User endpoints
 	path('api/users', UserAPI.as_view()),
-	path('api/update_user', UpdateUserAPI.as_view())
+	path('api/update_user', UpdateUserAPI.as_view()),
+	path('api/users/achievement', UserAchievementAPI.as_view()),
 ]

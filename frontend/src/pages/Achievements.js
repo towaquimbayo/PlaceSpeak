@@ -8,10 +8,17 @@ import { config } from "../config";
 
 export default function Achievements() {
   const totalAchievements = 180;
-  const userAchievements = 152;
-  const badges = 3;
-  const questPoints = 589;
-  const daysActive = 462;
+  // const userAchievements = 152;
+  // const badges = 3;
+  // const questPoints = 589;
+  // const daysActive = 462;
+
+  const [userAchievements, setUserAchievements] = useState({
+    num_achievements: '',
+    num_badges: '',
+    quest_points: '',
+    days_active: '',
+  });
   const [errorMsg, setErrorMsg] = useState("");
 
   function Badge({ imgSrc, imgAlt, title, description, locked }) {
@@ -31,18 +38,25 @@ export default function Achievements() {
       try {
         const endpoint = config.url;
         const hardcoded_email = "colleen@gmail.com";
-        // const response = await fetch(`${endpoint}/api/users`, {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ email: `${hardcoded_email}` }),
-        // });
-        // if (!response.ok) {
-        //   throw new Error(
-        //     `Error fetching user details: ${response.statusText}`
-        //   );
-        // }
+        const response = await fetch(`${endpoint}/api/users/achievement`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: hardcoded_email }),
+        });
 
-        // const data = await response.json();
+        if (!response.ok) {
+          throw new Error(
+            `Error fetching user details: ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        setUserAchievements({
+          num_achievements: data.num_achievements,
+          num_badges: data.num_badges,
+          quest_points: data.quest_points,
+          days_active: data.days_active,
+        });
         // console.log("Data:", data);
       } catch (error) {
         console.error("Error:", error);
@@ -61,17 +75,17 @@ export default function Achievements() {
           <div className="headingContainer">
             <div className="achievementsHeading">
               <h2>My Achievements</h2>
-              <p className="achievementsCount">{userAchievements}</p>
+              <p className="achievementsCount">{userAchievements.num_achievements}</p>
             </div>
             <div className="progressBarContainer">
               <span>
-                {userAchievements}/{totalAchievements}
+                {userAchievements.num_achievements}/{totalAchievements}
               </span>
               <div className="progressBar">
                 <div
                   className="progressFill"
                   style={{
-                    width: (userAchievements / totalAchievements) * 100 + "%",
+                    width: (userAchievements.num_achievements / totalAchievements) * 100 + "%",
                   }}
                 ></div>
               </div>
@@ -85,19 +99,19 @@ export default function Achievements() {
           {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
           <div className="achievementsContainer">
             <div className="achievement">
-              <h4 className="achievementNumber">{userAchievements}</h4>
+              <h4 className="achievementNumber">{userAchievements.num_achievements}</h4>
               <p className="achievementTitle">Achievements</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{badges}</h4>
+              <h4 className="achievementNumber">{userAchievements.num_badges}</h4>
               <p className="achievementTitle">Badges</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{questPoints}</h4>
+              <h4 className="achievementNumber">{userAchievements.quest_points}</h4>
               <p className="achievementTitle">Quest Points</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{daysActive}</h4>
+              <h4 className="achievementNumber">{userAchievements.days_active}</h4>
               <p className="achievementTitle">Days Active</p>
             </div>
           </div>
