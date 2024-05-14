@@ -23,6 +23,10 @@ class User(models.Model):
 	verified_phone 		= 		models.BooleanField(default=False)
 	verified_address 	= 		models.BooleanField(default=False)
 
+	post_count 			= 		models.IntegerField(default=0)
+	comment_count 		= 		models.IntegerField(default=0)
+	polls_answered_count 	= 		models.IntegerField(default=0)
+
 	# user can have multiple addresses (Home, School, Work etc.)
 	addresses = models.ManyToManyField('Address', related_name='users')
 
