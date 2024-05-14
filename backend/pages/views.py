@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import User, Badge, User_Badge
+from .models import User, Badge, User_Badge, Comment
 from django.utils import timezone
 
 # Create your views here.
@@ -373,17 +373,19 @@ class VerifyInquirerBadge(APIView):
     Verifies if a user meets the requirements for the Inquirer Badge and grants the badge if applicable.
 
     Requirements:
-    - A comment created by the user has received a certain number of upvotes.
+    - A comment created by the user has received a certain number of upvotes and is considered insightful (over 80% approval)
     """
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
             user = User.objects.get(id=user_id)
 
-            # Check if the user's comment has received a certain number of upvotes
-            # Note: The user model should have relationships with comments and upvotes tables
-            # Assuming the user's comment has received 10 upvotes
-            if user.comment_set.filter(upvotes__gte=10).exists():
+            # Retrieve the user's comments from the Comment table
+            comments = Comment.objects.filter(user=user)
+
+            # Check if the user's comment complies with the requirements
+            # Note: The user model should have relationships with comments table
+            if any((comment.upvotes >= 5 and comment.upvotes / comment.downvotes >= 4) for comment in comments):
                 # Create or update User_Badge entry for Inquirer Badge
                 inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=inquirer_badge)

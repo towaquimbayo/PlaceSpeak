@@ -12,12 +12,12 @@ class User(models.Model):
 	email 				= 		models.CharField(max_length=255, unique=True)
 	password 			= 		models.CharField(max_length=255) # should be hashed
 	about  				=     models.CharField(max_length=255, blank=True)  # user description
-	# socials below
+	pfp_link      =     models.CharField(max_length=255, blank=True)
+
+	# Fields for social media links
 	linkedin 			= 		models.CharField(max_length=255, blank=True)
 	twitter 			= 		models.CharField(max_length=255, blank=True)
 	facebook 			= 		models.CharField(max_length=255, blank=True)
-
-	pfp_link      =     models.CharField(max_length=255, blank=True)
 
 	# Fields for verification status
 	verified_email 		= 		models.BooleanField(default=False)
