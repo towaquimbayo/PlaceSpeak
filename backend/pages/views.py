@@ -160,13 +160,12 @@ class UserAchievementAPI(APIView):
         return Response(serialized_data, status=status.HTTP_200_OK)
 
 
-
-"""
-UpdateEmailVerificationStatus class
-
-This class is used to update the email verification status of a user.
-"""
 class UpdateEmailVerificationStatus(APIView):
+    """
+    UpdateEmailVerificationStatus class
+
+    This class is used to update the email verification status of a user.
+    """
     def post(self, request, user_id):
         user = get_object_or_404(User, user_id=user_id)
         verified_email = request.data.get('verified_email')
@@ -181,12 +180,13 @@ class UpdateEmailVerificationStatus(APIView):
         
         
 
-"""
-UpdatePhoneVerificationStatus class
 
-This class is used to update the phone verification status of a user.
-"""
 class UpdatePhoneVerificationStatus(APIView):
+    """
+    UpdatePhoneVerificationStatus class
+
+    This class is used to update the phone verification status of a user.
+    """
     def post(self, request, user_id):
         user = get_object_or_404(User, user_id=user_id)
         verified_phone = request.data.get('verified_phone')
@@ -200,12 +200,12 @@ class UpdatePhoneVerificationStatus(APIView):
             return Response({'error': 'Verified phone status not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""
-UpdateAddressVerificationStatus class
-
-This class is used to update the address verification status of a user.
-"""
 class UpdateAddressVerificationStatus(APIView):
+    """
+    UpdateAddressVerificationStatus class
+
+    This class is used to update the address verification status of a user.
+    """
     def post(self, request, user_id):
         user = get_object_or_404(User, user_id=user_id)
         verified_address = request.data.get('verified_address')
@@ -220,6 +220,11 @@ class UpdateAddressVerificationStatus(APIView):
         
 
 class PopulateBadges(APIView):
+    """
+    PopulateBadges class
+
+    This class is used to populate the database with predefined badges and associate them with users based on certain conditions.
+    """
     def post(self, request):
         try:
             # Inquirer Badge
@@ -297,7 +302,14 @@ class PopulateBadges(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 class VerifyTrustedNeighbourBadge(APIView):
+    """
+    Verifies if a user meets the requirements for the Trusted Neighbour Badge and grants the badge if applicable.
+
+    Requirements:
+    - User must have verified email, phone, and address.
+    """
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
