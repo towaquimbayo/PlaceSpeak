@@ -12,20 +12,26 @@ class User(models.Model):
 	email 				= 		models.CharField(max_length=255, unique=True)
 	password 			= 		models.CharField(max_length=255) # should be hashed
 	about  				=     models.CharField(max_length=255, blank=True)  # user description
-	# socials below
+	pfp_link      =     models.CharField(max_length=255, blank=True)
+
+	# Fields for social media links
 	linkedin 			= 		models.CharField(max_length=255, blank=True)
 	twitter 			= 		models.CharField(max_length=255, blank=True)
 	facebook 			= 		models.CharField(max_length=255, blank=True)
 
-	pfp_link      =     models.CharField(max_length=255, blank=True)
-
+	# Fields for verification status
 	verified_email 		= 		models.BooleanField(default=False)
 	verified_phone 		= 		models.BooleanField(default=False)
 	verified_address 	= 		models.BooleanField(default=False)
 
+	# Fields for user stats
 	post_count 			= 		models.IntegerField(default=0)
 	comment_count 		= 		models.IntegerField(default=0)
 	polls_answered_count 	= 		models.IntegerField(default=0)
+	account_created		= models.DateTimeField(auto_now_add=True)
+
+	# Invited_by field for referral system (defaults to None/null)
+	invited_by = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True, related_name='invited_users')
 
 	# user can have multiple addresses (Home, School, Work etc.)
 	addresses = models.ManyToManyField('Address', related_name='users')
@@ -154,4 +160,5 @@ class User_Badge(models.Model):
     granted_date = models.DateTimeField()
     expiry_date = models.DateTimeField(null=True, blank=True)  # Optional expiry date
     active = models.BooleanField(default=True)  # Flag for active/inactive badges
+
 
