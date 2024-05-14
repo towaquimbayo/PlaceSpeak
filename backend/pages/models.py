@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # initial commit - beginning work on DB object models 
 
@@ -30,6 +31,17 @@ class User(models.Model):
 
 	# Many-to-Many relationship with Badges through User_Badge bridge table
 	badges = models.ManyToManyField('Badge', through='User_Badge')
+
+	def isFullyVerified(self):
+		return self.verified_address and self.verified_email and self.verified_phone
+	
+	def awardVerificationBadge(self):
+		if self.isFullyVerified():
+			b = Badge.objects.get(badge_id=1)  # Use double quotes for model access
+			ub = User_Badge.objects.create(user=self, badge=b, granted_date=timezone.now())
+			ub.save()
+		else:
+			print("User is not fully verified, cannot award badge.")
 
 
 	def add_address(self, street_address, city, province, zip_code, primary_address=False, address_type=None):
@@ -109,6 +121,9 @@ class Badge(models.Model):
 
     # Many-to-Many relationship with Users through User_Badge bridge table
     users = models.ManyToManyField(User, through='User_Badge')
+
+    def __str__(self) -> str:
+      return f"{self.name}, {self.points}, {self.category}"
 
 class User_Badge(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

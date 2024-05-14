@@ -131,8 +131,8 @@ class UpdateEmailVerificationStatus(APIView):
         if verified_email is not None:
             user.verified_email = verified_email
             user.save()
-            if isFullyVerified(user_id):
-                awardVerificationBadge(user_id)
+            if user.isFullyVerified():
+                user.awardVerificationBadge()
             return Response({'message': 'Email verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified email status not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -151,8 +151,8 @@ class UpdatePhoneVerificationStatus(APIView):
         if verified_phone is not None:
             user.verified_phone = verified_phone
             user.save()
-            if isFullyVerified(user_id):
-                awardVerificationBadge(user_id)
+            if user.isFullyVerified():
+                user.awardVerificationBadge()
             return Response({'message': 'Phone verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified phone status not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -170,8 +170,8 @@ class UpdateAddressVerificationStatus(APIView):
         if verified_address is not None:
             user.verified_address = verified_address
             user.save()
-            if isFullyVerified(user_id):
-                awardVerificationBadge(user_id)
+            if user.isFullyVerified():
+                user.awardVerificationBadge()
             return Response({'message': 'Address verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified address status not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -280,21 +280,9 @@ class VerifyTrustedNeighbourBadge(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
-def isFullyVerified(user_id):
-  try:
-    user = User.objects.get(user_id=user_id)
-    return user.verified_address and user.verified_email and user.verified_phone
-  except User.DoesNotExist:
-    return False
+
   
-def awardVerificationBadge(user_id):
-    u = User.objects.get(user_id=user_id)
 
-    b = Badge.objects.get(badge_id=1) # 1 is verification badge
-
-    ub = User_Badge.objects.create(user=u, badge=b, granted_date = timezone.now())
-
-    ub.save() # save new user_badge record in the junction brige connecting badges and users
 
 
 # code api view
