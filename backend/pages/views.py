@@ -332,10 +332,38 @@ class VerifyTrustedNeighbourBadge(APIView):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-    
 
-  
+
+class VerifyNewNeighborBadge(APIView):
+    """
+    Verifies if a user meets the requirements for the New Neighbour Badge and grants the badge if applicable.
+
+    Requirements:
+    - User must complete their first post or comment on the platform.
+    """
+    def post(self, request, user_id):
+        try:
+            # Retrieve the user object based on the user_id
+            user = User.objects.get(id=user_id)
+
+            # Check if the user has completed their first post or comment
+            # Note: The user model should have relationships with posts and comments tables
+            if user.post_count > 0 or user.comment_count > 0:
+                # Create or update User_Badge entry for New Neighbour Badge
+                new_neighbour_badge = Badge.objects.get(name="New Neighbour Badge")  # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=new_neighbour_badge)
+
+                # Set the granted date of the badge
+                user_badge.granted_date = datetime.now()
+                user_badge.save()
+
+                return Response({"message": "User meets the requirements for New Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "User does not meet the requirements for New Neighbour Badge"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
