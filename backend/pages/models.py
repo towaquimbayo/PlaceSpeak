@@ -94,6 +94,16 @@ class User(models.Model):
 	
 	def __str__(self):
 		return f"{self.first_name} {self.last_name} ({self.email}, pfp_link: {self.pfp_link})"
+	
+class Comment(models.Model):
+  comment_id = models.AutoField(primary_key=True)
+  content = models.TextField()  # Use TextField for larger text content
+  upvotes = models.IntegerField(default=0)
+  downvotes = models.IntegerField(default=0)
+  created_date = models.DateTimeField(auto_now_add=True)  # Automatically set creation date
+
+  # Foreign key to User model
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
 
 class Achievement(models.Model):
 	# user = models.OneToOneField(
