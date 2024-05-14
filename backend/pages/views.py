@@ -66,6 +66,89 @@ class UserAPI(APIView):
 
         return Response(serialized_data, status=status.HTTP_200_OK)
     
+
+class LoginUserAPI(APIView):
+    def post(self, request):
+        """
+        API endpoint to authenticate a user based on email and password.
+
+        Args:
+            request (Request): Incoming HTTP request containing user credentials in JSON format.
+
+        Returns:
+            Response: JSON response with success message or error details.
+        """
+
+        try:
+            # Validate request data as a dictionary
+            user_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['email', 'password']
+        missing_fields = [field for field in required_fields if field not in user_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Hardcoded user email for demonstration (replace with appropriate logic)
+        user_email = user_data['email']
+
+        try:
+            user = User.objects.get(email=user_email)  # Use primary key (pk) for retrieval
+        except User.DoesNotExist:
+            return Response(
+                {'error': f"User with email {user_email} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # Check if the provided password matches the user's password
+        if user_data['password'] != user.password:
+            return Response({'error': 'Incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({
+            'message': 'User authenticated successfully.', 
+            'user_id': user.user_id
+        }, status=status.HTTP_200_OK)
+    
+class RegisterUserAPI(APIView):
+    def post(self, request):
+        """
+        API endpoint to register a new user.
+
+        Args:
+            request (Request): Incoming HTTP request containing user details in JSON format.
+
+        Returns:
+            Response: JSON response with success message or error details.
+        """
+
+        try:
+            # Validate request data as a dictionary
+            user_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['firstName', 'lastName', 'email', 'password']
+        missing_fields = [field for field in required_fields if field not in user_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Create a new user instance with the provided data
+        new_user = User(
+            first_name=user_data['firstName'],
+            last_name=user_data['lastName'],
+            email=user_data['email'],
+            password=user_data['password'],
+        )
+
+        new_user.save()  # Save the new user to the database
+
+        return Response({'message': 'User registered successfully.'}, status=status.HTTP_201_CREATED)
+    
 class UpdateUserAPI(APIView):
     def post(self, request):
         """

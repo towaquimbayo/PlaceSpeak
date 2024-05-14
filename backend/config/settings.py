@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-qfk9u@umici7zvdydjqyg#k-(p2)$9rbf^8d!sjz4!j1i(xvko
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -125,6 +125,7 @@ USE_I18N = True
 USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWS_CREDENTIALS = True
 
 
 # Static files (CSS, JavaScript, Images)
