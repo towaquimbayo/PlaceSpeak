@@ -30,7 +30,7 @@ class User(models.Model):
 	achievement = models.OneToOneField('Achievement', on_delete=models.CASCADE, null=True, blank=True, related_name='user')  # OneToOneField to Achievement
 
 	# Many-to-Many relationship with Badges through User_Badge bridge table
-	badges = models.ManyToManyField('Badge', through='User_Badge')
+	badges = models.ManyToManyField('Badge', through='User_Badge', related_name='user_badges')
 
 	def isFullyVerified(self):
 		return self.verified_address and self.verified_email and self.verified_phone
@@ -42,6 +42,15 @@ class User(models.Model):
 			ub.save()
 		else:
 			print("User is not fully verified, cannot award badge.")
+
+	def awardBadge(self, name):
+		b = Badge.objects.get(name=name)
+		ub = User_Badge.objects.create(user=self, badge=b, granted_date=timezone.now())
+
+	def getAllBadges(self):
+		user_badges = self.badges.all()
+		# print(user_badges)
+		return user_badges
 
 
 	def add_address(self, street_address, city, province, zip_code, primary_address=False, address_type=None):
