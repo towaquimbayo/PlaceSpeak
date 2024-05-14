@@ -7,31 +7,14 @@ import "../css/achievements.css";
 import { config } from "../config";
 
 export default function Achievements() {
-  const totalAchievements = 180;
-  // const userAchievements = 152;
-  // const badges = 3;
-  // const questPoints = 589;
-  // const daysActive = 462;
-
-  const [userAchievements, setUserAchievements] = useState({
-    num_achievements: '',
-    num_badges: '',
-    quest_points: '',
-    days_active: '',
-  });
   const [errorMsg, setErrorMsg] = useState("");
-
-  function Badge({ imgSrc, imgAlt, title, description, locked }) {
-    return (
-      <div className={`badge ${locked ? "locked" : ""}`}>
-        <img src={imgSrc} alt={imgAlt} />
-        <div className="badgeInfo">
-          <h4>{title}</h4>
-          <p>{description}</p>
-        </div>
-      </div>
-    );
-  }
+  const [user, setUser] = useState({
+    num_achievements: 0,
+    num_badges: 0,
+    quest_points: 0,
+    days_active: 0,
+  });
+  const totalAchievements = 180;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,18 +29,18 @@ export default function Achievements() {
 
         if (!response.ok) {
           throw new Error(
-            `Error fetching user details: ${response.statusText}`
+            `Error fetching user achievements: ${response.statusText}`
           );
         }
 
         const data = await response.json();
-        setUserAchievements({
+        console.log("Data:", data);
+        setUser({
           num_achievements: data.num_achievements,
           num_badges: data.num_badges,
           quest_points: data.quest_points,
           days_active: data.days_active,
         });
-        // console.log("Data:", data);
       } catch (error) {
         console.error("Error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -65,6 +48,18 @@ export default function Achievements() {
     };
     fetchUser();
   }, []);
+
+  function Badge({ imgSrc, imgAlt, title, description, locked }) {
+    return (
+      <div className={`badge ${locked ? "locked" : ""}`}>
+        <img src={imgSrc} alt={imgAlt} />
+        <div className="badgeInfo">
+          <h4>{title}</h4>
+          <p>{description}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Layout title="Achievements">
@@ -75,17 +70,18 @@ export default function Achievements() {
           <div className="headingContainer">
             <div className="achievementsHeading">
               <h2>My Achievements</h2>
-              <p className="achievementsCount">{userAchievements.num_achievements}</p>
+              <p className="achievementsCount">{user.num_achievements}</p>
             </div>
             <div className="progressBarContainer">
               <span>
-                {userAchievements.num_achievements}/{totalAchievements}
+                {user.num_achievements}/{totalAchievements}
               </span>
               <div className="progressBar">
                 <div
                   className="progressFill"
                   style={{
-                    width: (userAchievements.num_achievements / totalAchievements) * 100 + "%",
+                    width:
+                      (user.num_achievements / totalAchievements) * 100 + "%",
                   }}
                 ></div>
               </div>
@@ -99,20 +95,20 @@ export default function Achievements() {
           {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
           <div className="achievementsContainer">
             <div className="achievement">
-              <h4 className="achievementNumber">{userAchievements.num_achievements}</h4>
-              <p className="achievementTitle">Achievements</p>
+              <h4 className="achievementNumber">{user.num_achievements}</h4>
+              <p>Achievements</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{userAchievements.num_badges}</h4>
-              <p className="achievementTitle">Badges</p>
+              <h4 className="achievementNumber">{user.num_badges}</h4>
+              <p>Badges</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{userAchievements.quest_points}</h4>
-              <p className="achievementTitle">Quest Points</p>
+              <h4 className="achievementNumber">{user.quest_points}</h4>
+              <p>Quest Points</p>
             </div>
             <div className="achievement">
-              <h4 className="achievementNumber">{userAchievements.days_active}</h4>
-              <p className="achievementTitle">Days Active</p>
+              <h4 className="achievementNumber">{user.days_active}</h4>
+              <p>Days Active</p>
             </div>
           </div>
           <div className="badgesList">

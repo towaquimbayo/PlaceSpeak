@@ -83,7 +83,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   border-radius: 0.5rem;
   border: solid 1px #858585;
   width: 100%;
@@ -153,4 +153,50 @@
 
 .badgesList .badge.locked .badgeInfo h4 {
   color: #858585;
+}
+
+@media screen and (max-width: 1200px) {
+  .dashboardContent .headingContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dashboardContent .achievementsContainer {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .dashboardContent .achievementsContainer .achievement {
+    width: 48%;
+    padding: 0.75rem 1rem;
+  }
+  .dashboardContent .achievementsContainer .achievement h4 {
+    font-size: 1.75rem;
+  }
+  .badgesList .badge {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .badgesList .badge .badgeInfo h4 {
+    font-size: 1rem;
+  }
+  .badgesList .badgeRow {
+    flex-direction: column;
+  }
+  .badgesList .badge {
+    flex-direction: row;
+  }
+  .badgesList .badge .badgeInfo p {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .dashboardContent .achievementsContainer .achievement h4 {
+    font-size: 1.5rem;
+  }
+  .dashboardContent .achievementsContainer .achievement p {
+    font-size: 0.8rem;
+  }
 }
