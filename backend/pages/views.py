@@ -353,13 +353,49 @@ class VerifyNewNeighborBadge(APIView):
                 new_neighbour_badge = Badge.objects.get(name="New Neighbour Badge")  # Assuming the badge already exists
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=new_neighbour_badge)
 
-                # Set the granted date of the badge
-                user_badge.granted_date = datetime.now()
-                user_badge.save()
+                # Set the granted date of the badge only if it's a new entry
+                if created:
+                    user_badge.granted_date = datetime.now()
+                    user_badge.save()
 
                 return Response({"message": "User meets the requirements for New Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
             else:
                 return Response({"message": "User does not meet the requirements for New Neighbour Badge"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class VerifyInquirerBadge(APIView):
+    """
+    Verifies if a user meets the requirements for the Inquirer Badge and grants the badge if applicable.
+
+    Requirements:
+    - A comment created by the user has received a certain number of upvotes.
+    """
+    def post(self, request, user_id):
+        try:
+            # Retrieve the user object based on the user_id
+            user = User.objects.get(id=user_id)
+
+            # Check if the user's comment has received a certain number of upvotes
+            # Note: The user model should have relationships with comments and upvotes tables
+            # Assuming the user's comment has received 10 upvotes
+            if user.comment_set.filter(upvotes__gte=10).exists():
+                # Create or update User_Badge entry for Inquirer Badge
+                inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=inquirer_badge)
+
+                # Set the granted date of the badge only if it's a new entry
+                if created:
+                    user_badge.granted_date = datetime.now()
+                    user_badge.save()
+
+                return Response({"message": "User meets the requirements for Inquirer Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "User does not meet the requirements for Inquirer Badge"}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
