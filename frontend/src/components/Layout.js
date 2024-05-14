@@ -7,7 +7,7 @@ export default function Layout({
   title,
   isAuthPage = false,
   isLandingPage = false,
-  children
+  children,
 }) {
   if (title && typeof document !== "undefined") {
     document.title = isLandingPage ? "PlaceSpeak" : `${title} | PlaceSpeak`;
@@ -24,7 +24,7 @@ export default function Layout({
       ) : (
         <>
           <Navbar />
-          <div className="wrapper">{children}</div>
+          <div id="wrapper">{children}</div>
         </>
       )}
     </>

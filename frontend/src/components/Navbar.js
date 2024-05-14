@@ -13,7 +13,7 @@ export default function Navbar() {
         <div
           style={{ display: "flex", alignItems: "center", marginRight: "1rem" }}
         >
-          <Link to="/" className="logo">
+          <Link to="/" className="navLogo">
             <img src="./logo.svg" alt="PlaceSpeak Logo" />
           </Link>
           <input type="text" placeholder="Search..." className="searchBar" />
