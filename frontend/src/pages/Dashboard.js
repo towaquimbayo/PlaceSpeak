@@ -1,8 +1,19 @@
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
 import SideNav from "../components/SidenNav";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
+
   return (
     <Layout title="Dashboard">
       <DashboardHeader />
