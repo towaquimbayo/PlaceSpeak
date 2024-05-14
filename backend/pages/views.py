@@ -440,6 +440,38 @@ class VerifyWelcomingWhispererBadge(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class VerifyLegacyCitizenBadge(APIView):
+    """
+    Verifies if a user meets the requirements for the Legacy Citizen Badge and grants the badge if applicable.
+
+    Requirements:
+    - User has been active on the platform for a certain number of years.
+    """
+    def post(self, request, user_id):
+        try:
+            # Retrieve the user object based on the user_id
+            user = User.objects.get(id=user_id)
+
+            # Check if account was created over 1 year ago and user has a few posts/comments
+            if user.account_created < timezone.now() - datetime.timedelta(days=365) and (user.post_count > 10 or user.comment_count > 10):
+                # Create or update User_Badge entry for Legacy Citizen Badge
+                legacy_citizen_badge = Badge.objects.get(name="Legacy Citizen Badge")  # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=legacy_citizen_badge)
+
+                # Set the granted date of the badge only if it's a new entry
+                if created:
+                    user_badge.granted_date = datetime.now()
+                    user_badge.save()
+
+                return Response({"message": "User meets the requirements for Legacy Citizen Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "User does not meet the requirements for Legacy Citizen Badge"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
 # code api view
 # class AwardVerificationBadge(APIView):
     
