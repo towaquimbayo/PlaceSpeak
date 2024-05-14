@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSession, setUser } from "../redux/actions/UserAction";
+import { clearSession } from "../redux/actions/UserAction";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -37,12 +37,9 @@ export default function Navbar() {
               Logout
             </Link>
           ) : (
-            <Link
-              className="navLink"
-              onClick={async () => dispatch(setUser(true))}
-            >
+            <NavLink className="navLink" to="/login" activeclassname="active">
               Login
-            </Link>
+            </NavLink>
           )}
         </div>
       </div>

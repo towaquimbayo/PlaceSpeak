@@ -3,7 +3,12 @@ import { Helmet } from "react-helmet";
 import Navbar from "./Navbar";
 import "../css/dashboard.css";
 
-export default function Layout({ title, isLandingPage = false, children }) {
+export default function Layout({
+  title,
+  isAuthPage = false,
+  isLandingPage = false,
+  children
+}) {
   if (title && typeof document !== "undefined") {
     document.title = isLandingPage ? "PlaceSpeak" : `${title} | PlaceSpeak`;
   }
@@ -14,8 +19,14 @@ export default function Layout({ title, isLandingPage = false, children }) {
         <meta charSet="utf-8" />
         <title>{isLandingPage ? "PlaceSpeak" : `${title} | PlaceSpeak`}</title>
       </Helmet>
-      <Navbar />
-      <div id="wrapper">{children}</div>
+      {isAuthPage ? (
+        children
+      ) : (
+        <>
+          <Navbar />
+          <div className="wrapper">{children}</div>
+        </>
+      )}
     </>
   );
 }
