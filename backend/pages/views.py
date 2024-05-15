@@ -204,7 +204,7 @@ class UpdateUserAPI(APIView):
 class UserAchievementAPI(APIView):
     def post(self, request):
         """
-        API endpoint to fetch a user's details by email address.
+        API endpoint to fetch a user's details by user_id.
 
         Args:
             request (Request): Incoming HTTP request.
@@ -213,33 +213,41 @@ class UserAchievementAPI(APIView):
             Response: JSON response containing user details or error message.
         """
 
-        # Get email from the request body (adjust key name if needed)
+        # Get id from the request body (adjust key name if needed)
         try:
-            user_email = request.data['email']
+            user_id = request.data['user_id']
         except KeyError:
             return Response(
-                {"error": "Missing 'email' field in request body."},
+                {"error": "Missing 'user_id' field in request body."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            user = User.objects.get(email=user_email)
+            user = User.objects.get(user_id=user_id)
         except User.DoesNotExist:
             return Response(
-                {"error": "User with email '{}' not found.".format(user_email)},
+                {"error": "User with user_id '{}' not found.".format(user_id)},
                 status=status.HTTP_404_NOT_FOUND,
             )
         
         achievement_rec = user.achievement
-      
-        serialized_data = {
-            "quest_points": achievement_rec.quest_points,
-            "num_badges": achievement_rec.num_badges,
-            "days_active" : achievement_rec.days_active,
-	        "num_achievements" : achievement_rec.num_achievements
 
+        if (achievement_rec == None):
+            serialized_data = {
+            "quest_points": 0,
+            "num_badges": 0,
+            "days_active" : 0,
+	        "num_achievements" : 0
             # we can add more fields to return as required later
-        }
+            }
+        else: 
+            serialized_data = {
+                "quest_points": achievement_rec.quest_points,
+                "num_badges": achievement_rec.num_badges,
+                "days_active" : achievement_rec.days_active,
+                "num_achievements" : achievement_rec.num_achievements
+                # we can add more fields to return as required later
+            }
 
         return Response(serialized_data, status=status.HTTP_200_OK)
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../components/AlertMessage";
 import DashboardHeader from "../components/DashboardHeader";
 import Layout from "../components/Layout";
@@ -16,15 +17,18 @@ export default function Achievements() {
   });
   const totalAchievements = 180;
 
+
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const user_id = useSelector((state) => state.user.user_id);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const endpoint = config.url;
-        const hardcoded_email = "colleen@gmail.com";
         const response = await fetch(`${endpoint}/api/users/achievement`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: hardcoded_email }),
+          body: JSON.stringify({ user_id: user_id }),
         });
 
         if (!response.ok) {
