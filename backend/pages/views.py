@@ -16,6 +16,28 @@ class HelloWorldView(APIView):
     message = "Hello, world!"
     return Response(data={'message': message})
   
+
+def extractUserObject(request):
+    # Get email from the request body (adjust key name if needed)
+    try:
+        user_id = request.data['user_id']
+    except KeyError:
+        return Response(
+            {"error": "Missing 'user_id' field in request body."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        user = User.objects.get(user_id=user_id)
+    except User.DoesNotExist:
+        return Response(
+            {"error": "User with user_id '{}' not found.".format(user_id)},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    
+    return user
+      
+  
 class UserAPI(APIView):
     def post(self, request):
         """
@@ -28,22 +50,7 @@ class UserAPI(APIView):
             Response: JSON response containing user details or error message.
         """
 
-        # Get email from the request body (adjust key name if needed)
-        try:
-            user_id = request.data['user_id']
-        except KeyError:
-            return Response(
-                {"error": "Missing 'user_id' field in request body."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            user = User.objects.get(user_id=user_id)
-        except User.DoesNotExist:
-            return Response(
-                {"error": "User with user_id '{}' not found.".format(user_id)},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        user = extractUserObject(request)
       
         serialized_data = {
             "id": user.user_id,
@@ -200,6 +207,39 @@ class UpdateUserAPI(APIView):
         user.save()  # Save changes to the database
 
         return Response({'message': 'User details updated successfully.'}, status=status.HTTP_200_OK)
+    
+class UserPrimaryAddressAPI(APIView):
+    def post(self, request):
+        """
+        API endpoint to fetch a user's primary address by user id.
+
+        Args:
+            request (Request): Incoming HTTP request.
+
+        Returns:
+            Response: JSON response containing user details or error message.
+        """
+        user = extractUserObject(request)
+        primary_add = user.primaryAddress()
+
+        # required fields
+        serialized_data = {
+            "firstName": user.first_name,
+            "lastName": user.last_name,
+        }
+
+        # Conditionally add address fields if primary_add is not None
+        if primary_add:
+            serialized_data.update({
+                "street_address": primary_add.street_address,
+                "city": primary_add.city,
+                "province": primary_add.province,
+                "zip_code": primary_add.zip_code,
+                "address_type": primary_add.address_type,
+            })
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
+    
     
 class UserAchievementAPI(APIView):
     def post(self, request):

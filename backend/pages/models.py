@@ -61,6 +61,9 @@ class User(models.Model):
 		user_badges = self.badges.all()
 		# print(user_badges)
 		return user_badges
+	
+	def primaryAddress(self):
+		return self.addresses.filter(primary_address=True).first()
 
 
 	def add_address(self, street_address, city, province, zip_code, primary_address=False, address_type=None):
