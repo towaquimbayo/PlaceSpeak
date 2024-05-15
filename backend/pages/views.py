@@ -19,7 +19,7 @@ class HelloWorldView(APIView):
 class UserAPI(APIView):
     def post(self, request):
         """
-        API endpoint to fetch a user's details by email address.
+        API endpoint to fetch a user's details by user id.
 
         Args:
             request (Request): Incoming HTTP request.
@@ -30,18 +30,18 @@ class UserAPI(APIView):
 
         # Get email from the request body (adjust key name if needed)
         try:
-            user_email = request.data['email']
+            user_id = request.data['user_id']
         except KeyError:
             return Response(
-                {"error": "Missing 'email' field in request body."},
+                {"error": "Missing 'user_id' field in request body."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            user = User.objects.get(email=user_email)
+            user = User.objects.get(user_id=user_id)
         except User.DoesNotExist:
             return Response(
-                {"error": "User with email '{}' not found.".format(user_email)},
+                {"error": "User with user_id '{}' not found.".format(user_id)},
                 status=status.HTTP_404_NOT_FOUND,
             )
       
@@ -164,24 +164,25 @@ class UpdateUserAPI(APIView):
         try:
             # Validate request data as a dictionary
             user_data = request.data
+            print(user_data)
 
         except (TypeError, ValueError):
             return Response({'error': 'Request body must be valid JSON.'})
 
         # Check for required fields
-        required_fields = ['firstName', 'lastName', 'email', 'phone', 'about', 'linkedIn', 'twitter', 'facebook']
+        required_fields = ['user_id', 'firstName', 'lastName', 'email', 'phone', 'about', 'linkedIn', 'twitter', 'facebook']
         missing_fields = [field for field in required_fields if field not in user_data]
         if missing_fields:
             return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
 
-        # Hardcoded user ID for demonstration (replace with appropriate logic)
-        user_id = 1
+        # # Hardcoded user ID for demonstration (replace with appropriate logic)
+        # user_id = 1
 
         try:
-            user = User.objects.get(pk=user_id)  # Use primary key (pk) for retrieval
+            user = User.objects.get(pk=user_data['user_id'])  # Use primary key (pk) for retrieval
         except User.DoesNotExist:
             return Response(
-                {'error': f"User with ID {user_id} does not exist."},
+                {'error': f"User with ID {user_data['user_id']} does not exist."},
                 status=status.HTTP_404_NOT_FOUND,
             )
 

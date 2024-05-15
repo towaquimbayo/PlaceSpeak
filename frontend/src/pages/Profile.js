@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Button";
 import DashboardHeader from "../components/DashboardHeader";
 import { Field, Password, Textarea } from "../components/Field";
@@ -19,6 +20,8 @@ export default function Profile() {
     twitter: "",
     facebook: "",
   });
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const user_id = useSelector((state) => state.user.user_id);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
@@ -27,11 +30,11 @@ export default function Profile() {
     const fetchUser = async () => {
       try {
         const endpoint = config.url;
-        const hardcoded_email = "colleen@gmail.com";
+        // const hardcoded_email = "colleen@gmail.com";
         const response = await fetch(`${endpoint}/api/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: `${hardcoded_email}` }),
+          body: JSON.stringify({ user_id: `${user_id}` }),
         });
         if (!response.ok) {
           throw new Error(
@@ -59,10 +62,17 @@ export default function Profile() {
 
     try {
       const endpoint = config.url;
+
+      // Create a copy of the form object
+      const updatedForm = { ...form };
+
+      // Add the user_id field to the copied form
+      updatedForm.user_id = user_id;
+
       const response = await fetch(`${endpoint}/api/update_user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(updatedForm),
       });
 
       if (!response.ok) {
