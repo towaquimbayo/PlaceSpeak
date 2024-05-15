@@ -1,6 +1,7 @@
 import datetime
 from django.shortcuts import render
 
+from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -349,6 +350,19 @@ class UpdateAddressVerificationStatus(APIView):
             return Response({'message': 'Address verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified address status not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = '__all__'  # Include all fields (or specify specific fields)
+        
+class AllBadgesAPI(APIView):
+    def get(self, request):
+        badges = Badge.objects.all()
+        serializer = BadgeSerializer(badges, many=True)  # Pass 'many=True' for multiple instances
+        return Response(serializer.data)
+
         
 
 class PopulateBadges(APIView):

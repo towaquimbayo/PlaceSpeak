@@ -15,8 +15,10 @@ export default function Achievements() {
     quest_points: 0,
     days_active: 0,
   });
+  const [badges, setBadges] = useState({
+    badges: [],
+  });
   const totalAchievements = 180;
-
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const user_id = useSelector((state) => state.user.user_id);
@@ -38,7 +40,7 @@ export default function Achievements() {
         }
 
         const data = await response.json();
-        console.log("Data:", data);
+        // console.log("Data:", data);
         setUser({
           num_achievements: data.num_achievements,
           num_badges: data.num_badges,
@@ -51,6 +53,23 @@ export default function Achievements() {
       }
     };
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchBadges = async () => {
+      try {
+        const endpoint = config.url;
+        const response = await fetch(`${endpoint}/api/badges`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setBadges({ badges: data });
+      } catch (error) {
+        console.error("Error fetching badges:", error);
+      }
+    };
+    fetchBadges();
   }, []);
 
   function Badge({ imgSrc, imgAlt, title, description, locked }) {
@@ -116,54 +135,28 @@ export default function Achievements() {
             </div>
           </div>
           <div className="badgesList">
-            <div className="badgeRow">
-              <Badge
-                imgSrc="./img/topic.svg"
-                imgAlt="Welcome Badge"
-                title="Welcome Badge"
-                description="Awarded to those who have recently joined Placespeak."
-                locked={false}
-              />
-              <Badge
-                imgSrc="./img/id.svg"
-                imgAlt="Verification Badge"
-                title="Verification Badge"
-                description="This badge signifies that a user's identity and address have been verified, enhancing the trustworthiness and authenticity of their contributions."
-                locked={false}
-              />
-            </div>
-            <div className="badgeRow">
-              <Badge
-                imgSrc="./img/connector.svg"
-                imgAlt="Invitation Badge"
-                title="Invitation Badge"
-                description="Awarded for inviting their first neighbor to PlaceSpeak to participate in a poll or discussion."
-                locked={true}
-              />
-              <Badge
-                imgSrc="./img/lock.svg"
-                imgAlt="Long-Time User Badge"
-                title="Long-Time User Badge"
-                description="Long-time users consistently participating over the years. Their stories and contributions become legendary within the community."
-                locked={false}
-              />
-            </div>
-            <div className="badgeRow">
-              <Badge
-                imgSrc="./img/comment.svg"
-                imgAlt="Comment Badge"
-                title="Comment Badge"
-                description="Awarded after their first insightful comment or question. This badge acknowledges the initiation into the realm of discussions."
-                locked={true}
-              />
-              <Badge
-                imgSrc="./img/debate.svg"
-                imgAlt="Participating Poll Badge"
-                title="Participating Poll Badge"
-                description="Celebrating your inaugural participation! This badge acknowledges your initial step in voicing your opinion and contributing to the community's collective decision-making."
-                locked={true}
-              />
-            </div>
+            {badges.badges
+              .reduce((rows, badge, index) => {
+                if (index % 2 === 0) {
+                  rows.push([]);
+                }
+                rows[rows.length - 1].push(
+                  <Badge
+                    key={badge.badge_id}
+                    imgSrc={`./img/badges/${badge.name}.svg`}
+                    imgAlt={badge.name}
+                    title={badge.name}
+                    description={badge.description}
+                    locked={true}
+                  />
+                );
+                return rows;
+              }, [])
+              .map((row, index) => (
+                <div key={index} className="badgeRow">
+                  {row}
+                </div>
+              ))}
           </div>
         </div>
       </div>

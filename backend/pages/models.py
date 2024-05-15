@@ -58,7 +58,7 @@ class User(models.Model):
 		ub = User_Badge.objects.create(user=self, badge=b, granted_date=timezone.now())
 
 	def getAllBadges(self):
-		user_badges = self.badges.all()
+		user_badges = list(self.badges.all())
 		# print(user_badges)
 		return user_badges
 	
@@ -143,19 +143,21 @@ class Address(models.Model):
 		return f"{self.street_address}, {self.city}, {self.province}"
 
 class Badge(models.Model):
-    badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key
-    name = models.CharField(max_length=255)
-    img_link = models.CharField(max_length=255)
-    rarity = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    points = models.IntegerField()
-    category = models.CharField(max_length=255)
+		badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key
+		name = models.CharField(max_length=255)
+		img_link = models.CharField(max_length=255)
+		rarity = models.CharField(max_length=255)
+		description = models.CharField(max_length=255)
+		points = models.IntegerField()
+		category = models.CharField(max_length=255)
 
-    # Many-to-Many relationship with Users through User_Badge bridge table
-    users = models.ManyToManyField(User, through='User_Badge')
+		# Many-to-Many relationship with Users through User_Badge bridge table
+		users = models.ManyToManyField(User, through='User_Badge')
 
-    def __str__(self) -> str:
-      return f"{self.name}, {self.points}, {self.category}"
+		def __str__(self) -> str:
+			return f"{self.name}, {self.points}, {self.category}"
+		
+
 
 class User_Badge(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
