@@ -43,13 +43,17 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        dispatch(setUser(true, data.user_id));
+        const { user_id, firstName, lastName, city, province } = data;
+        dispatch(setUser(true, user_id, firstName, lastName, city, province));
         setLoading(false);
         navigate("/");
       } else {
         const data = await response.json();
         console.error("Login failed:", data);
-        setErrMsg(data.message || "An unexpected error occurred. Please try again later.");
+        setErrMsg(
+          data.message ||
+            "An unexpected error occurred. Please try again later."
+        );
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -70,17 +74,20 @@ export default function Login() {
             <div className="auth-info-head">
               <h1>Real people, real places, real change.</h1>
               <p>
-                PlaceSpeak empowers you to shape your community! Connect with your neighbours, share your
-                voice, and directly influence decisions that impact your daily life.
+                PlaceSpeak empowers you to shape your community! Connect with
+                your neighbours, share your voice, and directly influence
+                decisions that impact your daily life.
               </p>
             </div>
             <div className="review">
               <p>
                 <q>
                   <i>
-                    I have used PlaceSpeak as part of several public and stakeholder consulatations
-                    in BC and the Yukon beginning in 2016; as the only purpose-built Canadian public
-                    consulatation framework it has proven its value and effectiveness.
+                    I have used PlaceSpeak as part of several public and
+                    stakeholder consulatations in BC and the Yukon beginning in
+                    2016; as the only purpose-built Canadian public
+                    consulatation framework it has proven its value and
+                    effectiveness.
                   </i>
                 </q>
               </p>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AlertMessage from "../components/AlertMessage";
 import DashboardHeader from "../components/DashboardHeader";
 import Layout from "../components/Layout";
@@ -8,6 +8,8 @@ import "../css/achievements.css";
 import { config } from "../config";
 
 export default function Achievements() {
+  const user_id = useSelector((state) => state.user.user_id);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [user, setUser] = useState({
     num_achievements: 0,
@@ -20,11 +22,8 @@ export default function Achievements() {
   });
   const totalAchievements = 180;
 
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const user_id = useSelector((state) => state.user.user_id);
-
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchAchievements = async () => {
       try {
         const endpoint = config.url;
         const response = await fetch(`${endpoint}/api/users/achievement`, {
@@ -40,20 +39,15 @@ export default function Achievements() {
         }
 
         const data = await response.json();
-        // console.log("Data:", data);
-        setUser({
-          num_achievements: data.num_achievements,
-          num_badges: data.num_badges,
-          quest_points: data.quest_points,
-          days_active: data.days_active,
-        });
+        console.log("Data:", data);
+        setUser(data);
       } catch (error) {
         console.error("Error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
       }
     };
-    fetchUser();
-  }, []);
+    fetchAchievements();
+  }, [user_id]);
 
   useEffect(() => {
     const fetchBadges = async () => {

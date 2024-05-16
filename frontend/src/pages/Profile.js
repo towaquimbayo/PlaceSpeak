@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Button from "../components/Button";
 import DashboardHeader from "../components/DashboardHeader";
 import { Field, Password, Textarea } from "../components/Field";
@@ -9,7 +9,10 @@ import AlertMessage from "../components/AlertMessage";
 import { config } from "../config";
 
 export default function Profile() {
+  const user_id = useSelector((state) => state.user.user_id);
+
   const [form, setForm] = useState({
+    userId: user_id,
     firstName: "",
     lastName: "",
     email: "",
@@ -20,17 +23,15 @@ export default function Profile() {
     twitter: "",
     facebook: "",
   });
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const user_id = useSelector((state) => state.user.user_id);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const endpoint = config.url;
-        // const hardcoded_email = "colleen@gmail.com";
         const response = await fetch(`${endpoint}/api/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -44,7 +45,18 @@ export default function Profile() {
 
         const data = await response.json();
         console.log("Data:", data);
-        setForm(data);
+        setForm({
+          userId: user_id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          password: "",
+          about: data.about,
+          linkedIn: data.linkedIn,
+          twitter: data.twitter,
+          facebook: data.facebook,
+        });
       } catch (error) {
         console.error("Error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -53,33 +65,26 @@ export default function Profile() {
       }
     };
     fetchUser();
-  }, []);
+  }, [user_id]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
 
     try {
       const endpoint = config.url;
-
-      // Create a copy of the form object
-      const updatedForm = { ...form };
-
-      // Add the user_id field to the copied form
-      updatedForm.user_id = user_id;
-
       const response = await fetch(`${endpoint}/api/update_user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedForm),
+        body: JSON.stringify(form),
       });
 
       if (!response.ok) {
         throw new Error(`Error updating user details: ${response.statusText}`);
       }
-
-      alert("User details updated successfully!");
+      setSuccessMsg("Your profile has been updated successfully.");
     } catch (error) {
       console.error("Error:", error);
       setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -89,6 +94,8 @@ export default function Profile() {
   }
 
   function handleOnChange(e) {
+    setSuccessMsg("");
+    setErrorMsg("");
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
@@ -198,6 +205,7 @@ export default function Profile() {
             badge!
           </p>
           {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
+          {successMsg && <AlertMessage type="success" msg={successMsg} />}
           {fetching ? <p id="loadingText">Loading...</p> : accountForm()}
         </div>
       </div>

@@ -3,21 +3,38 @@ import { MdVerified } from "react-icons/md";
 import { FaLinkedin } from "react-icons/fa";
 import { ImFacebook2 } from "react-icons/im";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function DashboardHeader ({ name, city, province }) {
+export default function DashboardHeader() {
+  const navigate = useNavigate();
+  const { isLoggedIn, firstName, lastName, city, province } = useSelector(
+    (state) => state.user
+  );
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
+
   return (
     <div className="dashboardHeaderContainer">
       <div className="dashboardInfo">
         <div className="dashboardDescription">
-          <img className="profileImage" src="./img/profile-pic.jpg" alt="Profile" />
+          <img
+            className="profileImage"
+            src="./img/profile-pic.jpg"
+            alt="Profile"
+          />
           <div className="dashboardNameContainer">
             <div className="dashboardName">
-              <h1>{name}</h1>
+              <h1>{`${firstName} ${lastName}`}</h1>
               <MdVerified />
             </div>
-            {/* Conditionally render city and province */}
-            {(city !== null && city !== undefined) && (province !== null && province !== undefined) && (
+            {city && province ? (
               <p>{`${city}, ${province}`}</p>
+            ) : (
+              <p>You haven't set your location yet.</p>
             )}
           </div>
         </div>

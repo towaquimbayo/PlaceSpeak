@@ -114,10 +114,15 @@ class LoginUserAPI(APIView):
         # Check if the provided password matches the user's password
         if user_data['password'] != user.password:
             return Response({'error': 'Incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
-
+        
+        primary_add = user.primaryAddress()
         return Response({
             'message': 'User authenticated successfully.', 
-            'user_id': user.user_id
+            'user_id': user.user_id,
+            'firstName': user.first_name,
+            'lastName': user.last_name,
+            'city': primary_add.city if primary_add else "",
+            'province': primary_add.province if primary_add else "",
         }, status=status.HTTP_200_OK)
     
 class RegisterUserAPI(APIView):
