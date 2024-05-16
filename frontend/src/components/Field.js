@@ -10,10 +10,14 @@ export function Field({
   value,
   onChange = () => {},
   halfWidth = false,
+  optional = false,
 }) {
   return (
     <div className={`formGroup ${halfWidth ? "half" : ""}`}>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name}>
+        {label}
+        {optional && <span>{"(optional)"}</span>}
+      </label>
       <input
         type={type}
         name={name}

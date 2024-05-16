@@ -29,6 +29,11 @@
   color: black;
 }
 
+.accountForm .formGroup label span {
+  color: #969696;
+  padding-left: 0.25rem;
+}
+
 .accountForm .formGroup input,
 .accountForm .formGroup textarea {
   font-size: 0.9rem;
