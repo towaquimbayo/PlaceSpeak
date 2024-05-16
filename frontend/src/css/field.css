@@ -59,9 +59,9 @@
 
 .accountForm .formGroup .passwordField svg {
   position: absolute;
-  margin-left: -2.5rem;
-  margin-top: 6px;
-  width: 1.5rem;
+  margin-left: -2.25rem;
+  margin-top: 8px;
+  width: 1.25rem;
   height: auto;
   cursor: pointer;
 }

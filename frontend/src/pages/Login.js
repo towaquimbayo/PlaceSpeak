@@ -5,6 +5,7 @@ import { setUser } from "../redux/actions/UserAction";
 import Layout from "../components/Layout";
 import Button from "../components/Button";
 import AlertMessage from "../components/AlertMessage";
+import { Field, Password } from "../components/Field";
 import { config } from "../config";
 import "../css/auth.css";
 
@@ -51,8 +52,7 @@ export default function Login() {
         const data = await response.json();
         console.error("Login failed:", data);
         setErrMsg(
-          data.message ||
-            "An unexpected error occurred. Please try again later."
+          data.error || "An unexpected error occurred. Please try again later."
         );
       }
     } catch (error) {
@@ -110,26 +110,26 @@ export default function Login() {
         <div className="auth-form">
           <h1>Welcome Back!</h1>
           {errMsg && <AlertMessage msg={errMsg} type="error" />}
-          <form onSubmit={handleLogin}>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
+          <form className="accountForm" onSubmit={handleLogin}>
+            <div className="formRow">
+              <Field
+                label="Email"
                 type="email"
-                id="email"
                 name="email"
-                placeholder="example@email.com"
+                placeholder="johndoe@gmail.com"
+                value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrMsg("");
                 }}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
+            <div className="formRow">
+              <Password
+                label="Password"
                 name="password"
+                placeholder="********"
+                value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setErrMsg("");
@@ -142,7 +142,7 @@ export default function Login() {
               loading={loading}
               text="Login"
               full
-              customStyle={{ marginTop: "2rem" }}
+              customStyle={{ marginTop: "1rem" }}
             />
             <p>
               Don't have an account? <Link to="/register">Sign Up</Link>

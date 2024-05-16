@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Button from "../components/Button";
 import AlertMessage from "../components/AlertMessage";
+import { Field, Password } from "../components/Field";
 import { config } from "../config";
 import "../css/auth.css";
 
@@ -16,6 +17,8 @@ export default function Register() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
@@ -101,53 +104,48 @@ export default function Register() {
         <div className="auth-form">
           <h1>Get Started</h1>
           {errMsg && <AlertMessage msg={errMsg} type="error" />}
-          <form onSubmit={handleSignup}>
-            <div className="form-group">
-              <label htmlFor="fname">First Name</label>
-              <input
-                type="text"
-                id="fname"
-                name="fname"
+          <form className="accountForm" onSubmit={handleSignup}>
+            <div className="formRow">
+              <Field
+                label="First Name"
+                name="firstName"
                 placeholder="John"
+                value={firstName}
                 onChange={(e) => {
                   setFirstName(e.target.value);
                   setErrMsg("");
                 }}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="lname">Last Name</label>
-              <input
-                type="text"
-                id="lname"
-                name="lname"
+              <Field
+                label="Last Name"
+                name="lastName"
                 placeholder="Doe"
+                value={lastName}
                 onChange={(e) => {
                   setLastName(e.target.value);
                   setErrMsg("");
                 }}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
+            <div className="formRow">
+              <Field
+                label="Email"
                 type="email"
-                id="email"
                 name="email"
-                placeholder="example@email.com"
+                placeholder="johndoe@gmail.com"
+                value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrMsg("");
                 }}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
+            <div className="formRow">
+              <Password
+                label="Password"
                 name="password"
                 placeholder="********"
+                value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setErrMsg("");
@@ -160,7 +158,7 @@ export default function Register() {
               loading={loading}
               text="Sign Up"
               full
-              customStyle={{ marginTop: "2rem" }}
+              customStyle={{ marginTop: "1rem" }}
             />
             <p>
               Already have an account? <Link to="/login">Log In</Link>
