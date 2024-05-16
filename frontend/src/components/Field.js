@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Select from "react-select";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../css/field.css";
 
@@ -76,6 +77,59 @@ export function Textarea({
         value={value}
         onChange={onChange}
       ></textarea>
+    </div>
+  );
+}
+
+export function Dropdown({
+  label,
+  name,
+  value,
+  options,
+  onChange = () => {},
+  halfWidth = false,
+  optional = false,
+}) {
+  const selectStyles = {
+    control: (styles) => ({
+      ...styles,
+      fontSize: "0.9rem",
+      fontWeight: "400",
+      lineHeight: "1.25rem",
+      paddingLeft: "0.375rem",
+      border: "1px solid #e0e0e0",
+      borderRadius: "0.25rem",
+      transition: "border-color 0.3s ease-in-out",
+      outline: "none",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#4990e2",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => {
+      return {
+        ...styles,
+        fontSize: "0.9rem",
+        fontWeight: "400",
+        lineHeight: "1.5rem",
+        backgroundColor: isSelected ? "#4990e2" : isFocused ? "#e5f1ff" : "transparent",
+        cursor: "pointer",
+      };
+    },
+  };
+  return (
+    <div className={`formGroup ${halfWidth ? "half" : ""}`}>
+      <label htmlFor={name}>
+        {label}
+        {optional && <span>{"(optional)"}</span>}
+      </label>
+      <Select
+        options={options}
+        styles={selectStyles}
+        name={name}
+        value={value}
+        onChange={onChange}
+      />
     </div>
   );
 }

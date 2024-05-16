@@ -178,6 +178,17 @@
   margin-bottom: 1.5rem;
 }
 
+.dashboardContainer .dashboardContent .flexHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.dashboardContainer .dashboardContent .flexHeader h2 {
+  margin-bottom: 0;
+}
+
 @media screen and (max-width: 992px) {
   .dashboardHeaderContainer {
     padding-top: 10rem;
