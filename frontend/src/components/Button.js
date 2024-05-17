@@ -9,8 +9,16 @@ export default function Button({
   children,
   full = false,
   disabled = false,
+  outline=false,
   customStyle,
 }) {
+  const classNames = [
+    "btnPrimary",
+    full ? "full" : "",
+    disabled ? "disabled" : "",
+    outline ? "outline" : "fill",
+  ].filter(Boolean).join(" ");
+
   return (
     <button
       type={type}
@@ -22,9 +30,7 @@ export default function Button({
         }
         onClick(e);
       }}
-      className={
-        `btnPrimary` + (full ? " full" : "") + (disabled ? " disabled" : "")
-      }
+      className={classNames}
       style={{ ...customStyle }}
     >
       {loading ? (

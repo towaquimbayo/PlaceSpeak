@@ -189,6 +189,11 @@
   margin-bottom: 0;
 }
 
+.dashboardContainer .dashboardContent form .formBtnGroup {
+  display: flex;
+  gap: 1rem;
+}
+
 @media screen and (max-width: 992px) {
   .dashboardHeaderContainer {
     padding-top: 10rem;

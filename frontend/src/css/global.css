@@ -153,9 +153,7 @@ input.searchBar {
   font-size: 1rem;
   font-weight: 400;
   padding: 10px 12px;
-  color: white;
-  background-color: var(--primaryColor);
-  border: solid 2px var(--primaryColor);
+  border: solid 1px var(--primaryColor);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -169,6 +167,16 @@ input.searchBar {
   transition: all ease-in-out 0.3s;
 }
 
+.btnPrimary.fill {
+  color: white;
+  background-color: var(--primaryColor);
+}
+
+.btnPrimary.outline {
+  color: var(--primaryColor);
+  background-color: transparent;
+}
+
 .btnPrimary.full {
   width: 100%;
 }
@@ -179,8 +187,13 @@ input.searchBar {
   cursor: not-allowed;
 }
 
-.btnPrimary:hover {
+.btnPrimary.fill:hover {
   opacity: 0.8;
+}
+
+.btnPrimary.outline:hover {
+  background-color: var(--primaryColor);
+  color: white;
 }
 
 .buttonSpinner {

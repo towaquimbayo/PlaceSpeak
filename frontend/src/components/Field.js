@@ -84,7 +84,7 @@ export function Textarea({
 export function Dropdown({
   label,
   name,
-  value,
+  value = "",
   options,
   onChange = () => {},
   halfWidth = false,
@@ -112,7 +112,11 @@ export function Dropdown({
         fontSize: "0.9rem",
         fontWeight: "400",
         lineHeight: "1.5rem",
-        backgroundColor: isSelected ? "#4990e2" : isFocused ? "#e5f1ff" : "transparent",
+        backgroundColor: isSelected
+          ? "#4990e2"
+          : isFocused
+          ? "#e5f1ff"
+          : "transparent",
         cursor: "pointer",
       };
     },
