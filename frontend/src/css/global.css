@@ -25,7 +25,10 @@ body {
   background: #f8f8f8;
 }
 
-input {
+input,
+button,
+textarea,
+select {
   font-family: "Inter", sans-serif;
   outline: none;
 }
@@ -75,6 +78,11 @@ input.searchBar {
   gap: 2.5rem;
 }
 
+.hamburgerMenu {
+  display: none;
+  cursor: pointer;
+}
+
 .navLink {
   font-size: 1rem;
   font-weight: 400;
@@ -94,6 +102,98 @@ input.searchBar {
 
 .navLink:hover {
   opacity: 0.7;
+}
+
+.mobileNavContainer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80%;
+  height: 100vh;
+  background-color: white;
+  padding: 2rem 2.5rem;
+  box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
+  z-index: 99;
+  transition: all 0.6s ease-in-out;
+  -webkit-transition: all 0.6s ease-in-out;
+  -moz-transition: all 0.6s ease-in-out;
+  -ms-transition: all 0.6s ease-in-out;
+  -o-transition: all 0.6s ease-in-out;
+  transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+  -moz-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  -o-transform: translateX(-100%);
+}
+
+.mobileNavContainer.open {
+  transform: translateX(0);
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -ms-transform: translateX(0);
+  -o-transform: translateX(0);
+}
+
+.mobileNavContainer .mobileNavHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.mobileNavContainer .mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-top: 0;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup h3 {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #858585;
+  margin-bottom: 0.5rem;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup .sideNavLink {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: black;
+  gap: 0.75rem;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  -webkit-transition: all ease-in-out 0.3s;
+  -moz-transition: all ease-in-out 0.3s;
+  -ms-transition: all ease-in-out 0.3s;
+  -o-transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup .sideNavLink svg {
+  width: 1rem;
+  height: auto;
+  fill: black;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup .sideNavLink.active {
+  color: var(--primaryColor);
+  background: rgba(73, 144, 226, 0.2);
+  font-weight: 600;
+}
+
+.mobileNavContainer .mobileNavLinks .navLinkGroup .sideNavLink.active svg {
+  fill: var(--primaryColor);
 }
 
 .alertMessageContainer {
@@ -289,14 +389,28 @@ input.searchBar {
   input.searchBar {
     font-size: 0.8rem;
   }
-  .navLink {
-    font-size: 0.8rem;
-  }
   #wrapper {
     padding: 0 2rem;
   }
   .btnPrimary {
     font-size: 0.9rem;
+  }
+  .navLinksContainer .navLink {
+    display: none;
+  }
+  .mobileNavContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .hamburgerMenu {
+    display: block;
+  }
+  .navLink {
+    font-size: 0.9rem;
+  }
+  .mobileNavContainer .navLogo img {
+    width: 180px;
+    height: 100%;
   }
 }
 
@@ -304,7 +418,11 @@ input.searchBar {
   input.searchBar {
     display: none;
   }
-  .navLinksContainer {
-    display: none;
+  .mobileNavContainer {
+    width: 90%;
+    padding: 2rem 1.5rem;
+  }
+  .mobileNavContainer .navLogo img {
+    width: 150px;
   }
 }
