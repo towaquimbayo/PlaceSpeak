@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import User, Badge, User_Badge, Comment
+from .models import User, Badge, User_Badge, Comment, Post
 from django.utils import timezone
 
 # Create your views here.
