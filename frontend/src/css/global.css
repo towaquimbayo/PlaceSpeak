@@ -343,7 +343,7 @@ input.searchBar {
   max-width: 1600px;
   margin: 15vh auto 3rem;
   padding: 0 7rem;
-  min-height: 85vh;
+  min-height: 79vh;
 }
 
 @media screen and (max-width: 1200px) {
