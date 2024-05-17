@@ -722,3 +722,33 @@ class GetAllPosts(APIView):
 
         return Response(serialized_data, status=status.HTTP_200_OK)
     
+
+class GetPostsByUser(APIView):
+    def get(self, request, user_id):
+        """
+        API endpoint to fetch all posts by a specific user.
+
+        Args:
+            request (Request): Incoming HTTP request.
+            user_id (int): The ID of the user.
+
+        Returns:
+            Response: JSON response containing all posts by the user or error message.
+        """
+
+        posts = Post.objects.filter(user_id=user_id)
+        serialized_data = [
+            {
+                "post_id": post.post_id,
+                "title": post.title,
+                "content": post.content,
+                "upvotes": post.upvotes,
+                "downvotes": post.downvotes,
+                "created_date": post.created_date,
+                "user_id": post.user_id,
+            }
+            for post in posts
+        ]
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
+    
