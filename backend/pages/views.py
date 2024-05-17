@@ -694,3 +694,31 @@ class AddPost(APIView):
         return Response({'message': 'Post added successfully.'}, status=status.HTTP_201_CREATED)
     
 
+class GetAllPosts(APIView):
+    def get(self, request):
+        """
+        API endpoint to fetch all posts.
+
+        Args:
+            request (Request): Incoming HTTP request.
+
+        Returns:
+            Response: JSON response containing all posts or error message.
+        """
+
+        posts = Post.objects.all()
+        serialized_data = [
+            {
+                "post_id": post.post_id,
+                "title": post.title,
+                "content": post.content,
+                "upvotes": post.upvotes,
+                "downvotes": post.downvotes,
+                "created_date": post.created_date,
+                "user_id": post.user_id,
+            }
+            for post in posts
+        ]
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
+    
