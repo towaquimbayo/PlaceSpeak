@@ -818,3 +818,30 @@ class AddComment(APIView):
         return Response({'message': 'Comment added successfully.'}, status=status.HTTP_201_CREATED)
     
 
+class GetCommentsByPost(APIView):
+    def get(self, request, post_id):
+        """
+        API endpoint to fetch all comments for a specific post.
+
+        Args:
+            request (Request): Incoming HTTP request.
+            post_id (int): The ID of the post.
+
+        Returns:
+            Response: JSON response containing all comments for the post or error message.
+        """
+
+        comments = Comment.objects.filter(post_id=post_id)
+        serialized_data = [
+            {
+                "comment_id": comment.comment_id,
+                "content": comment.content,
+                "upvotes": comment.upvotes,
+                "downvotes": comment.downvotes,
+                "created_date": comment.created_date,
+                "user_id": comment.user_id,
+            }
+            for comment in comments
+        ]
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
