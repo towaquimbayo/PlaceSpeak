@@ -108,13 +108,8 @@ export default function Places() {
     fetchPlaces();
   }, [user_id]);
 
-  useEffect(() => {
-    console.log("Form data:", form);
-  }, [form]);
-
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("Form data:", form);
     setErrorMsg("");
     setSuccessMsg("");
 
@@ -175,7 +170,6 @@ export default function Places() {
               options={placeNameOptions}
               onChange={(option) => {
                 setForm(places.find((place) => place.id === option.value));
-                console.log("Selected place:", option);
               }}
             />
           )}
