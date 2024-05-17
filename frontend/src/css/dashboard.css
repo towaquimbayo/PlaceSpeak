@@ -250,8 +250,8 @@
     padding: 0.5rem 1rem;
   }
   .dashboardHeaderContainer .dashboardInfo .profileImage {
-    width: 6rem;
-    height: 6rem;
+    width: 5rem;
+    height: 5rem;
     margin-top: -2rem;
   }
   .dashboardHeaderContainer .dashboardInfo .dashboardNameContainer h1 {
@@ -267,11 +267,8 @@
     svg {
     width: 1.25rem;
   }
-  .dashboardHeaderContainer .dashboardInfo .dashboardSocials button {
+  .dashboardHeaderContainer .dashboardInfo .dashboardSocials {
     display: none;
-  }
-  .dashboardHeaderContainer .dashboardInfo .dashboardSocials .socialIcons svg {
-    height: 1.5rem;
   }
   .dashboardContainer .sideNav {
     display: none;
