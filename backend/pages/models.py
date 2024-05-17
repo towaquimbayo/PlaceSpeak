@@ -42,6 +42,10 @@ class User(models.Model):
 	# Many-to-Many relationship with Badges through User_Badge bridge table
 	badges = models.ManyToManyField('Badge', through='User_Badge', related_name='user_badges')
 
+	# One user can have multiple posts, each post can have only one user
+	posts_list = models.ManyToManyField('Post', related_name='users')
+	comments_list = models.ManyToManyField('Comment', related_name='users')
+
 	def isFullyVerified(self):
 		return self.verified_address and self.verified_email and self.verified_phone
 	
@@ -107,6 +111,22 @@ class Comment(models.Model):
 
   # Foreign key to User model
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+  post_id = models.IntegerField(default=0)
+
+class Post(models.Model):
+	post_id = models.AutoField(primary_key=True)
+	title = models.CharField(max_length=255)
+	content = models.TextField()
+	upvotes = models.IntegerField(default=0)
+	downvotes = models.IntegerField(default=0)
+	created_date = models.DateTimeField(auto_now_add=True)
+
+	# Foreign key to User model
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+
+	# One post can have multiple comments, each comment can have only one post
+	comments = models.ManyToManyField(Comment, related_name='posts')
+
 
 class Achievement(models.Model):
 	# user = models.OneToOneField(
