@@ -752,3 +752,32 @@ class GetPostsByUser(APIView):
 
         return Response(serialized_data, status=status.HTTP_200_OK)
     
+
+class GetCommentsByUser(APIView):
+    def get(self, request, user_id):
+        """
+        API endpoint to fetch all comments by a specific user.
+
+        Args:
+            request (Request): Incoming HTTP request.
+            user_id (int): The ID of the user.
+
+        Returns:
+            Response: JSON response containing all comments by the user or error message.
+        """
+
+        comments = Comment.objects.filter(user_id=user_id)
+        serialized_data = [
+            {
+                "comment_id": comment.comment_id,
+                "content": comment.content,
+                "upvotes": comment.upvotes,
+                "downvotes": comment.downvotes,
+                "created_date": comment.created_date,
+                "user_id": comment.user_id,
+            }
+            for comment in comments
+        ]
+
+        return Response(serialized_data, status=status.HTTP_200_OK)
+    
