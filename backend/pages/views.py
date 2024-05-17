@@ -781,3 +781,40 @@ class GetCommentsByUser(APIView):
 
         return Response(serialized_data, status=status.HTTP_200_OK)
     
+
+class AddComment(APIView):
+    def post(self, request):
+        """
+        API endpoint to add a new comment to a post.
+
+        Args:
+            request (Request): Incoming HTTP request with user_id, post_id, and content in JSON format.
+
+        Returns:
+            Response: JSON response with success message or error details.
+        """
+            
+        try:
+            # Validate request data as a dictionary
+            comment_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'post_id', 'content']
+        missing_fields = [field for field in required_fields if field not in comment_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Create a new comment instance with the provided data
+        new_comment = Comment(
+            user_id=comment_data['user_id'],
+            post_id=comment_data['post_id'],
+            content=comment_data['content'],
+        )
+
+        new_comment.save()
+        return Response({'message': 'Comment added successfully.'}, status=status.HTTP_201_CREATED)
+    
+
