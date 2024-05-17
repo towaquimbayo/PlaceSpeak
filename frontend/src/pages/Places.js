@@ -322,7 +322,7 @@ export default function Places() {
           {successMsg && <AlertMessage type="success" msg={successMsg} />}
           {fetching ? (
             <p id="loadingText">Loading...</p>
-          ) : places && places.length > 0 ? (
+          ) : (places && places.length > 0) || isNewPlace ? (
             placeForm()
           ) : (
             <p>
