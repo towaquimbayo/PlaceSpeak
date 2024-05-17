@@ -374,7 +374,7 @@ input.searchBar {
   }
   #wrapper {
     padding: 0 3rem;
-    margin: 10vh auto 0;
+    margin: 10vh auto 3rem;
     min-height: 90vh;
   }
 }
