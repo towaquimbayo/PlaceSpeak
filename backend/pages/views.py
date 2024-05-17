@@ -655,3 +655,42 @@ class VerifyNewVoiceBadge(APIView):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AddPost(APIView):
+    def post(self, request):
+        """
+        API endpoint to add a new post for a user.
+
+        Args:
+            request (Request): Incoming HTTP request containing user_id, title, and content in JSON format.
+
+        Returns:
+            Response: JSON response with success message or error details.
+        """
+
+        try:
+            # Validate request data as a dictionary
+            post_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'title', 'content']
+        missing_fields = [field for field in required_fields if field not in post_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Create a new post instance with the provided data
+        new_post = Post(
+            user_id=post_data['user_id'],
+            title=post_data['title'],
+            content=post_data['content'],
+        )
+
+        new_post.save()  # Save the new post to the database
+
+        return Response({'message': 'Post added successfully.'}, status=status.HTTP_201_CREATED)
+    
+
