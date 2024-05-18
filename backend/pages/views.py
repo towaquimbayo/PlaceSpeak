@@ -367,6 +367,20 @@ class AllBadgesAPI(APIView):
         badges = Badge.objects.all()
         serializer = BadgeSerializer(badges, many=True)  # Pass 'many=True' for multiple instances
         return Response(serializer.data)
+    
+class UserBadgesAPI(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id) # use pk to get the user information
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        all_user_badges = user.getAllBadges()
+
+        serializer = BadgeSerializer(all_user_badges, many=True)
+
+        return Response(serializer.data)
+
 
         
 
