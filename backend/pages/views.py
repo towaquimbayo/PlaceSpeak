@@ -160,6 +160,8 @@ class RegisterUserAPI(APIView):
 
         new_user.save()  # Save the new user to the database
 
+        new_user.awardBadge("Welcome Badge") # give the user a welcome badge
+
         return Response({'message': 'User registered successfully.'}, status=status.HTTP_201_CREATED)
     
 class UpdateUserAPI(APIView):
