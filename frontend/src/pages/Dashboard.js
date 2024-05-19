@@ -118,6 +118,21 @@ export default function Dashboard() {
     }
   };
 
+  const UserInfo = ({ user }) => {
+    return (
+      <div className="userInfo">
+        <div className="userHead">
+          <p className="name">{user.firstName} {user.lastName}</p>
+          <p className="about">{user.about}</p>
+        </div>
+        <div className="userContact">
+          <p className="contact email">{user.email}</p>
+          <p className="contact phone">{user.phone}</p>
+        </div>
+      </div>
+    );
+  };
+
   function allDiscussions() {
     if (discussions.length === 0) {
       return <p id="loadingText">No discussions available.</p>;
@@ -129,7 +144,10 @@ export default function Dashboard() {
           <div key={discussion.post_id} className="discussionCard">
             <div className="discussionCardHeader">
               <div className="discussionCardHeaderLeft userCont">
-                <p className="name">{discussion.user.firstName} {discussion.user.lastName}</p>
+                <p className="name">
+                  {discussion.user.firstName} {discussion.user.lastName}
+                  <UserInfo user={discussion.user} />
+                </p>
                 <p className="date">{new Date(discussion.created_date).toLocaleString()}</p>
               </div>
               <div className="discussionCardHeaderRight">
@@ -162,7 +180,10 @@ export default function Dashboard() {
                     <div key={comment.comment_id} className="comment">
                       <div className="commentHeader">
                         <div className="commentHeaderLeft userCont">
-                          <p className="name">{comment.user.firstName} {comment.user.lastName}</p>
+                          <p className="name">
+                            {comment.user.firstName} {comment.user.lastName}
+                            <UserInfo user={comment.user} />
+                          </p>
                           <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
                         </div>
                         <div className="commentHeaderRight voteCont">

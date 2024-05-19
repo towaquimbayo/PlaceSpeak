@@ -231,9 +231,60 @@
   flex-grow: 1;
 }
 
+.userCont {
+  position: relative;
+}
+
+.userInfo {
+  display: none;
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  z-index: 1;
+  color: #858585;
+  font-weight: 400;
+}
+
+.userInfo .userHead {
+  background-color: var(--primaryColor);
+  color: white;
+  padding: 1rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.userInfo .userContact {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-decoration: underline;
+}
+
+.userInfo .name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.userInfo .about {
+  font-style: italic;
+}
+
 .dashboardContainer .discussionsContainer .discussionCard .userCont .name {
+  width: fit-content;
   font-weight: 600;
   padding-bottom: 0.25rem;
+}
+
+.userCont .name:hover {
+  cursor: pointer;
+}
+
+.userCont .name:hover .userInfo {
+  display: block;
 }
 
 .dashboardContainer .discussionsContainer .discussionCard .userCont .date {
