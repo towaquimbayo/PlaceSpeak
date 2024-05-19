@@ -14,6 +14,7 @@ export default function Dashboard() {
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userId = useSelector((state) => state.user.user_id);
+  const firstName = useSelector((state) => state.user.firstName);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -89,6 +90,35 @@ export default function Dashboard() {
     fetchDiscussions();
   }, [isLoggedIn]);
 
+  const addDiscussion = async (e) => {
+    setLoading(true);
+
+    const title = e.target[0].value;
+    const content = e.target[1].value;
+
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/posts/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, title, content }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to add discussion:", response);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error adding discussion:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addComment = async (e) => {
     setLoading(true);
 
@@ -147,93 +177,95 @@ export default function Dashboard() {
 
     return (
       <div className="discussionsContainer">
-        {discussions.map((discussion) => (
-          <div key={discussion.post_id} className="discussionCard">
-            <div className="discussionCardHeader">
-              <div className="discussionCardHeaderLeft">
-                <img
-                  src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
-                  alt="avatar"
-                  width={38}
-                />
+        {discussions
+          .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
+          .map((discussion) => (
+            <div key={discussion.post_id} className="discussionCard">
+              <div className="discussionCardHeader">
+                <div className="discussionCardHeaderLeft">
+                  <img
+                    src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
+                    alt="avatar"
+                    width={38}
+                  />
+                </div>
+                <div className="discussionCardHeaderCenter userCont">
+                  <p className="name">
+                    {discussion.user.firstName} {discussion.user.lastName}
+                    <UserInfo user={discussion.user} />
+                  </p>
+                  <p className="date">{new Date(discussion.created_date).toLocaleString()}</p>
+                </div>
+                <div className="discussionCardHeaderRight">
+                  <button>
+                    <PiDotsThreeBold size={24} color="#858585" />
+                  </button>
+                </div>
               </div>
-              <div className="discussionCardHeaderCenter userCont">
-                <p className="name">
-                  {discussion.user.firstName} {discussion.user.lastName}
-                  <UserInfo user={discussion.user} />
-                </p>
-                <p className="date">{new Date(discussion.created_date).toLocaleString()}</p>
+              <div className="discussionCardBody">
+                <div className="bodyHeader">
+                  <h3>{discussion.title}</h3>
+                  <p>BCIT ISSP Class</p>
+                </div>
+                <p className="bodyContent">{discussion.content}</p>
               </div>
-              <div className="discussionCardHeaderRight">
+              <div className="voteCont">
+                <button className="active">
+                  <PiArrowFatUpLight size={20} color="#858585" />
+                </button>
+                <p>{discussion.upvotes - discussion.downvotes}</p>
                 <button>
-                  <PiDotsThreeBold size={24} color="#858585" />
+                  <PiArrowFatDownLight size={20} color="#858585" />
                 </button>
               </div>
-            </div>
-            <div className="discussionCardBody">
-              <div className="bodyHeader">
-                <h3>{discussion.title}</h3>
-                <p>BCIT ISSP Class</p>
-              </div>
-              <p className="bodyContent">{discussion.content}</p>
-            </div>
-            <div className="voteCont">
-              <button className="active">
-                <PiArrowFatUpLight size={20} color="#858585" />
-              </button>
-              <p>{discussion.upvotes - discussion.downvotes}</p>
-              <button>
-                <PiArrowFatDownLight size={20} color="#858585" />
-              </button>
-            </div>
-            <div className="discussionCardFooter">
-              <h4>Comments <span>{discussion.comments.length}</span></h4>
-              {(discussion.comments.length > 0 &&
-                <div className="comments">
-                  {discussion.comments.map((comment) => (
-                    <div key={comment.comment_id} className="comment">
-                      <div className="commentHeader">
-                        <div className="commentHeaderLeft">
-                          <img
-                            src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
-                            alt="avatar"
-                            width={38}
-                          />
+              <div className="discussionCardFooter">
+                <h4>Comments <span>{discussion.comments.length}</span></h4>
+                {(discussion.comments.length > 0 &&
+                  <div className="comments">
+                    {discussion.comments.map((comment) => (
+                      <div key={comment.comment_id} className="comment">
+                        <div className="commentHeader">
+                          <div className="commentHeaderLeft">
+                            <img
+                              src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
+                              alt="avatar"
+                              width={38}
+                            />
+                          </div>
+                          <div className="commentHeaderCenter userCont">
+                            <p className="name">
+                              {comment.user.firstName} {comment.user.lastName}
+                              <UserInfo user={comment.user} />
+                            </p>
+                            <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
+                          </div>
+                          <div className="commentHeaderRight voteCont">
+                            <button>
+                              <PiArrowFatUpLight size={20} color="#858585" />
+                            </button>
+                            <p>{comment.upvotes - comment.downvotes}</p>
+                            <button>
+                              <PiArrowFatDownLight size={20} color="#858585" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="commentHeaderCenter userCont">
-                          <p className="name">
-                            {comment.user.firstName} {comment.user.lastName}
-                            <UserInfo user={comment.user} />
-                          </p>
-                          <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
-                        </div>
-                        <div className="commentHeaderRight voteCont">
-                          <button>
-                            <PiArrowFatUpLight size={20} color="#858585" />
-                          </button>
-                          <p>{comment.upvotes - comment.downvotes}</p>
-                          <button>
-                            <PiArrowFatDownLight size={20} color="#858585" />
-                          </button>
-                        </div>
+                        <p className="content">{comment.content}</p>
                       </div>
-                      <p className="content">{comment.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <form post-key={discussion.post_id} className="addComment" onSubmit={addComment}>
-                <input type="text" placeholder="Add a comment..." />
-                <Button
-                  type="submit"
-                  title="Post"
-                  loading={loading}
-                  text="Post"
-                />
-              </form>
+                    ))}
+                  </div>
+                )}
+                <form post-key={discussion.post_id} className="addComment" onSubmit={addComment}>
+                  <input type="text" placeholder="Add a comment..." />
+                  <Button
+                    type="submit"
+                    title="Post"
+                    loading={loading}
+                    text="Post"
+                  />
+                </form>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     );
   }
@@ -253,6 +285,25 @@ export default function Dashboard() {
               conversations!
             </p>
           </div>
+          <form className="addDiscussion" onSubmit={addDiscussion}>
+            <div className="formHead">
+              <img
+                src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
+                alt="avatar"
+                width={38}
+              />
+              <input type="text" placeholder="Start a new discussion..." />
+            </div>
+            <textarea placeholder={`What's the discussion about, ${firstName}?`} rows={4} />
+            <div>
+              <Button
+                type="submit"
+                title="Create New Discussion"
+                loading={loading}
+                text="Create New Discussion"
+              />
+            </div>
+          </form>
           {fetching ? <p id="loadingText">Loading...</p> : allDiscussions()}
         </div>
       </div>
