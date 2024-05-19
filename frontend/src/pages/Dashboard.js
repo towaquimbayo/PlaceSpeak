@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
+import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
 import SideNav from "../components/SidenNav";
@@ -293,6 +294,48 @@ export default function Dashboard() {
                 width={38}
               />
               <input type="text" placeholder="Start a new discussion..." />
+              <Select
+                options={[{
+                  value: "1",
+                  label: "BCIT ISSP Class",
+                }]}
+                name="Topic"
+                styles={{
+                  control: (styles) => ({
+                    ...styles,
+                    width: "100%",
+                    height: "100%",
+                    border: "none",
+                    boxShadow: "none",
+                    backgroundColor: "#F5F5F5",
+                    borderRadius: "10px",
+                  }),
+                  option: (styles) => ({
+                    ...styles,
+                    fontSize: "0.85rem",
+                    fontWeight: "400",
+                    lineHeight: "1.25rem",
+                    paddingLeft: "0.375rem",
+                    transition: "background-color 0.3s ease-in-out",
+                  }),
+                  placeholder: (styles) => ({
+                    ...styles,
+                    fontSize: "0.85rem",
+                    fontWeight: "400",
+                    lineHeight: "1.25rem",
+                    paddingLeft: "0.375rem",
+                  }),
+                  singleValue: (styles) => ({
+                    ...styles,
+                    fontSize: "0.85rem",
+                    fontWeight: "400",
+                    lineHeight: "1.25rem",
+                    paddingLeft: "0.375rem",
+                  }),
+                }}
+                placeholder="Select topic..."
+                onChange={() => { }}
+              />
             </div>
             <textarea placeholder={`What's the discussion about, ${firstName}?`} rows={4} />
             <div>
