@@ -123,9 +123,9 @@ export default function Dashboard() {
       <div className="userInfo">
         <div className="userHead">
           <img
-            src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${user.firstName}`}
+            src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${user.firstName}`}
             alt="avatar"
-            width={44}
+            width={46}
           />
           <div className="userHeadRight">
             <p className="name">{user.firstName} {user.lastName}</p>
@@ -152,7 +152,7 @@ export default function Dashboard() {
             <div className="discussionCardHeader">
               <div className="discussionCardHeaderLeft">
                 <img
-                  src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${discussion.user.firstName}`}
+                  src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
                   alt="avatar"
                   width={38}
                 />
@@ -195,7 +195,7 @@ export default function Dashboard() {
                       <div className="commentHeader">
                         <div className="commentHeaderLeft">
                           <img
-                            src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${comment.user.firstName}`}
+                            src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
                             alt="avatar"
                             width={38}
                           />

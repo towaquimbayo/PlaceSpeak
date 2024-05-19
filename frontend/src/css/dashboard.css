@@ -264,7 +264,9 @@
 }
 
 .userInfo .userHead img {
+  border: 0.1rem solid rgba(255, 255, 255, 0.25);
   border-radius: 0.5rem;
+  height: 100%;
 }
 
 .userInfo .userContact {
