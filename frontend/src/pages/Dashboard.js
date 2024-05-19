@@ -308,7 +308,7 @@ export default function Dashboard() {
                     border: "none",
                     boxShadow: "none",
                     backgroundColor: "#F5F5F5",
-                    borderRadius: "10px",
+                    borderRadius: "0.5rem",
                   }),
                   option: (styles) => ({
                     ...styles,
