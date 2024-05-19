@@ -346,15 +346,6 @@
   border: none;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .addComment button {
-  background-color: var(--primaryColor);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-}
-
 @media screen and (max-width: 992px) {
   .dashboardHeaderContainer {
     padding-top: 10rem;

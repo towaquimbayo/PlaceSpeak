@@ -5,6 +5,7 @@ import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-i
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
 import SideNav from "../components/SidenNav";
+import Button from "../components/Button";
 import { config } from "../config";
 import "../css/dashboard.css";
 
@@ -12,8 +13,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const userId = useSelector((state) => state.user.user_id);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
@@ -86,6 +89,35 @@ export default function Dashboard() {
     fetchDiscussions();
   }, [isLoggedIn]);
 
+  const addComment = async (e) => {
+    setLoading(true);
+
+    const content = e.target[0].value;
+    const postId = e.target.getAttribute("post-key");
+
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/comments/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post_id: postId, user_id: userId, content }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to add comment:", response);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   function allDiscussions() {
     if (discussions.length === 0) {
       return <p id="loadingText">No discussions available.</p>;
@@ -148,10 +180,15 @@ export default function Dashboard() {
                   ))}
                 </div>
               )}
-              <div className="addComment">
+              <form post-key={discussion.post_id} className="addComment" onSubmit={addComment}>
                 <input type="text" placeholder="Add a comment..." />
-                <button>Post</button>
-              </div>
+                <Button
+                  type="submit"
+                  title="Post"
+                  loading={loading}
+                  text="Post"
+                />
+              </form>
             </div>
           </div>
         ))}
