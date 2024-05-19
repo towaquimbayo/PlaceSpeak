@@ -213,6 +213,11 @@
 
 .dashboardContainer .discussionsContainer .discussionCard .discussionCardHeader {
   display: flex;
+  gap: 0.5rem;
+}
+
+.dashboardContainer .discussionsContainer .discussionCard .discussionCardHeaderLeft img {
+  border-radius: 0.5rem;
 }
 
 .dashboardContainer .discussionsContainer .discussionCard .discussionCardHeaderRight button {
@@ -254,6 +259,12 @@
   padding: 1rem;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+  display: flex;
+  gap: 0.65rem;
+}
+
+.userInfo .userHead img {
+  border-radius: 0.5rem;
 }
 
 .userInfo .userContact {
@@ -379,6 +390,11 @@
 .dashboardContainer .discussionsContainer .discussionCard .commentHeader {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboardContainer .discussionsContainer .discussionCard .commentHeaderLeft img {
+  border-radius: 0.5rem;
 }
 
 .dashboardContainer .discussionsContainer .discussionCard .comment .content {

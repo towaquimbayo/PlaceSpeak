@@ -122,8 +122,15 @@ export default function Dashboard() {
     return (
       <div className="userInfo">
         <div className="userHead">
-          <p className="name">{user.firstName} {user.lastName}</p>
-          <p className="about">{user.about}</p>
+          <img
+            src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${user.firstName}`}
+            alt="avatar"
+            width={44}
+          />
+          <div className="userHeadRight">
+            <p className="name">{user.firstName} {user.lastName}</p>
+            <p className="about">{user.about}</p>
+          </div>
         </div>
         <div className="userContact">
           <p className="contact email">{user.email}</p>
@@ -143,7 +150,14 @@ export default function Dashboard() {
         {discussions.map((discussion) => (
           <div key={discussion.post_id} className="discussionCard">
             <div className="discussionCardHeader">
-              <div className="discussionCardHeaderLeft userCont">
+              <div className="discussionCardHeaderLeft">
+                <img
+                  src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${discussion.user.firstName}`}
+                  alt="avatar"
+                  width={38}
+                />
+              </div>
+              <div className="discussionCardHeaderCenter userCont">
                 <p className="name">
                   {discussion.user.firstName} {discussion.user.lastName}
                   <UserInfo user={discussion.user} />
@@ -179,7 +193,14 @@ export default function Dashboard() {
                   {discussion.comments.map((comment) => (
                     <div key={comment.comment_id} className="comment">
                       <div className="commentHeader">
-                        <div className="commentHeaderLeft userCont">
+                        <div className="commentHeaderLeft">
+                          <img
+                            src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${comment.user.firstName}`}
+                            alt="avatar"
+                            width={38}
+                          />
+                        </div>
+                        <div className="commentHeaderCenter userCont">
                           <p className="name">
                             {comment.user.firstName} {comment.user.lastName}
                             <UserInfo user={comment.user} />
