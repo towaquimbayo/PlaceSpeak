@@ -95,6 +95,8 @@ export default function Dashboard() {
   const addDiscussion = async (e) => {
     setLoading(true);
 
+    e.preventDefault();
+
     const title = e.target[0].value;
     const content = e.target[1].value;
 
@@ -118,11 +120,14 @@ export default function Dashboard() {
       return null;
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 
   const addComment = async (e) => {
     setLoading(true);
+
+    e.preventDefault();
 
     const content = e.target[0].value;
     const postId = e.target.getAttribute("post-key");
@@ -147,6 +152,7 @@ export default function Dashboard() {
       return null;
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 
