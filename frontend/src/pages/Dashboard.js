@@ -133,6 +133,8 @@ export default function Dashboard() {
     const postId = e.target.getAttribute("post-key");
 
     const endpoint = config.url;
+
+    let responseText = "";
     try {
       const response = await fetch(`${endpoint}/api/comments/add`, {
         method: "POST",
@@ -141,8 +143,7 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        return data;
+        responseText += await response.json();
       } else {
         console.error("Failed to add comment:", response);
         return null;
@@ -152,7 +153,32 @@ export default function Dashboard() {
       return null;
     } finally {
       setLoading(false);
-      window.location.reload();
+    }
+
+    try {
+      const badgeResponse = await fetch(`${endpoint}/api/${userId}/verify-new-neighbor/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post_id: postId }),
+      });
+
+      if (badgeResponse.ok) {
+        const badgeData = await badgeResponse.json();
+        console.log("New neighbor badge:", badgeData);
+        responseText += badgeData;
+        return responseText;
+      } else {
+        console.error("Failed to verify new neighbor badge:", badgeResponse);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error verifying new neighbor badge:", error);
+      return null;
+    } finally {
+      // Wait 1 second before reloading the page to allow the user to see the badge
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 10000);
     }
   };
 
