@@ -185,7 +185,7 @@ class Badge(models.Model):
 class User_Badge(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
-    granted_date = models.DateTimeField()
+    granted_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     expiry_date = models.DateTimeField(null=True, blank=True)  # Optional expiry date
     active = models.BooleanField(default=True)  # Flag for active/inactive badges
 
