@@ -215,6 +215,7 @@
   font-size: 1rem;
   font-weight: 400;
   color: #858585;
+  margin-bottom: 1.5rem;
 }
 
 .dashboardContainer .dashboardContent .flexHeader {
@@ -282,6 +283,7 @@
 .userInfo {
   display: none;
   position: absolute;
+  max-width: 375px;
   bottom: 120%;
   left: 0;
   background-color: white;
