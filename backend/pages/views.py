@@ -480,7 +480,7 @@ class VerifyTrustedNeighbourBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Check if the user's identity and address have been verified
             if user.verified_email and user.verified_phone and user.verified_address:
@@ -489,7 +489,7 @@ class VerifyTrustedNeighbourBadge(APIView):
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=trusted_neighbour_badge)
 
                 # Set the granted date of the badge
-                user_badge.granted_date = datetime.now()
+                user_badge.granted_date = datetime.datetime.now()
                 user_badge.save()
 
                 return Response({"message": "User meets the requirements for Trusted Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
@@ -511,7 +511,7 @@ class VerifyNewNeighborBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Check if the user has completed their first post or comment
             if user.post_count > 0 or user.comment_count > 0:
@@ -521,7 +521,8 @@ class VerifyNewNeighborBadge(APIView):
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
-                    user_badge.granted_date = datetime.now()
+                    # Fix datetime has no attribute 'now' error
+                    user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
                 return Response({"message": "User meets the requirements for New Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
@@ -544,7 +545,7 @@ class VerifyInquirerBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Retrieve the user's comments from the Comment table
             comments = Comment.objects.filter(user=user)
@@ -557,7 +558,7 @@ class VerifyInquirerBadge(APIView):
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
-                    user_badge.granted_date = datetime.now()
+                    user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
                 return Response({"message": "User meets the requirements for Inquirer Badge", "badge_granted": created}, status=status.HTTP_200_OK)
@@ -579,7 +580,7 @@ class VerifyWelcomingWhispererBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Check all users invitedById field and check if they were invited by the current user
             invited_users = User.objects.filter(invited_by=user.id)
@@ -594,7 +595,7 @@ class VerifyWelcomingWhispererBadge(APIView):
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
-                    user_badge.granted_date = datetime.now()
+                    user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
                 return Response({"message": "User meets the requirements for Welcoming Whisperer Badge", "badge_granted": created}, status=status.HTTP_200_OK)
@@ -616,7 +617,7 @@ class VerifyLegacyCitizenBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Check if account was created over 1 year ago and user has a few posts/comments
             if user.account_created < timezone.now() - datetime.timedelta(days=365) and (user.post_count > 10 or user.comment_count > 10):
@@ -626,7 +627,7 @@ class VerifyLegacyCitizenBadge(APIView):
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
-                    user_badge.granted_date = datetime.now()
+                    user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
                 return Response({"message": "User meets the requirements for Legacy Citizen Badge", "badge_granted": created}, status=status.HTTP_200_OK)
@@ -648,7 +649,7 @@ class VerifyNewVoiceBadge(APIView):
     def post(self, request, user_id):
         try:
             # Retrieve the user object based on the user_id
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(user_id=user_id)
 
             # Check if the user has participated in at least one poll
             if user.polls_answered_count > 0:
@@ -658,7 +659,7 @@ class VerifyNewVoiceBadge(APIView):
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
-                    user_badge.granted_date = datetime.now()
+                    user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
                 return Response({"message": "User meets the requirements for New Voice Badge", "badge_granted": created}, status=status.HTTP_200_OK)
