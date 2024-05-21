@@ -156,12 +156,10 @@ class Address(models.Model):
 	province 				= 		models.CharField(max_length=10)
 	zip_code 				= 		models.CharField(max_length=6)
 	primary_address =			models.BooleanField(default=False) # flag for primary address
-	property_type 		= 		models.CharField(max_length=50, choices=PropertyType.choices, default=PropertyType.HOME)
-	ownership_type = models.CharField(max_length=50, choices=OwnershipType.choices, default=OwnershipType.HOME)
-	# users = models.ManyToManyField('User', related_name='addresses')
-
-
-	
+	property_type 		= 		models.CharField(max_length=50, choices=PropertyType.choices, blank=True, null=True)
+	ownership_type = models.CharField(max_length=50, choices=OwnershipType.choices, blank=True, null=True)
+	# New field for APT/Suite
+	apt_suite = models.CharField(max_length=50, blank=True, null=True)
 
 
 	def __str__(self) -> str:
