@@ -105,6 +105,8 @@ export default function Dashboard() {
     const title = e.target[0].value;
     const content = e.target[1].value;
 
+    let responseText = "";
+
     const endpoint = config.url;
     try {
       const response = await fetch(`${endpoint}/api/posts/add`, {
@@ -115,7 +117,7 @@ export default function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        return data;
+        responseText += data;
       } else {
         console.error("Failed to add discussion:", response);
         return null;
@@ -125,7 +127,37 @@ export default function Dashboard() {
       return null;
     } finally {
       setLoading(false);
-      window.location.reload();
+    }
+
+    try {
+      const badgeResponse = await fetch(`${endpoint}/api/${user_id}/verify-new-neighbor/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (badgeResponse.ok) {
+        const badgeData = await badgeResponse.json();
+        responseText += badgeData;
+        if (badgeData.badge_granted) {
+          setUnlockedBadge(true);
+          setUnlockedBadgeMessage("You just unlocked the New Neighbour Badge!");
+          // Wait 3 seconds before hiding the badge message, then refresh the page
+          setTimeout(() => {
+            setUnlockedBadge(false);
+            setUnlockedBadgeMessage("");
+            window.location.reload();
+          }, 3000);
+        } else {
+          window.location.reload();
+        }
+        return responseText;
+      } else {
+        console.error("Failed to verify new neighbor badge:", badgeResponse);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error verifying new neighbor badge:", error);
+      return null;
     }
   };
 
@@ -160,16 +192,13 @@ export default function Dashboard() {
     }
 
     try {
-      console.log('User ID: ', user_id);
       const badgeResponse = await fetch(`${endpoint}/api/${user_id}/verify-new-neighbor/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id: postId }),
       });
 
       if (badgeResponse.ok) {
         const badgeData = await badgeResponse.json();
-        console.log("New neighbor badge:", badgeData);
         responseText += badgeData;
         if (badgeData.badge_granted) {
           setUnlockedBadge(true);
