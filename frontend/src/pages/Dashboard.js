@@ -322,6 +322,56 @@ export default function Dashboard() {
 
   return (
     <Layout title="Dashboard">
+      <ReactModal
+        isOpen={unlockedBadge}
+        contentLabel="Badge Unlocked"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+
+          content: {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "2rem",
+            backgroundColor: "#fff",
+            border: "none",
+            borderRadius: "0.5rem",
+            boxShadow: "0 0 1rem rgba(0, 0, 0, 0.5)",
+          },
+        }}
+        closeTimeoutMS={3000}
+      >
+        <h2>{unlockedBadgeMessage}</h2>
+        {unlockedBadge && <ConfettiExplosion
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+          duration={3000}
+      />}
+      <button onClick={() => setUnlockedBadge(false)} style={
+        {
+          backgroundColor: "#FF4D00",
+          color: "white",
+          padding: "0.5rem 1rem",
+          borderRadius: "0.5rem",
+          border: "none",
+          cursor: "pointer",
+          marginTop: "4rem",
+        }
+      
+      }>Close</button>
+      </ReactModal>
+                
       <DashboardHeader />
       <div className="dashboardContainer">
         {console.log(discussions)}
