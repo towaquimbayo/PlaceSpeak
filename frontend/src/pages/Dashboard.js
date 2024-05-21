@@ -16,6 +16,7 @@ export default function Dashboard() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userId = useSelector((state) => state.user.user_id);
   const firstName = useSelector((state) => state.user.firstName);
+  const pfp_link = useSelector((state) => state.user.pfp_link);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -166,7 +167,7 @@ export default function Dashboard() {
       <div className="userInfo">
         <div className="userHead">
           <img
-            src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${user.firstName}`}
+            src={user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${user.firstName}`}
             alt="avatar"
             width={46}
           />
@@ -201,7 +202,7 @@ export default function Dashboard() {
               <div className="discussionCardHeader">
                 <div className="discussionCardHeaderLeft">
                   <img
-                    src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
+                    src={discussion.user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
                     alt="avatar"
                     width={38}
                   />
@@ -248,7 +249,7 @@ export default function Dashboard() {
                             <div className="commentHeader">
                               <div className="commentHeaderLeft">
                                 <img
-                                  src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
+                                  src={comment.user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
                                   alt="avatar"
                                   width={38}
                                 />
@@ -311,7 +312,7 @@ export default function Dashboard() {
           <form className="addDiscussion" onSubmit={addDiscussion}>
             <div className="formHead">
               <img
-                src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
+                src={pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
                 alt="avatar"
                 width={38}
               />

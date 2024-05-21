@@ -123,6 +123,7 @@ class LoginUserAPI(APIView):
             'lastName': user.last_name,
             'city': primary_add.city if primary_add else "",
             'province': primary_add.province if primary_add else "",
+            'pfp_link': user.pfp_link if user.pfp_link else "",
         }, status=status.HTTP_200_OK)
     
 class RegisterUserAPI(APIView):
