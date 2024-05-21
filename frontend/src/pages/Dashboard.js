@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
+import { MdVerified } from "react-icons/md";
 import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
-import SideNav from "../components/SidenNav";
+import SideNav from "../components/SideNav";
 import Button from "../components/Button";
 import { config } from "../config";
 import "../css/dashboard.css";
@@ -15,10 +16,7 @@ import ReactModal from "react-modal";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const userId = useSelector((state) => state.user.user_id);
-  const firstName = useSelector((state) => state.user.firstName);
-  const pfp_link = useSelector((state) => state.user.pfp_link);
+  const { isLoggedIn, userId, firstName, pfp_link } = useSelector((state) => state.user);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -103,9 +101,8 @@ export default function Dashboard() {
   }, [isLoggedIn]);
 
   const addDiscussion = async (e) => {
-    setLoading(true);
-
     e.preventDefault();
+    setLoading(true);
 
     const title = e.target[0].value;
     const content = e.target[1].value;
@@ -135,9 +132,8 @@ export default function Dashboard() {
   };
 
   const addComment = async (e) => {
-    setLoading(true);
-
     e.preventDefault();
+    setLoading(true);
 
     const content = e.target[0].value;
     const postId = e.target.getAttribute("post-key");
@@ -200,6 +196,27 @@ export default function Dashboard() {
   };
 
   const UserInfo = ({ user }) => {
+    const [badges, setBadges] = useState([]);
+
+    useEffect(() => {
+      const fetchBadges = async () => {
+        try {
+          const response = await fetch(`${config.url}/api/badges`);
+          if (response.ok) {
+            const badgesData = await response.json();
+            const userBadges = badgesData.filter((badge) => badge.users.includes(user.id));
+            setBadges(userBadges);
+          } else {
+            throw new Error(`Failed to fetch badges: ${response.status}`);
+          }
+        } catch (error) {
+          console.error("Error fetching badges:", error);
+        }
+      };
+
+      fetchBadges();
+    }, [user.id]);
+
     return (
       <div className="userInfo">
         <div className="userHead">
@@ -209,10 +226,20 @@ export default function Dashboard() {
             width={46}
           />
           <div className="userHeadRight">
-            <p className="name">{user.firstName} {user.lastName}</p>
+            <p className="name">
+              {user.firstName} {user.lastName}
+              {(user.verified_email && user.verified_phone && user.verified_address) && <MdVerified color="white" size={16} />}
+            </p>
             <p className="about">{user.about}</p>
           </div>
         </div>
+        {badges.length > 0 && (
+          <div className="userBadges">
+            {badges.map((badge) => (
+              <img key={badge.badge_id} src={`./img/badges/${badge.name}.svg`} alt={badge.name} width={30} />
+            ))}
+          </div>
+        )}
         <div className="userContact">
           <p className="contact email">{user.email}</p>
           <p className="contact phone">{user.phone}</p>

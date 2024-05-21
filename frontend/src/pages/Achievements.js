@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import AlertMessage from "../components/AlertMessage";
 import DashboardHeader from "../components/DashboardHeader";
 import Layout from "../components/Layout";
-import SideNav from "../components/SidenNav";
+import SideNav from "../components/SideNav";
 import "../css/achievements.css";
 import { config } from "../config";
 

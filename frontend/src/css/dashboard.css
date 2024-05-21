@@ -323,6 +323,16 @@
   font-weight: 600;
 }
 
+.userInfo .name svg {
+  margin-left: 0.5rem;
+}
+
+.userInfo .userBadges {
+  padding: 1rem 1rem 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
 .userInfo .about {
   font-style: italic;
 }
