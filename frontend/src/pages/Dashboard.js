@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
+import { MdVerified } from "react-icons/md";
 import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
@@ -214,7 +215,10 @@ export default function Dashboard() {
             width={46}
           />
           <div className="userHeadRight">
-            <p className="name">{user.firstName} {user.lastName}</p>
+            <p className="name">
+              {user.firstName} {user.lastName}
+              {(user.verified_email && user.verified_phone && user.verified_address) && <MdVerified color="white" size={16} />}
+            </p>
             <p className="about">{user.about}</p>
           </div>
         </div>
