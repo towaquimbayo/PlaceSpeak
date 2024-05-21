@@ -9,6 +9,8 @@ import SideNav from "../components/SidenNav";
 import Button from "../components/Button";
 import { config } from "../config";
 import "../css/dashboard.css";
+import ConfettiExplosion from 'react-confetti-explosion';
+import ReactModal from "react-modal";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -21,6 +23,8 @@ export default function Dashboard() {
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
   const [expandedDiscussionId, setExpandedDiscussionId] = useState(null);
+  const [unlockedBadge, setUnlockedBadge] = useState(false);
+  const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
@@ -172,6 +176,18 @@ export default function Dashboard() {
         const badgeData = await badgeResponse.json();
         console.log("New neighbor badge:", badgeData);
         responseText += badgeData;
+        if (badgeData.badge_granted) {
+          setUnlockedBadge(true);
+          setUnlockedBadgeMessage("You just unlocked the New Neighbour Badge!");
+          // Wait 3 seconds before hiding the badge message, then refresh the page
+          setTimeout(() => {
+            setUnlockedBadge(false);
+            setUnlockedBadgeMessage("");
+            window.location.reload();
+          }, 3000);
+        } else {
+          window.location.reload();
+        }
         return responseText;
       } else {
         console.error("Failed to verify new neighbor badge:", badgeResponse);
@@ -180,11 +196,6 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error verifying new neighbor badge:", error);
       return null;
-    } finally {
-      // Wait 1 second before reloading the page to allow the user to see the badge
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 10000);
     }
   };
 
