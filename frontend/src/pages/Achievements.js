@@ -81,7 +81,7 @@ export default function Achievements() {
         );
         const updatedBadges = lockedBadges.map((badge) => ({
           ...badge,
-          unlocked: unlockedBadgeIds.has(badge.id),
+          unlocked: unlockedBadgeIds.has(badge.badge_id),
         }));
         setBadges(updatedBadges);
       } catch (error) {

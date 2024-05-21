@@ -277,10 +277,6 @@ export default function Places() {
     );
   }
 
-    const myStyle = {
-      marginTop: '50px', // Add desired margin top value
-    };
-
   return (
     <Layout title="Places">
       <DashboardHeader />
@@ -320,7 +316,7 @@ export default function Places() {
           ) : (places && places.length > 0) || isNewPlace ? (
             placeForm()
           ) : (
-            <p style={myStyle}>
+            <p>
               Hmm, it looks like you haven't added any places yet. Create a new
               place to get started!
             </p>
