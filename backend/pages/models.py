@@ -72,7 +72,7 @@ class User(models.Model):
 		return user_addresses
 	
 	def primaryAddress(self):
-		return self.addresses.filter(primary_address=True).first()
+		return self.addresses.filter(primaryAddress=True).first()
 
 
 	def add_address(self, name, street_address, city, country, province, zip_code, primary_address=False, property_type=None, ownership_type=None):
