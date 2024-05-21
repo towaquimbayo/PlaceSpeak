@@ -19,7 +19,7 @@ export default function Places() {
   const [places, setPlaces] = useState([]);
   const [primaryPlace, setPrimaryPlace] = useState(null);
   const initialForm = {
-    id: 0,
+    address_id: 0,
     name: "",
     country: "",
     postalCode: "",
@@ -32,71 +32,68 @@ export default function Places() {
   };
   const [form, setForm] = useState(initialForm);
   const placeNameOptions = places.map((place) => ({
-    value: place.id,
+    value: place.address_id,
     label: place.name,
   }));
   const propertyTypeOptions = [
-    { value: "home", label: "Home" },
-    { value: "work", label: "Work" },
-    { value: "recreational", label: "Recreational" },
-    { value: "investment", label: "Investment" },
-    { value: "management", label: "Management" },
+    { value: "HOME", label: "Home" },
+    { value: "WORK", label: "Work" },
+    { value: "RECREATIONAL", label: "Recreational" },
+    { value: "INVESTMENT", label: "Investment" },
+    { value: "MANAGEMENT", label: "Management" },
   ];
   const ownershipTypeOptions = [
-    { value: "rent", label: "Rent" },
-    { value: "own", label: "Own" },
-    { value: "manage", label: "Manage" },
+    { value: "RENT", label: "Rent" },
+    { value: "OWN", label: "Own" },
+    { value: "MANAGE", label: "Manage" },
   ];
 
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        // const endpoint = config.url;
-        // const response = await fetch(`${endpoint}/api/places`, {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ user_id: `${user_id}` }),
-        // });
-        // if (!response.ok) {
-        //   throw new Error(`Error fetching user places: ${response.statusText}`);
-        // }
+        const endpoint = config.url;
+        const response = await fetch(`${endpoint}/api/users/address/${user_id}`);
+        if (!response.ok) {
+          throw new Error(`Error fetching user places: ${response.statusText}`);
+        }
 
-        // const data = await response.json();
+        const data = await response.json();
         // @TODO replace hardcoded places
-        const data = {
-          primary: 1, // primary place id
-          places: [
-            {
-              id: 1,
-              name: "Home",
-              country: "United States",
-              postalCode: "12345",
-              province: "California",
-              city: "Los Angeles",
-              street: "123 Main St",
-              suite: "Apt 101",
-              propertyType: "home",
-              ownershipType: "own",
-            },
-            {
-              id: 2,
-              name: "Work",
-              country: "United States",
-              postalCode: "54321",
-              province: "New York",
-              city: "Los Angeles",
-              street: "456 Elm St",
-              suite: "Suite 200",
-              propertyType: "work",
-              ownershipType: "rent",
-            },
-          ],
-        };
+        // const data = {
+        //   primary: 1, // primary place id
+        //   places: [
+        //     // {
+        //     //   id: 1,
+        //     //   name: "Home",
+        //     //   country: "United States",
+        //     //   postalCode: "12345",
+        //     //   province: "California",
+        //     //   city: "Los Angeles",
+        //     //   street: "123 Main St",
+        //     //   suite: "",
+        //     //   propertyType: "home",
+        //     //   ownershipType: "own",
+        //     // },
+        //     // {
+        //     //   id: 2,
+        //     //   name: "Work",
+        //     //   country: "United States",
+        //     //   postalCode: "54321",
+        //     //   province: "New York",
+        //     //   city: "Los Angeles",
+        //     //   street: "456 Elm St",
+        //     //   suite: "Suite 200",
+        //     //   propertyType: "work",
+        //     //   ownershipType: "rent",
+        //     // },
+        //   ],
+        // };
+        console.log(data);
         console.log("Places:", data.places);
         if (data.places.length > 0) {
           setPlaces(data.places);
           setPrimaryPlace(data.primary);
-          setForm(data.places.find((place) => place.id === data.primary));
+          setForm(data.places.find((place) => place.address_id === data.primary));
         }
       } catch (error) {
         console.error("Fetch places error:", error);
@@ -132,7 +129,7 @@ export default function Places() {
 
       setSuccessMsg("New place created successfully.");
       setIsNewPlace(false);
-      setForm(places.find((place) => place.id === primaryPlace));
+      setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
       console.error("Update place error:", error);
@@ -165,11 +162,11 @@ export default function Places() {
               label="Name"
               name="name"
               value={placeNameOptions.find(
-                (option) => option.value === form.id
+                (option) => option.value === form.address_id
               )}
               options={placeNameOptions}
               onChange={(option) => {
-                setForm(places.find((place) => place.id === option.value));
+                setForm(places.find((place) => place.address_id === option.value));
               }}
             />
           )}
@@ -260,7 +257,7 @@ export default function Places() {
                 text="Cancel"
                 onClick={() => {
                   setIsNewPlace(false);
-                  setForm(places.find((place) => place.id === primaryPlace));
+                  setForm(places.find((place) => place.address_id === primaryPlace));
                   setErrorMsg("");
                   setSuccessMsg("");
                 }}
@@ -279,6 +276,10 @@ export default function Places() {
       </form>
     );
   }
+
+    const myStyle = {
+      marginTop: '50px', // Add desired margin top value
+    };
 
   return (
     <Layout title="Places">
@@ -319,7 +320,7 @@ export default function Places() {
           ) : (places && places.length > 0) || isNewPlace ? (
             placeForm()
           ) : (
-            <p>
+            <p style={myStyle}>
               Hmm, it looks like you haven't added any places yet. Create a new
               place to get started!
             </p>
