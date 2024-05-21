@@ -13,10 +13,7 @@ import "../css/dashboard.css";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const userId = useSelector((state) => state.user.user_id);
-  const firstName = useSelector((state) => state.user.firstName);
-  const pfp_link = useSelector((state) => state.user.pfp_link);
+  const { isLoggedIn, userId, firstName, pfp_link } = useSelector((state) => state.user);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -99,9 +96,8 @@ export default function Dashboard() {
   }, [isLoggedIn]);
 
   const addDiscussion = async (e) => {
-    setLoading(true);
-
     e.preventDefault();
+    setLoading(true);
 
     const title = e.target[0].value;
     const content = e.target[1].value;
@@ -131,9 +127,8 @@ export default function Dashboard() {
   };
 
   const addComment = async (e) => {
-    setLoading(true);
-
     e.preventDefault();
+    setLoading(true);
 
     const content = e.target[0].value;
     const postId = e.target.getAttribute("post-key");
