@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [expandedDiscussionId, setExpandedDiscussionId] = useState(null);
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
@@ -171,6 +172,10 @@ export default function Dashboard() {
     );
   };
 
+  const toggleComments = (discussionId) => {
+    setExpandedDiscussionId((prevId) => (prevId === discussionId ? null : discussionId));
+  };
+
   function allDiscussions() {
     if (discussions.length === 0) {
       return <p id="loadingText">No discussions available.</p>;
@@ -220,50 +225,56 @@ export default function Dashboard() {
                 </button>
               </div>
               <div className="discussionCardFooter">
-                <h4>Comments <span>{discussion.comments.length}</span></h4>
-                {(discussion.comments.length > 0 &&
-                  <div className="comments">
-                    {discussion.comments.map((comment) => (
-                      <div key={comment.comment_id} className="comment">
-                        <div className="commentHeader">
-                          <div className="commentHeaderLeft">
-                            <img
-                              src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
-                              alt="avatar"
-                              width={38}
-                            />
+                <h4 onClick={() => toggleComments(discussion.post_id)}>
+                  Comments <span>{discussion.comments.length}</span>
+                </h4>
+                {expandedDiscussionId === discussion.post_id && (
+                  <>
+                    {(discussion.comments.length > 0 &&
+                      <div className="comments">
+                        {discussion.comments.map((comment) => (
+                          <div key={comment.comment_id} className="comment">
+                            <div className="commentHeader">
+                              <div className="commentHeaderLeft">
+                                <img
+                                  src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
+                                  alt="avatar"
+                                  width={38}
+                                />
+                              </div>
+                              <div className="commentHeaderCenter userCont">
+                                <p className="name">
+                                  {comment.user.firstName} {comment.user.lastName}
+                                  <UserInfo user={comment.user} />
+                                </p>
+                                <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
+                              </div>
+                              <div className="commentHeaderRight voteCont">
+                                <button>
+                                  <PiArrowFatUpLight size={20} color="#858585" />
+                                </button>
+                                <p>{comment.upvotes - comment.downvotes}</p>
+                                <button>
+                                  <PiArrowFatDownLight size={20} color="#858585" />
+                                </button>
+                              </div>
+                            </div>
+                            <p className="content">{comment.content}</p>
                           </div>
-                          <div className="commentHeaderCenter userCont">
-                            <p className="name">
-                              {comment.user.firstName} {comment.user.lastName}
-                              <UserInfo user={comment.user} />
-                            </p>
-                            <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
-                          </div>
-                          <div className="commentHeaderRight voteCont">
-                            <button>
-                              <PiArrowFatUpLight size={20} color="#858585" />
-                            </button>
-                            <p>{comment.upvotes - comment.downvotes}</p>
-                            <button>
-                              <PiArrowFatDownLight size={20} color="#858585" />
-                            </button>
-                          </div>
-                        </div>
-                        <p className="content">{comment.content}</p>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    )}
+                    <form post-key={discussion.post_id} className="addComment" onSubmit={addComment}>
+                      <input type="text" placeholder="Add a comment..." />
+                      <Button
+                        type="submit"
+                        title="Post"
+                        loading={loading}
+                        text="Post"
+                      />
+                    </form>
+                  </>
                 )}
-                <form post-key={discussion.post_id} className="addComment" onSubmit={addComment}>
-                  <input type="text" placeholder="Add a comment..." />
-                  <Button
-                    type="submit"
-                    title="Post"
-                    loading={loading}
-                    text="Post"
-                  />
-                </form>
               </div>
             </div>
           ))}

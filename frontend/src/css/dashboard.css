@@ -405,6 +405,11 @@
   font-weight: 600;
   display: flex;
   align-items: center;
+  cursor: pointer;
+}
+
+.dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter h4:hover {
+  text-decoration: underline;
 }
 
 .dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter h4 span {
