@@ -282,6 +282,7 @@
 .userInfo {
   display: none;
   position: absolute;
+  max-width: 375px;
   bottom: 120%;
   left: 0;
   background-color: white;
