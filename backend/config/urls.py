@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserBadgesAPI, UserPrimaryAddressAPI, VerifyTrustedNeighbourBadge
+from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserBadgesAPI, UserPrimaryAddressAPI
 from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts
+from pages.views import VerifyInquirerBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,6 +34,11 @@ urlpatterns = [
 
     # Badge check/unlock endpoints
     path('api/<str:user_id>/verify-trusted-neighbour/', VerifyTrustedNeighbourBadge.as_view(), name='verify_trusted_neighbour'),
+    path('api/<str:user_id>/verify-new-voice/', VerifyNewVoiceBadge.as_view(), name='verify_new_voice'),
+    path('api/<str:user_id>/verify-legacy-citizen/', VerifyLegacyCitizenBadge.as_view(), name='verify_legacy_citizen'),
+    path('api/<str:user_id>/verify-new-neighbor/', VerifyNewNeighborBadge.as_view(), name='verify_new_neighbor'),
+    path('api/<str:user_id>/verify-welcoming-whisperer/', VerifyWelcomingWhispererBadge.as_view(), name='verify_welcoming_whisperer'),
+    path('api/<str:user_id>/verify-inquirer/', VerifyInquirerBadge.as_view(), name='verify_inquirer'),
 
     # User endpoints
 	path('api/users', UserAPI.as_view()),
@@ -57,4 +63,3 @@ urlpatterns = [
     path('api/comments/add', AddComment.as_view(), name='add_comment'),
     path('api/comments/<str:post_id>', GetCommentsByPost.as_view(), name='get_comments_by_post'),
 ]
-    
