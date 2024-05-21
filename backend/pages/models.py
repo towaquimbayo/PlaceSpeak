@@ -137,13 +137,17 @@ class Achievement(models.Model):
 	days_active = models.IntegerField()
 	num_achievements = models.IntegerField()
 
-class AddressType(models.TextChoices):
+class PropertyType(models.TextChoices):
 	HOME = 'HOME', 'Home'
 	WORK = 'WORK', 'Work'
-	SCHOOL = 'SCHOOL', 'School'
-	BILLING = 'BILLING', 'Billing'
-	MAILING = 'MAILING', 'Mailing'
-	OTHER = 'OTHER', 'Other'
+	RECREATIONAL = 'RECREATIONAL', 'Recreational'
+	INVESTMENT = 'INVESTMENT', 'Investment'
+	MANAGEMENT = 'MANAGEMENT', 'Management'
+
+class OwnershipType(models.TextChoices):
+	RENT = 'RENT', 'Rent'
+	OWN = 'OWN', 'Own'
+	MANAGE = 'MANAGE', 'Manage'
 
 class Address(models.Model):
 	address_id 			= 		models.AutoField(primary_key=True)
@@ -152,7 +156,8 @@ class Address(models.Model):
 	province 				= 		models.CharField(max_length=10)
 	zip_code 				= 		models.CharField(max_length=6)
 	primary_address =			models.BooleanField(default=False) # flag for primary address
-	address_type 		= 		models.CharField(max_length=50, choices=AddressType.choices, default=AddressType.HOME)
+	property_type 		= 		models.CharField(max_length=50, choices=PropertyType.choices, default=PropertyType.HOME)
+	ownership_type = models.CharField(max_length=50, choices=OwnershipType.choices, default=OwnershipType.HOME)
 	# users = models.ManyToManyField('User', related_name='addresses')
 
 

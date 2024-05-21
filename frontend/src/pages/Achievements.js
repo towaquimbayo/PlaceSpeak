@@ -17,11 +17,11 @@ export default function Achievements() {
     quest_points: 0,
     days_active: 0,
   });
-  const [badges, setBadges] = useState({
-    badges: [],
-  });
+  const [badges, setBadges] = useState( [] );
+
   const totalAchievements = 180;
 
+  // fetch achievement stats for the current user
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
@@ -49,6 +49,7 @@ export default function Achievements() {
     fetchAchievements();
   }, [user_id]);
 
+  // fetch all badges from the database and store in a state list
   useEffect(() => {
     const fetchBadges = async () => {
       try {
@@ -58,13 +59,39 @@ export default function Achievements() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setBadges({ badges: data });
+        // Initialize all badges as locked
+        const lockedBadges = data.map(badge => ({ ...badge, unlocked: false }));
+        setBadges(lockedBadges);
       } catch (error) {
         console.error("Error fetching badges:", error);
       }
     };
     fetchBadges();
   }, []);
+
+  // fetch all badges earned by the user and unlock the badges that belong to the user
+  useEffect(() => {
+    const fetchUserBadges = async() => {
+      try {
+        const endpoint = config.url;
+        const response = await fetch(`${endpoint}/api/users/badges/${user_id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const earnedBadges = await response.json();
+        const updatedBadges = badges.map(badge => ({
+          ...badge,
+          unlocked: earnedBadges.some(earnedBadge => earnedBadge.badge_id === badge.badge_id),
+        }));
+        setBadges(updatedBadges);
+      } catch (error) {
+        console.error("Error fetching user badges:", error);
+      }
+    };
+    if (badges.length > 0) {
+      fetchUserBadges();
+    }
+  }, [badges.length, user_id]);
 
   function Badge({ imgSrc, imgAlt, title, description, locked }) {
     return (
@@ -129,19 +156,19 @@ export default function Achievements() {
             </div>
           </div>
           <div className="badgesList">
-            {badges.badges
+            {badges.length > 0 && badges
               .reduce((rows, badge, index) => {
                 if (index % 2 === 0) {
                   rows.push([]);
                 }
                 rows[rows.length - 1].push(
                   <Badge
-                    key={badge.badge_id}
+                    key={badge.id}
                     imgSrc={`./img/badges/${badge.name}.svg`}
                     imgAlt={badge.name}
                     title={badge.name}
                     description={badge.description}
-                    locked={true}
+                    locked={!badge.unlocked}
                   />
                 );
                 return rows;
