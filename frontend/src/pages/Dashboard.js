@@ -184,6 +184,27 @@ export default function Dashboard() {
   };
 
   const UserInfo = ({ user }) => {
+    const [badges, setBadges] = useState([]);
+
+    useEffect(() => {
+      const fetchBadges = async () => {
+        try {
+          const response = await fetch(`${config.url}/api/badges`);
+          if (response.ok) {
+            const badgesData = await response.json();
+            const userBadges = badgesData.filter((badge) => badge.users.includes(user.id));
+            setBadges(userBadges);
+          } else {
+            throw new Error(`Failed to fetch badges: ${response.status}`);
+          }
+        } catch (error) {
+          console.error("Error fetching badges:", error);
+        }
+      };
+
+      fetchBadges();
+    }, [user.id]);
+
     return (
       <div className="userInfo">
         <div className="userHead">
@@ -197,6 +218,13 @@ export default function Dashboard() {
             <p className="about">{user.about}</p>
           </div>
         </div>
+        {badges.length > 0 && (
+          <div className="userBadges">
+            {badges.map((badge) => (
+              <img key={badge.badge_id} src={`./img/badges/${badge.name}.svg`} alt={badge.name} width={30} />
+            ))}
+          </div>
+        )}
         <div className="userContact">
           <p className="contact email">{user.email}</p>
           <p className="contact phone">{user.phone}</p>
