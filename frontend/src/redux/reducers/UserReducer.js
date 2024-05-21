@@ -7,6 +7,7 @@ export const initialState = {
   lastName: "",
   city: "",
   province: "",
+  pfp_link: "",
 };
 
 export default function UserReducer(state = initialState, action) {
@@ -20,6 +21,7 @@ export default function UserReducer(state = initialState, action) {
         lastName: action.payload.lastName,
         city: action.payload.city,
         province: action.payload.province,
+        pfp_link: action.payload.pfp_link,
       };
     case CLEAR_SESSION:
       return initialState;

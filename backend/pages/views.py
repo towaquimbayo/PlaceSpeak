@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import User, Badge, User_Badge, Comment, Post
+from .models import Address, User, Badge, User_Badge, Comment, Post
 from django.utils import timezone
 
 # Create your views here.
@@ -123,6 +123,7 @@ class LoginUserAPI(APIView):
             'lastName': user.last_name,
             'city': primary_add.city if primary_add else "",
             'province': primary_add.province if primary_add else "",
+            'pfp_link': user.pfp_link if user.pfp_link else "",
         }, status=status.HTTP_200_OK)
     
 class RegisterUserAPI(APIView):
@@ -160,7 +161,7 @@ class RegisterUserAPI(APIView):
 
         new_user.save()  # Save the new user to the database
 
-        new_user.awardBadge("Welcome Badge") # give the user a welcome badge
+        # new_user.awardBadge("New Neighbour Badge") # give the user a welcome badge
 
         return Response({'message': 'User registered successfully.'}, status=status.HTTP_201_CREATED)
     
@@ -247,6 +248,35 @@ class UserPrimaryAddressAPI(APIView):
             })
 
         return Response(serialized_data, status=status.HTTP_200_OK)
+    
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'  # Include all fields (or specify specific fields)
+    
+class UserAddressAPI(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)  # Use pk to get the user information
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Get all user addresses
+        all_user_addresses = user.addresses.all()
+
+        # Find the primary address
+        primary_address = all_user_addresses.filter(primaryAddress=True).first()
+
+        # Serialize addresses
+        serializer = AddressSerializer(all_user_addresses, many=True)
+
+        # Create response data
+        response_data = {
+            "primary": primary_address.address_id if primary_address else None,
+            "places": serializer.data
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
     
     
 class UserAchievementAPI(APIView):

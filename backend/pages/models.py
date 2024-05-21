@@ -66,11 +66,16 @@ class User(models.Model):
 		# print(user_badges)
 		return user_badges
 	
+	def getAllAddresses(self):
+		user_addresses = list(self.addresses.all())
+		# print(user_badges)
+		return user_addresses
+	
 	def primaryAddress(self):
-		return self.addresses.filter(primary_address=True).first()
+		return self.addresses.filter(primaryAddress=True).first()
 
 
-	def add_address(self, street_address, city, province, zip_code, primary_address=False, address_type=None):
+	def add_address(self, name, street_address, city, country, province, zip_code, primary_address=False, property_type=None, ownership_type=None):
 		"""
 		Adds a new address to the user's addresses.
 
@@ -80,22 +85,33 @@ class User(models.Model):
 				province (str): The province of the user's address.
 				zip_code (str): The zip code of the user's address.
 				primary_address (bool, optional): Flag indicating if it's the primary address. Defaults to False.
-				address_type (models.TextChoices, optional): The type of address (e.g., HOME, WORK). Defaults to None.
+				property_type (models.TextChoices, optional): The type of address (e.g., HOME, WORK). Defaults to None.
 		"""
 		address = Address.objects.create(
-				street_address=street_address,
+				name=name,
+				street=street_address,
 				city=city,
+				country=country,
 				province=province,
-				zip_code=zip_code,
+				postalCode=zip_code,
 		)
 
-		if address_type:
-			address.address_type = address_type
+		if property_type:
+			address.propertyType = property_type
+
+		if ownership_type:
+			address.ownershipType = ownership_type
+
+		if primary_address:
+				address.primaryAddress = True  # Set primary address flag
+
+        # Ensure only one primary address exists by unsetting primary_address for other addresses
+				self.addresses.filter(primaryAddress=True).update(primaryAddress=False)
+
+		address.save()  # Save the address object after setting primary_address
 
 		self.addresses.add(address)
 
-		if primary_address:
-			self.addresses.set([address])  # Set the primary address
 
 		return address
 	
@@ -151,19 +167,21 @@ class OwnershipType(models.TextChoices):
 
 class Address(models.Model):
 	address_id 			= 		models.AutoField(primary_key=True)
-	street_address	= 		models.CharField(max_length=255)
+	name 						= 		models.CharField(max_length=127)
+	country					= 		models.CharField(max_length=32)
+	street					= 		models.CharField(max_length=255)
 	city 						=			models.CharField(max_length=20)
 	province 				= 		models.CharField(max_length=10)
-	zip_code 				= 		models.CharField(max_length=6)
-	primary_address =			models.BooleanField(default=False) # flag for primary address
-	property_type 		= 		models.CharField(max_length=50, choices=PropertyType.choices, blank=True, null=True)
-	ownership_type = models.CharField(max_length=50, choices=OwnershipType.choices, blank=True, null=True)
+	postalCode 				= 		models.CharField(max_length=6)
+	primaryAddress =			models.BooleanField(default=False) # flag for primary address
+	propertyType 		= 		models.CharField(max_length=50, choices=PropertyType.choices, blank=True, null=True)
+	ownershipType = models.CharField(max_length=50, choices=OwnershipType.choices, blank=True, null=True)
 	# New field for APT/Suite
-	apt_suite = models.CharField(max_length=50, blank=True, null=True)
+	suite = models.CharField(max_length=50, blank=True, null=True)
 
 
 	def __str__(self) -> str:
-		return f"{self.street_address}, {self.city}, {self.province}"
+		return f"{self.street}, {self.city}, {self.province}"
 
 class Badge(models.Model):
 		badge_id = models.AutoField(primary_key=True)  # Assuming auto-incrementing primary key

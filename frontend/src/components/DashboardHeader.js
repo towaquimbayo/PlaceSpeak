@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function DashboardHeader() {
   const navigate = useNavigate();
-  const { isLoggedIn, firstName, lastName, city, province } = useSelector(
+  const { isLoggedIn, firstName, lastName, city, province, pfp_link } = useSelector(
     (state) => state.user
   );
 
@@ -23,7 +23,7 @@ export default function DashboardHeader() {
         <div className="dashboardDescription">
           <img
             className="profileImage"
-            src="./img/profile-pic.jpg"
+            src={pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
             alt="Profile"
           />
           <div className="dashboardNameContainer">

@@ -44,8 +44,8 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        const { user_id, firstName, lastName, city, province } = data;
-        dispatch(setUser(true, user_id, firstName, lastName, city, province));
+        const { user_id, firstName, lastName, city, province, pfp_link } = data;
+        dispatch(setUser(true, user_id, firstName, lastName, city, province, pfp_link));
         setLoading(false);
         navigate("/");
       } else {

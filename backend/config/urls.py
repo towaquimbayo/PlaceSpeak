@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserBadgesAPI, UserPrimaryAddressAPI
+from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserAddressAPI, UserBadgesAPI, UserPrimaryAddressAPI
 from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts
 from pages.views import VerifyInquirerBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
 
@@ -62,4 +62,7 @@ urlpatterns = [
     # Comment endpoints
     path('api/comments/add', AddComment.as_view(), name='add_comment'),
     path('api/comments/<str:post_id>', GetCommentsByPost.as_view(), name='get_comments_by_post'),
+		
+    # Address endpoints
+	path('api/users/address/<str:user_id>', UserAddressAPI.as_view()),
 ]

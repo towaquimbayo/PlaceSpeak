@@ -16,6 +16,7 @@ export default function Dashboard() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userId = useSelector((state) => state.user.user_id);
   const firstName = useSelector((state) => state.user.firstName);
+  const pfp_link = useSelector((state) => state.user.pfp_link);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -27,61 +28,66 @@ export default function Dashboard() {
 
   useEffect(() => {
     const endpoint = config.url;
+
+    const fetchUser = async (userId) => {
+      try {
+        const response = await fetch(`${endpoint}/api/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId }),
+        });
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw new Error(`Failed to fetch user: ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        return null;
+      }
+    };
+
+    const fetchComments = async (postId) => {
+      try {
+        const response = await fetch(`${endpoint}/api/comments/${postId}`);
+
+        if (response.ok) {
+          const commentsData = await response.json();
+          const commentsWithUser = await Promise.all(
+            commentsData.map(async (comment) => {
+              const user = await fetchUser(comment.user_id);
+              return { ...comment, user };
+            })
+          );
+          return commentsWithUser;
+        } else {
+          throw new Error(`Failed to fetch comments: ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+        return [];
+      }
+    };
+
     const fetchDiscussions = async () => {
       try {
         const response = await fetch(`${endpoint}/api/posts`);
+
         if (response.ok) {
           const data = await response.json();
           const discussionsWithUserAndComments = await Promise.all(
             data.map(async (discussion) => {
-              const userResponse = await fetch(`${endpoint}/api/users`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_id: discussion.user_id }),
-              });
-
-              if (userResponse.ok) {
-                const userData = await userResponse.json();
-                discussion.user = userData;
-              } else {
-                console.error("Failed to fetch user:", userResponse);
-              }
-
-              const commentsResponse = await fetch(`${endpoint}/api/comments/${discussion.post_id}`);
-              if (commentsResponse.ok) {
-                const commentsData = await commentsResponse.json();
-                const commentsWithUser = await Promise.all(
-                  commentsData.map(async (comment) => {
-                    const commentUserResponse = await fetch(`${endpoint}/api/users`, {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ user_id: comment.user_id }),
-                    });
-
-                    if (commentUserResponse.ok) {
-                      const commentUserData = await commentUserResponse.json();
-                      comment.user = commentUserData;
-                    } else {
-                      console.error("Failed to fetch user for comment:", commentUserResponse);
-                    }
-
-                    return comment;
-                  })
-                );
-                discussion.comments = commentsWithUser;
-              } else {
-                console.error("Failed to fetch comments:", commentsResponse);
-              }
-
-              return discussion;
+              const user = await fetchUser(discussion.user_id);
+              const comments = await fetchComments(discussion.post_id);
+              return { ...discussion, user, comments };
             })
           );
 
           setDiscussions(discussionsWithUserAndComments);
           setFetching(false);
         } else {
-          console.error("Failed to fetch discussions:", response);
-          setFetching(false);
+          throw new Error(`Failed to fetch discussions: ${response.status}`);
         }
       } catch (error) {
         console.error("Error fetching discussions:", error);
@@ -187,7 +193,7 @@ export default function Dashboard() {
       <div className="userInfo">
         <div className="userHead">
           <img
-            src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${user.firstName}`}
+            src={user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${user.firstName}`}
             alt="avatar"
             width={46}
           />
@@ -222,7 +228,7 @@ export default function Dashboard() {
               <div className="discussionCardHeader">
                 <div className="discussionCardHeaderLeft">
                   <img
-                    src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
+                    src={discussion.user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${discussion.user.firstName}`}
                     alt="avatar"
                     width={38}
                   />
@@ -269,7 +275,7 @@ export default function Dashboard() {
                             <div className="commentHeader">
                               <div className="commentHeaderLeft">
                                 <img
-                                  src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
+                                  src={comment.user.pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${comment.user.firstName}`}
                                   alt="avatar"
                                   width={38}
                                 />
@@ -332,7 +338,7 @@ export default function Dashboard() {
           <form className="addDiscussion" onSubmit={addDiscussion}>
             <div className="formHead">
               <img
-                src={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
+                src={pfp_link || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${firstName}`}
                 alt="avatar"
                 width={38}
               />
