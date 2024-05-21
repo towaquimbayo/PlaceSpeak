@@ -514,7 +514,6 @@ class VerifyNewNeighborBadge(APIView):
             user = User.objects.get(id=user_id)
 
             # Check if the user has completed their first post or comment
-            # Note: The user model should have relationships with posts and comments tables
             if user.post_count > 0 or user.comment_count > 0:
                 # Create or update User_Badge entry for New Neighbour Badge
                 new_neighbour_badge = Badge.objects.get(name="New Neighbour Badge")  # Assuming the badge already exists
@@ -551,7 +550,6 @@ class VerifyInquirerBadge(APIView):
             comments = Comment.objects.filter(user=user)
 
             # Check if the user's comment complies with the requirements
-            # Note: The user model should have relationships with comments table
             if any((comment.upvotes >= 5 and comment.upvotes / comment.downvotes >= 4) for comment in comments):
                 # Create or update User_Badge entry for Inquirer Badge
                 inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
@@ -587,7 +585,6 @@ class VerifyWelcomingWhispererBadge(APIView):
             invited_users = User.objects.filter(invited_by=user.id)
 
             # Check if any user has completed their first activity
-            # Note: The user model should have relationships with posts and comments tables
             new_users = [invited_user for invited_user in invited_users if invited_user.post_count > 0 or invited_user.comment_count > 0 or invited_user.polls_answered_count > 0]
 
             if new_users:
@@ -706,6 +703,12 @@ class AddPost(APIView):
         )
 
         new_post.save()  # Save the new post to the database
+
+        
+        # Fetch user and increment their post count
+        user = User.objects.get(pk=post_data['user_id'])
+        user.post_count += 1
+        user.save()
 
         return Response({'message': 'Post added successfully.'}, status=status.HTTP_201_CREATED)
     
@@ -831,6 +834,12 @@ class AddComment(APIView):
         )
 
         new_comment.save()
+
+        # Fetch user and increment their comment count
+        user = User.objects.get(pk=comment_data['user_id'])
+        user.comment_count += 1
+        user.save()
+
         return Response({'message': 'Comment added successfully.'}, status=status.HTTP_201_CREATED)
     
 
