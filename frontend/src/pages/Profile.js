@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import DashboardHeader from "../components/DashboardHeader";
 import { Field, Password, Textarea } from "../components/Field";
 import Layout from "../components/Layout";
-import SideNav from "../components/SidenNav";
+import SideNav from "../components/SideNav";
 import AlertMessage from "../components/AlertMessage";
 import { config } from "../config";
 

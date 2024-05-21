@@ -5,7 +5,7 @@ import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-i
 import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
-import SideNav from "../components/SidenNav";
+import SideNav from "../components/SideNav";
 import Button from "../components/Button";
 import { config } from "../config";
 import "../css/dashboard.css";

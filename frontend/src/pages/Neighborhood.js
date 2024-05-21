@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
-import SideNav from "../components/SidenNav";
+import SideNav from "../components/SideNav";
 
 export default function Neighborhood() {
   return (
