@@ -175,7 +175,7 @@ export function Checkbox({
   error = "",
 }) {
   return (
-    <div className="checkbox">
+    <div className="checkbox" onClick={() => onChange({ target: { name } })}>
       <input
         type="checkbox"
         name={name}

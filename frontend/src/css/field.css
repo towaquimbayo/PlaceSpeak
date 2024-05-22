@@ -99,11 +99,12 @@ form .checkbox {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
+  cursor: pointer;
 }
 
 form .checkbox input[type="checkbox"] {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   cursor: pointer;
 }
 
