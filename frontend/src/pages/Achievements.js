@@ -83,6 +83,14 @@ export default function Achievements() {
           ...badge,
           unlocked: unlockedBadgeIds.has(badge.badge_id),
         }));
+
+        // Sort the badges by unlocked status
+        updatedBadges.sort((a, b) => {
+          if (a.unlocked && !b.unlocked) return -1;
+          if (!a.unlocked && b.unlocked) return 1;
+          return 0;
+        });
+
         setBadges(updatedBadges);
       } catch (error) {
         console.error("Error:", error);
@@ -101,7 +109,7 @@ export default function Achievements() {
   // Display individual badge
   function Badge({ imgSrc, imgAlt, title, description, locked }) {
     return (
-      <div className={`badge ${locked ? "locked" : ""}`}>
+      <div className={`badge${locked ? " locked" : ""}`}>
         <img src={imgSrc} alt={imgAlt} />
         <div className="badgeInfo">
           <h4>{title}</h4>
@@ -195,9 +203,7 @@ export default function Achievements() {
               <p>Days Active</p>
             </div>
           </div>
-          <div className="badgesList">
-            <BadgesList />
-          </div>
+          <BadgesList />
         </div>
       </div>
     </Layout>
