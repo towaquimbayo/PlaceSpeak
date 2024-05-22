@@ -121,8 +121,8 @@ class User(models.Model):
 class Comment(models.Model):
   comment_id = models.AutoField(primary_key=True)
   content = models.TextField()  # Use TextField for larger text content
-  upvotes = models.IntegerField(default=0)
-  downvotes = models.IntegerField(default=0)
+  upvoted_by = models.ManyToManyField(User, related_name='upvoted_comments', blank=True)
+  downvoted_by = models.ManyToManyField(User, related_name='downvoted_comments', blank=True)
   created_date = models.DateTimeField(auto_now_add=True)  # Automatically set creation date
 
   # Foreign key to User model
@@ -133,8 +133,8 @@ class Post(models.Model):
 	post_id = models.AutoField(primary_key=True)
 	title = models.CharField(max_length=255)
 	content = models.TextField()
-	upvotes = models.IntegerField(default=0)
-	downvotes = models.IntegerField(default=0)
+	upvoted_by = models.ManyToManyField(User, related_name='upvoted_posts', blank=True)
+	downvoted_by = models.ManyToManyField(User, related_name='downvoted_posts', blank=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 
 	# Foreign key to User model
