@@ -15,6 +15,7 @@ export default function Places() {
   const [fetching, setFetching] = useState(true);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isCreateNew, setIsCreateNew] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
   const [places, setPlaces] = useState([]);
@@ -73,7 +74,7 @@ export default function Places() {
           setForm(
             data.places.find((place) => place.address_id === data.primary)
           );
-        }
+        } else setPrimaryPlace(0);
       } catch (error) {
         console.error("Fetch places error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -84,21 +85,124 @@ export default function Places() {
     fetchPlaces();
   }, [user_id]);
 
+  function validateForm() {
+    let valid = true;
+
+    if (Object.values(form).some((value) => value === "" || value === null)) {
+      setErrorMsg("Please fill out all mandatory fields.");
+      return false;
+    }
+
+    if (form.name.length > 50) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        name: "Please enter a name under 50 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.street.length > 100) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        street: "Please enter a street under 100 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.suite && form.suite.length > 50) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        suite: "Please enter an apt/suite under 50 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.city.length > 50) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        city: "Please enter a city under 50 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.province.length > 50) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        province: "Please enter a province under 50 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.country.length > 100) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        country: "Please enter a country under 100 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.postalCode.length > 10) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        postalCode: "Please enter a postal code under 10 characters.",
+      }));
+      valid = false;
+    }
+
+    if (form.propertyType.length === 0) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        propertyType: "Please select a property type.",
+      }));
+      valid = false;
+    }
+
+    if (form.ownershipType.length === 0) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        ownershipType: "Please select an ownership type.",
+      }));
+      valid = false;
+    }
+
+    // Check if there are any errors in the fieldErrors object
+    if (!valid) {
+      setErrorMsg("Please ensure all fields are filled out correctly.");
+      return false;
+    }
+
+    return true;
+  }
+
   // If form.address_id is 0, it's creating a new place
   // Otherwise, it's updating an existing place
   async function handleSubmit(e) {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
+    setFieldErrors({});
     setLoading(true);
     const isUpdating = form.address_id !== 0;
+
+    // Trim all form values
+    for (const key in form) {
+      if (typeof form[key] === "string") {
+        form[key] = form[key].trim();
+      }
+    }
+
+    // Form Validations
+    if (!validateForm()) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const endpoint = config.url;
       const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
-        method: isUpdating ? "POST" : "PUT",
+        method: isUpdating ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, primaryPlace }),
       });
 
       if (!response.ok) {
@@ -139,10 +243,12 @@ export default function Places() {
   function handleOnChange(e) {
     setSuccessMsg("");
     setErrorMsg("");
-    if (e.target.name === "addressSearch") {
-      setSearchAddress(e.target.value.trim());
+    setFieldErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+
+    if (e.target.name.includes("addressSearch")) {
+      setSearchAddress(e.target.value);
     } else {
-      setForm({ ...form, [e.target.name]: e.target.value.trim() });
+      setForm({ ...form, [e.target.name]: e.target.value });
     }
   }
 
@@ -213,6 +319,7 @@ export default function Places() {
             onChange={handleOnChange}
             autoComplete="address-line1"
             disabled
+            error={fieldErrors?.street}
           />
           <Field
             label="Apt / Suite"
@@ -222,6 +329,7 @@ export default function Places() {
             optional
             autoComplete="address-line2"
             disabled={!isAutofilled}
+            error={fieldErrors?.suite}
           />
         </div>
         <div className="formRow">
@@ -233,6 +341,7 @@ export default function Places() {
             onChange={handleOnChange}
             autoComplete="address-level1"
             disabled
+            error={fieldErrors?.province}
           />
           <Field
             label="City"
@@ -242,6 +351,7 @@ export default function Places() {
             onChange={handleOnChange}
             autoComplete="address-level2"
             disabled
+            error={fieldErrors?.city}
           />
         </div>
         <div className="formRow">
@@ -253,6 +363,7 @@ export default function Places() {
             onChange={handleOnChange}
             autoComplete="country-name"
             disabled
+            error={fieldErrors?.country}
           />
           <Field
             label="Postal Code"
@@ -261,6 +372,7 @@ export default function Places() {
             onChange={handleOnChange}
             autoComplete="postal-code"
             disabled={!isAutofilled}
+            error={fieldErrors?.postalCode}
           />
         </div>
         <div className="formRow">
@@ -274,6 +386,7 @@ export default function Places() {
             onChange={(option) => {
               setForm({ ...form, propertyType: option.value });
             }}
+            error={fieldErrors?.propertyType}
           />
           <Dropdown
             label="Ownership Type"
@@ -285,6 +398,7 @@ export default function Places() {
             onChange={(option) => {
               setForm({ ...form, ownershipType: option.value });
             }}
+            error={fieldErrors?.ownershipType}
           />
         </div>
         <div style={{ marginTop: "1rem" }}>

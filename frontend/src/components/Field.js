@@ -17,6 +17,7 @@ export function Field({
   autoComplete = "off",
   addressAutofill = false,
   onRetrieve = () => {},
+  error = "",
 }) {
   const accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
   const inputField = (
@@ -51,6 +52,7 @@ export function Field({
       ) : (
         inputField
       )}
+      {error && <span className="fieldErrorMsg">{error}</span>}
     </div>
   );
 }
@@ -114,6 +116,7 @@ export function Dropdown({
   onChange = () => {},
   halfWidth = false,
   optional = false,
+  error = "",
 }) {
   const selectStyles = {
     control: (styles) => ({
@@ -159,6 +162,27 @@ export function Dropdown({
         value={value}
         onChange={onChange}
       />
+      {error && <span className="fieldErrorMsg">{error}</span>}
     </div>
   );
 }
+
+// export function Checkbox({
+
+// }) {
+//   return (
+//     <div className="formGroup">
+//       <label htmlFor={name}>
+//         {label}
+//         {optional && <span>{"(optional)"}</span>}
+//       </label>
+//       <input
+//         type="checkbox"
+//         name={name}
+//         value={value}
+//         onChange={onChange}
+//       />
+//       {error && <span className="fieldErrorMsg">{error}</span>}
+//     </div>
+//   );
+// }
