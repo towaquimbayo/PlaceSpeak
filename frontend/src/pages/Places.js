@@ -82,7 +82,7 @@ export default function Places() {
         setFetching(false);
       }
     };
-    fetchPlaces();
+    if (user_id) fetchPlaces();
   }, [user_id]);
 
   function validateForm() {
