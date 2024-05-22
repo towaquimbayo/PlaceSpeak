@@ -60,39 +60,9 @@ export default function Places() {
         }
 
         const data = await response.json();
-        // @TODO replace hardcoded places
-        // const data = {
-        //   primary: 1, // primary place id
-        //   places: [
-        //     // {
-        //     //   id: 1,
-        //     //   name: "Home",
-        //     //   country: "United States",
-        //     //   postalCode: "12345",
-        //     //   province: "California",
-        //     //   city: "Los Angeles",
-        //     //   street: "123 Main St",
-        //     //   suite: "",
-        //     //   propertyType: "home",
-        //     //   ownershipType: "own",
-        //     // },
-        //     // {
-        //     //   id: 2,
-        //     //   name: "Work",
-        //     //   country: "United States",
-        //     //   postalCode: "54321",
-        //     //   province: "New York",
-        //     //   city: "Los Angeles",
-        //     //   street: "456 Elm St",
-        //     //   suite: "Suite 200",
-        //     //   propertyType: "work",
-        //     //   ownershipType: "rent",
-        //     // },
-        //   ],
-        // };
+        console.log("Data:", data);
+        console.log("Places:", data.places);
 
-        // console.log(data);
-        // console.log("Places:", data.places);
         if (data.places.length > 0) {
           setPlaces(data.places);
           setPrimaryPlace(data.primary);
@@ -110,24 +80,19 @@ export default function Places() {
     fetchPlaces();
   }, [user_id]);
 
+  // If form.address_id is 0, it's creating a new place
+  // Otherwise, it's updating an existing place
   async function handleSubmit(e) {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
-
-    // @TODO: Use same endpoint for creating and updating places
-    // use form.address_id to determine if it's a new place or an existing one
-    // if form.id is 0, it's a new place, otherwise it's an existing one
+    setLoading(true);
+    const isUpdating = form.address_id !== 0;
 
     try {
-      setLoading(true);
-      console.log(form.address_id);
-      const isUpdating = form.address_id !== 0;
-      const http_method = isUpdating ? "PUT" : "POST";
-      // setForm({ ...form, user_id: user_id }); // add user_id to form data
       const endpoint = config.url;
       const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
-        method: http_method,
+        method: isUpdating ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
@@ -141,6 +106,7 @@ export default function Places() {
       }
 
       const updatedPlace = await response.json();
+      console.log("Updated place:", updatedPlace);
 
       if (isUpdating) {
         // Update the existing place in the places array
@@ -159,7 +125,7 @@ export default function Places() {
       setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
-      console.error(`Create/update place error:`, error);
+      console.error(`${isUpdating ? "Update" : "Create"} place error:`, error);
       setErrorMsg("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
