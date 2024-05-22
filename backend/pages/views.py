@@ -704,7 +704,7 @@ class VerifyWelcomingWhispererBadge(APIView):
             user = User.objects.get(user_id=user_id)
 
             # Check all users invitedById field and check if they were invited by the current user
-            invited_users = User.objects.filter(invited_by=user.id)
+            invited_users = User.objects.filter(invited_by=user.user_id)
 
             # Check if any user has completed their first activity
             new_users = [invited_user for invited_user in invited_users if invited_user.post_count > 0 or invited_user.comment_count > 0 or invited_user.polls_answered_count > 0]
@@ -1204,3 +1204,38 @@ class DownvoteComment(APIView):
 
         return Response({'message': message}, status=status.HTTP_200_OK)
     
+
+class InviteNeighbor(APIView):
+    """
+    API endpoint to invite a neighbor to join PlaceSpeak. (Currently, it mocks the functionality by assigning the current user as the inviter_id for user 1)
+    
+    Args:
+        request (Request): Incoming HTTP request with user_id.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            invite_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id']
+        missing_fields = [field for field in required_fields if field not in invite_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = invite_data['user_id']
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Mock functionality: Assign the current user as the inviter_id for user 1
+        user1 = User.objects.get(user_id=1)
+        user1.invited_by_id = user_id
+        user1.save()
+
+        return Response({'message': 'Neighbor invited successfully.'}, status=status.HTTP_200_OK)
