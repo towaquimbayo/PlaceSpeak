@@ -24,7 +24,8 @@ export const ConfettiModal = ({ isOpen, message }) => {
             backgroundColor: "#fff",
             border: "none",
             borderRadius: "0.5rem",
-            boxShadow: "0 0 1rem rgba(0, 0, 0, 0.5)",
+            maxWidth: "700px",
+            width: "90%",
           },
         }}
         closeTimeoutMS={3000}

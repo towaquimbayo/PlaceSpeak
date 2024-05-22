@@ -29,6 +29,10 @@ body:has(.mobileNavContainer.open) {
   overflow: hidden;
 }
 
+body.ReactModal__Body--open {
+  overflow: hidden;
+}
+
 input,
 button,
 textarea,
@@ -349,6 +353,12 @@ input.searchBar {
   margin: 15vh auto 3rem;
   padding: 0 7rem;
   min-height: 79vh;
+}
+
+.formBtnGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 @media screen and (max-width: 1200px) {

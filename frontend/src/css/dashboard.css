@@ -229,11 +229,6 @@
   margin-bottom: 0;
 }
 
-.dashboardContainer .dashboardContent form .formBtnGroup {
-  display: flex;
-  gap: 1rem;
-}
-
 .dashboardContainer .discussionsContainer {
   width: 100%;
   display: flex;
@@ -251,16 +246,27 @@
   gap: 1rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardHeader {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardHeader {
   display: flex;
   gap: 0.5rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardHeaderLeft img {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardHeaderLeft
+  img {
   border-radius: 0.5rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardHeaderRight button {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardHeaderRight
+  button {
   border: none;
   background-color: transparent;
   padding: 0.5rem;
@@ -268,7 +274,11 @@
   border-radius: 5rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardHeaderRight button:hover {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardHeaderRight
+  button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -375,7 +385,11 @@
   border-radius: 5rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .voteCont button:hover {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .voteCont
+  button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -409,7 +423,10 @@
   color: #858585;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardFooter {
   background-color: #f8f8f8;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -418,7 +435,11 @@
   gap: 0.75rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter h4 {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardFooter
+  h4 {
   color: rgba(0, 0, 0, 0.5);
   font-weight: 600;
   display: flex;
@@ -426,11 +447,20 @@
   cursor: pointer;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter h4:hover {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardFooter
+  h4:hover {
   text-decoration: underline;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .discussionCardFooter h4 span {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .discussionCardFooter
+  h4
+  span {
   margin-left: 0.5rem;
   background-color: rgba(0, 0, 0, 0.4);
   color: white;
@@ -457,7 +487,11 @@
   gap: 0.5rem;
 }
 
-.dashboardContainer .discussionsContainer .discussionCard .commentHeaderLeft img {
+.dashboardContainer
+  .discussionsContainer
+  .discussionCard
+  .commentHeaderLeft
+  img {
   border-radius: 0.5rem;
 }
 
