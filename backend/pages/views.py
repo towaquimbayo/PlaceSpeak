@@ -640,9 +640,9 @@ class VerifyNewNeighborBadge(APIView):
 
 
 
-class VerifyInquirerBadge(APIView):
+class VerifyInsightfulBadge(APIView):
     """
-    Verifies if a user meets the requirements for the Inquirer Badge and grants the badge if applicable.
+    Verifies if a user meets the requirements for the Insightful Badge and grants the badge if applicable.
 
     Requirements:
     - A comment created by the user has received a certain number of upvotes and is considered insightful (over 80% approval)
@@ -655,20 +655,20 @@ class VerifyInquirerBadge(APIView):
             # Retrieve the user's comments from the Comment table
             comments = Comment.objects.filter(user=user)
 
-            # Check if the user's comment complies with the requirements
-            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / len(comment.downvoted_by.all()) >= 4) for comment in comments):
-                # Create or update User_Badge entry for Inquirer Badge
-                inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
-                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=inquirer_badge)
+            # Check if the user's comment complies with the requirements (over 80% approval)
+            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / (len(comment.downvoted_by.all()) + len(comment.upvoted_by.all())) >= 0.8) for comment in comments):
+                # Create or update User_Badge entry for Insightful Badge
+                insightful_badge = Badge.objects.get(name="Insightful Badge")  # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=insightful_badge)
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
                     user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
-                return Response({"message": "User meets the requirements for Inquirer Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+                return Response({"message": "User meets the requirements for Insightful Badge", "badge_granted": created}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "User does not meet the requirements for Inquirer Badge"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "User does not meet the requirements for Insightful Badge"}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
