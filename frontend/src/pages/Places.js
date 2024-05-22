@@ -240,9 +240,7 @@ export default function Places() {
 
       if (!response.ok) {
         throw new Error(
-          `Error ${isUpdating ? "updating" : "creating"} place: ${
-            response.statusText
-          }`
+          `Error ${isUpdating ? "updating" : "creating"} place: ${response.statusText}`
         );
       }
 
@@ -494,7 +492,8 @@ export default function Places() {
                 setIsCreateNew(false);
                 setIsAutofilled(false);
                 setForm(
-                  places.find((place) => place.address_id === primaryPlaceId)
+                  places.find((place) => place.address_id === primaryPlaceId) ||
+                  initialForm
                 );
                 setPrimaryCheckedId(primaryPlaceId);
                 setErrorMsg("");
