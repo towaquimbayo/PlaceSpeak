@@ -499,10 +499,10 @@ class PopulateBadges(APIView):
     """
     def post(self, request):
         try:
-            # Inquirer Badge
-            inquirer_badge = Badge.objects.create(
-                name="Inquirer Badge",
-                img_link="inquirer_badge_img_link",
+            # Insightful Badge
+            insightful_badge = Badge.objects.create(
+                name="Insightful Badge",
+                img_link="insightful_badge_img_link",
                 rarity="Common",
                 description="Awarded after their first insightful comment or question. This badge acknowledges the initiation into the realm of discussions.",
                 points=100,  # Set appropriate points

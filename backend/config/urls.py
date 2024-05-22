@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserAddressAPI, UserBadgesAPI, UserPrimaryAddressAPI
 from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts, VoteInPoll
-from pages.views import VerifyInquirerBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
+from pages.views import VerifyInsightfulBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
 from pages.views import UpvotePost, DownvotePost, UpvoteComment, DownvoteComment
 
 urlpatterns = [
@@ -39,7 +39,7 @@ urlpatterns = [
     path('api/<str:user_id>/verify-legacy-citizen/', VerifyLegacyCitizenBadge.as_view(), name='verify_legacy_citizen'),
     path('api/<str:user_id>/verify-new-neighbor/', VerifyNewNeighborBadge.as_view(), name='verify_new_neighbor'),
     path('api/<str:user_id>/verify-welcoming-whisperer/', VerifyWelcomingWhispererBadge.as_view(), name='verify_welcoming_whisperer'),
-    path('api/<str:user_id>/verify-inquirer/', VerifyInquirerBadge.as_view(), name='verify_inquirer'),
+    path('api/<str:user_id>/verify-insightful/', VerifyInsightfulBadge.as_view(), name='verify_insightful'),
 
     # User endpoints
 	path('api/users', UserAPI.as_view()),
