@@ -291,6 +291,7 @@ class UserAddressAPI(APIView):
         country = data.get('country')
         province = data.get('province')
         zip_code = data.get('postalCode')
+        suite = data.get('suite', None)
         primary_address = data.get('primaryAddress', False)
         property_type = data.get('propertyType')
         ownership_type = data.get('ownershipType')
@@ -305,6 +306,7 @@ class UserAddressAPI(APIView):
             country=country,
             province=province,
             zip_code=zip_code,
+            suite=suite,
             primary_address=primary_address,
             property_type=property_type,
             ownership_type=ownership_type
