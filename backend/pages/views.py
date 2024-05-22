@@ -656,7 +656,7 @@ class VerifyInquirerBadge(APIView):
             comments = Comment.objects.filter(user=user)
 
             # Check if the user's comment complies with the requirements
-            if any((comment.upvotes >= 5 and comment.upvotes / comment.downvotes >= 4) for comment in comments):
+            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / len(comment.downvoted_by.all()) >= 4) for comment in comments):
                 # Create or update User_Badge entry for Inquirer Badge
                 inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=inquirer_badge)
@@ -837,8 +837,8 @@ class GetAllPosts(APIView):
                 "post_id": post.post_id,
                 "title": post.title,
                 "content": post.content,
-                "upvotes": post.upvotes,
-                "downvotes": post.downvotes,
+                "upvoted_by": [user.user_id for user in post.upvoted_by.all()],
+                "downvoted_by": [user.user_id for user in post.downvoted_by.all()],
                 "created_date": post.created_date,
                 "user_id": post.user_id,
             }
@@ -867,8 +867,8 @@ class GetPostsByUser(APIView):
                 "post_id": post.post_id,
                 "title": post.title,
                 "content": post.content,
-                "upvotes": post.upvotes,
-                "downvotes": post.downvotes,
+                "upvoted_by": [user.user_id for user in post.upvoted_by.all()],
+                "downvoted_by": [user.user_id for user in post.downvoted_by.all()],
                 "created_date": post.created_date,
                 "user_id": post.user_id,
             }
@@ -896,8 +896,8 @@ class GetCommentsByUser(APIView):
             {
                 "comment_id": comment.comment_id,
                 "content": comment.content,
-                "upvotes": comment.upvotes,
-                "downvotes": comment.downvotes,
+                "upvoted_by": [user.user_id for user in comment.upvoted_by.all()],
+                "downvoted_by": [user.user_id for user in comment.downvoted_by.all()],
                 "created_date": comment.created_date,
                 "user_id": comment.user_id,
             }
@@ -967,8 +967,8 @@ class GetCommentsByPost(APIView):
             {
                 "comment_id": comment.comment_id,
                 "content": comment.content,
-                "upvotes": comment.upvotes,
-                "downvotes": comment.downvotes,
+                "upvoted_by": [user.user_id for user in comment.upvoted_by.all()],
+                "downvoted_by": [user.user_id for user in comment.downvoted_by.all()],
                 "created_date": comment.created_date,
                 "user_id": comment.user_id,
             }
@@ -1007,3 +1007,184 @@ class VoteInPoll(APIView):
         user.save()
 
         return Response({'message': 'Poll vote added successfully.'}, status=status.HTTP_200_OK)
+
+
+class UpvotePost(APIView):
+    """
+    API endpoint to upvote a post.
+
+    Args:
+        request (Request): Incoming HTTP request with user_id and post_id in JSON format.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            vote_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'post_id']
+        missing_fields = [field for field in required_fields if field not in vote_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = vote_data['user_id']
+        post_id = vote_data['post_id']
+
+        try:
+            post = Post.objects.get(post_id=post_id)
+            user = User.objects.get(user_id=user_id)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user in post.upvoted_by.all():
+            post.upvoted_by.remove(user)
+            message = 'Post upvote removed successfully.'
+        else:
+            post.upvoted_by.add(user)
+            post.downvoted_by.remove(user)
+            message = 'Post upvoted successfully.'
+
+        post.save()
+
+        return Response({'message': message}, status=status.HTTP_200_OK)
+
+
+class DownvotePost(APIView):
+    """
+    API endpoint to downvote a post.
+
+    Args:
+        request (Request): Incoming HTTP request with user_id and post_id in JSON format.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            vote_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'post_id']
+        missing_fields = [field for field in required_fields if field not in vote_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = vote_data['user_id']
+        post_id = vote_data['post_id']
+
+        try:
+            post = Post.objects.get(post_id=post_id)
+            user = User.objects.get(user_id=user_id)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user in post.downvoted_by.all():
+            post.downvoted_by.remove(user)
+            message = 'Post downvote removed successfully.'
+        else:
+            post.downvoted_by.add(user)
+            post.upvoted_by.remove(user)
+            message = 'Post downvoted successfully.'
+
+        post.save()
+
+        return Response({'message': message}, status=status.HTTP_200_OK)
+    
+
+class UpvoteComment(APIView):
+    """
+    API endpoint to upvote a comment.
+
+    Args:
+        request (Request): Incoming HTTP request with user_id and comment_id in JSON format.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            vote_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'comment_id']
+        missing_fields = [field for field in required_fields if field not in vote_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = vote_data['user_id']
+        comment_id = vote_data['comment_id']
+
+        try:
+            comment = Comment.objects.get(comment_id=comment_id)
+            user = User.objects.get(user_id=user_id)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user in comment.upvoted_by.all():
+            comment.upvoted_by.remove(user)
+            message = 'Comment upvote removed successfully.'
+        else:
+            comment.upvoted_by.add(user)
+            comment.downvoted_by.remove(user)
+            message = 'Comment upvoted successfully.'
+
+        comment.save()
+
+        return Response({'message': message}, status=status.HTTP_200_OK)
+    
+
+class DownvoteComment(APIView):
+    """
+    API endpoint to downvote a comment.
+
+    Args:
+        request (Request): Incoming HTTP request with user_id and comment_id in JSON format.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            vote_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id', 'comment_id']
+        missing_fields = [field for field in required_fields if field not in vote_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = vote_data['user_id']
+        comment_id = vote_data['comment_id']
+
+        try:
+            comment = Comment.objects.get(comment_id=comment_id)
+            user = User.objects.get(user_id=user_id)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if user in comment.downvoted_by.all():
+            comment.downvoted_by.remove(user)
+            message = 'Comment downvote removed successfully.'
+        else:
+            comment.downvoted_by.add(user)
+            comment.upvoted_by.remove(user)
+            message = 'Comment downvoted successfully.'
+
+        comment.save()
+
+        return Response({'message': message}, status=status.HTTP_200_OK)
+    

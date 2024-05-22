@@ -19,6 +19,7 @@ from django.urls import path
 from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserAddressAPI, UserBadgesAPI, UserPrimaryAddressAPI
 from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts, VoteInPoll
 from pages.views import VerifyInquirerBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
+from pages.views import UpvotePost, DownvotePost, UpvoteComment, DownvoteComment
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -56,11 +57,15 @@ urlpatterns = [
 
     # Post endpoints
     path('api/posts/add', AddPost.as_view(), name='add_post'),
+    path('api/posts/upvote', UpvotePost.as_view(), name='upvote_post'),
+    path('api/posts/downvote', DownvotePost.as_view(), name='downvote_post'),
     path('api/posts', GetAllPosts.as_view(), name='get_all_posts'),
     path('api/posts/<str:user_id>', GetPostsByUser.as_view(), name='get_posts_by_user'),
 
     # Comment endpoints
     path('api/comments/add', AddComment.as_view(), name='add_comment'),
+    path('api/comments/upvote', UpvoteComment.as_view(), name='upvote_comment'),
+    path('api/comments/downvote', DownvoteComment.as_view(), name='downvote_comment'),
     path('api/comments/<str:post_id>', GetCommentsByPost.as_view(), name='get_comments_by_post'),
 		
     # Address endpoints
