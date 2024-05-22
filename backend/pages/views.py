@@ -295,6 +295,9 @@ class UserAddressAPI(APIView):
         property_type = data.get('propertyType')
         ownership_type = data.get('ownershipType')
 
+        if len(user.addresses.all()) == 0:
+            primary_address = True
+
         new_address = user.add_address(
             name=name,
             street_address=street_address,
@@ -309,6 +312,38 @@ class UserAddressAPI(APIView):
 
         serializer = AddressSerializer(new_address)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def put(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)  # Use pk to get the user information
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        data = request.data
+        address_id = data.get('address_id')
+
+        try:
+            address = user.addresses.get(pk=address_id)
+        except Address.DoesNotExist:
+            return Response({'error': 'Address not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Update address fields
+        address.name = data.get('name', address.name)
+        address.street = data.get('street', address.street)
+        address.city = data.get('city', address.city)
+        address.country = data.get('country', address.country)
+        address.province = data.get('province', address.province)
+        address.postalCode = data.get('postalCode', address.postalCode)
+        address.primaryAddress = data.get('primaryAddress', address.primaryAddress)
+        address.propertyType = data.get('propertyType', address.propertyType)
+        address.ownershipType = data.get('ownershipType', address.ownershipType)
+
+        address.save()
+
+        # Serialize and return the updated address
+        serializer = AddressSerializer(address)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     
     
 class UserAchievementAPI(APIView):

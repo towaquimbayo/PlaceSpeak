@@ -52,7 +52,9 @@ export default function Places() {
     const fetchPlaces = async () => {
       try {
         const endpoint = config.url;
-        const response = await fetch(`${endpoint}/api/users/address/${user_id}`);
+        const response = await fetch(
+          `${endpoint}/api/users/address/${user_id}`
+        );
         if (!response.ok) {
           throw new Error(`Error fetching user places: ${response.statusText}`);
         }
@@ -94,7 +96,9 @@ export default function Places() {
         if (data.places.length > 0) {
           setPlaces(data.places);
           setPrimaryPlace(data.primary);
-          setForm(data.places.find((place) => place.address_id === data.primary));
+          setForm(
+            data.places.find((place) => place.address_id === data.primary)
+          );
         }
       } catch (error) {
         console.error("Fetch places error:", error);
@@ -117,25 +121,45 @@ export default function Places() {
 
     try {
       setLoading(true);
+      console.log(form.address_id);
+      const isUpdating = form.address_id !== 0;
+      const http_method = isUpdating ? "PUT" : "POST";
       // setForm({ ...form, user_id: user_id }); // add user_id to form data
       const endpoint = config.url;
-      const response = await fetch(`${endpoint}/api/users/address/${user_id}/create`, {
-        method: "POST",
+      const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
+        method: http_method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       if (!response.ok) {
-        throw new Error(`Error creating new place: ${response.statusText}`);
+        throw new Error(
+          `Error ${isUpdating ? "updating" : "creating"} place: ${
+            response.statusText
+          }`
+        );
       }
 
-      const newPlace = await response.json();
-      setPlaces([...places, newPlace]); // add the new place to the places array
-      setSuccessMsg("New place created successfully.");
+      const updatedPlace = await response.json();
+
+      if (isUpdating) {
+        // Update the existing place in the places array
+        setPlaces(
+          places.map((place) =>
+            place.address_id === form.address_id ? updatedPlace : place
+          )
+        );
+        setSuccessMsg("Place updated successfully.");
+      } else {
+        // Add the new place to the places array
+        setPlaces([...places, updatedPlace]);
+        setSuccessMsg("New place created successfully.");
+      }
       setIsNewPlace(false);
       setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
-      console.error("Update place error:", error);
+      console.error(`Create/update place error:`, error);
       setErrorMsg("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
@@ -169,7 +193,9 @@ export default function Places() {
               )}
               options={placeNameOptions}
               onChange={(option) => {
-                setForm(places.find((place) => place.address_id === option.value));
+                setForm(
+                  places.find((place) => place.address_id === option.value)
+                );
               }}
             />
           )}
@@ -260,7 +286,9 @@ export default function Places() {
                 text="Cancel"
                 onClick={() => {
                   setIsNewPlace(false);
-                  setForm(places.find((place) => place.address_id === primaryPlace));
+                  setForm(
+                    places.find((place) => place.address_id === primaryPlace)
+                  );
                   setErrorMsg("");
                   setSuccessMsg("");
                 }}
