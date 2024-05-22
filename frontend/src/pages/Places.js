@@ -8,12 +8,14 @@ import Button from "../components/Button";
 import AlertMessage from "../components/AlertMessage";
 import { config } from "../config";
 import { setUserLocation } from "../redux/actions/UserAction";
+import PlacesDeleteModal from "../components/PlacesDeleteModal";
 
 export default function Places() {
   const dispatch = useDispatch();
   const user_id = useSelector((state) => state.user.user_id);
 
   const [loading, setLoading] = useState(false);
+  const [loadingAlt, setLoadingAlt] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -23,6 +25,7 @@ export default function Places() {
   const [places, setPlaces] = useState([]);
   const [primaryPlaceId, setPrimaryPlaceId] = useState(null);
   const [primaryCheckedId, setPrimaryCheckedId] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const initialForm = {
     address_id: 0,
     name: "",
@@ -296,6 +299,39 @@ export default function Places() {
     });
   }
 
+  async function handleDelete() {
+    setErrorMsg("");
+    setSuccessMsg("");
+    setLoadingAlt(true);
+
+    try {
+      const endpoint = config.url;
+      const response = await fetch(
+        `${endpoint}/api/users/address/${user_id}/${form.address_id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error deleting place: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Delete place response:", data);
+
+      setPlaces(places.filter((place) => place.address_id !== form.address_id));
+      setSuccessMsg("Place deleted successfully, reloading...");
+      setTimeout(() => window.location.reload(), 3000);
+    } catch (error) {
+      console.error("Delete place error:", error);
+      setErrorMsg("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoadingAlt(false);
+      setDeleteModalOpen(false);
+    }
+  }
+
   function placeForm() {
     return (
       <form onSubmit={handleSubmit}>
@@ -443,40 +479,46 @@ export default function Places() {
             error={fieldErrors?.ownershipType}
           />
         </div>
-        <div style={{ marginTop: "1rem" }}>
-          {isCreateNew ? (
-            <div className="formBtnGroup">
-              <Button
-                title="Create a New Place"
-                text="Create Place"
-                type="submit"
-                loading={loading}
-              />
-              <Button
-                title="Cancel"
-                text="Cancel"
-                onClick={() => {
-                  setIsCreateNew(false);
-                  setIsAutofilled(false);
-                  setForm(
-                    places.find((place) => place.address_id === primaryPlaceId)
-                  );
-                  setPrimaryCheckedId(primaryPlaceId);
-                  setErrorMsg("");
-                  setSuccessMsg("");
-                }}
-                outline
-              />
-            </div>
-          ) : (
+        {isCreateNew ? (
+          <div className="formBtnGroup">
+            <Button
+              title="Create a New Place"
+              text="Create Place"
+              type="submit"
+              loading={loading}
+            />
+            <Button
+              title="Cancel"
+              text="Cancel"
+              onClick={() => {
+                setIsCreateNew(false);
+                setIsAutofilled(false);
+                setForm(
+                  places.find((place) => place.address_id === primaryPlaceId)
+                );
+                setPrimaryCheckedId(primaryPlaceId);
+                setErrorMsg("");
+                setSuccessMsg("");
+              }}
+              outline
+            />
+          </div>
+        ) : (
+          <div className="formBtnGroup">
             <Button
               title="Save Changes"
               text="Save Changes"
               type="submit"
               loading={loading}
             />
-          )}
-        </div>
+            <Button
+              title="Delete Place"
+              text="Delete Place"
+              onClick={() => setDeleteModalOpen(true)}
+              outline
+            />
+          </div>
+        )}
       </form>
     );
   }
@@ -484,6 +526,13 @@ export default function Places() {
   return (
     <Layout title="Places">
       <DashboardHeader />
+      <PlacesDeleteModal
+        placeName={form.name}
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onDelete={handleDelete}
+        loading={loadingAlt}
+      />
       <div className="dashboardContainer">
         <SideNav />
         <div className="dashboardContent">
