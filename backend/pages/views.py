@@ -311,7 +311,10 @@ class UserAddressAPI(APIView):
         )
 
         serializer = AddressSerializer(new_address)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        response_data = serializer.data
+        response_data['address_id'] = new_address.address_id
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
     
     def put(self, request, user_id):
         try:

@@ -248,9 +248,11 @@ export default function Places() {
         // Add the new place to the places array
         setPlaces([...places, updatedPlace]);
         setSuccessMsg("New place created successfully.");
+        setForm(updatedPlace);  // Set the form to the newly created place
       }
       setIsCreateNew(false);
-      setForm(places.find((place) => place.address_id === primaryPlace));
+      console.log('error here')
+      // setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
       console.error(`${isUpdating ? "Update" : "Create"} place error:`, error);
