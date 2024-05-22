@@ -19,7 +19,7 @@ export default function Places() {
   const [isCreateNew, setIsCreateNew] = useState(false);
   const [isAutofilled, setIsAutofilled] = useState(false);
   const [places, setPlaces] = useState([]);
-  const [primaryPlace, setPrimaryPlace] = useState(null);
+  const [primaryPlaceId, setPrimaryPlaceId] = useState(null);
   const initialForm = {
     address_id: 0,
     name: "",
@@ -70,11 +70,11 @@ export default function Places() {
 
         if (data.places.length > 0) {
           setPlaces(data.places);
-          setPrimaryPlace(data.primary);
+          setPrimaryPlaceId(data.primary);
           setForm(
             data.places.find((place) => place.address_id === data.primary)
           );
-        } else setPrimaryPlace(0);
+        } else setPrimaryPlaceId(0);
       } catch (error) {
         console.error("Fetch places error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -87,12 +87,6 @@ export default function Places() {
 
   function validateForm() {
     let valid = true;
-
-    // if (Object.values(form).some((value) => value === "" || value === null)) {
-    //   setErrorMsg("Please fill out all mandatory fields.");
-    //   return false;
-    // }
-
     // Check mandatory fields, excluding 'suite'
     const mandatoryFields = [
       "name",
@@ -222,7 +216,7 @@ export default function Places() {
       const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
         method: isUpdating ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, primaryPlace }),
+        body: JSON.stringify({ ...form, primaryPlaceId }),
       });
 
       if (!response.ok) {
@@ -439,7 +433,7 @@ export default function Places() {
                   setIsCreateNew(false);
                   setIsAutofilled(false);
                   setForm(
-                    places.find((place) => place.address_id === primaryPlace)
+                    places.find((place) => place.address_id === primaryPlaceId)
                   );
                   setErrorMsg("");
                   setSuccessMsg("");
