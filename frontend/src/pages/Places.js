@@ -135,6 +135,7 @@ export default function Places() {
   function handleOnChange(e) {
     setSuccessMsg("");
     setErrorMsg("");
+    console.log("Form:", form.street, e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
@@ -173,6 +174,8 @@ export default function Places() {
             placeholder="123 Main St"
             value={form.street}
             onChange={handleOnChange}
+            autoComplete="address-line1"
+            addressAutofill
           />
           <Field
             label="Apt / Suite"
@@ -180,6 +183,7 @@ export default function Places() {
             value={form.suite}
             onChange={handleOnChange}
             optional
+            autoComplete="address-line2"
           />
         </div>
         <div className="formRow">
@@ -189,6 +193,7 @@ export default function Places() {
             placeholder="California"
             value={form.province}
             onChange={handleOnChange}
+            autoComplete="address-level1"
           />
           <Field
             label="City"
@@ -196,6 +201,7 @@ export default function Places() {
             placeholder="Los Angeles"
             value={form.city}
             onChange={handleOnChange}
+            autoComplete="address-level2"
           />
         </div>
         <div className="formRow">
@@ -205,6 +211,7 @@ export default function Places() {
             placeholder="United States"
             value={form.country}
             onChange={handleOnChange}
+            autoComplete="country-name"
           />
           <Field
             label="Postal Code"
@@ -212,6 +219,7 @@ export default function Places() {
             placeholder="12345"
             value={form.postalCode}
             onChange={handleOnChange}
+            autoComplete="postal-code"
           />
         </div>
         <div className="formRow">
