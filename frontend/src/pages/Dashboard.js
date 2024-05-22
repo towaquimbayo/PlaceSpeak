@@ -3,6 +3,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
+import { ImFacebook2 } from "react-icons/im";
+import { FaSquareXTwitter } from "react-icons/fa6";
 import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
@@ -272,6 +275,11 @@ export default function Dashboard() {
           <p className="contact email">{user.email}</p>
           <p className="contact phone">{user.phone}</p>
         </div>
+        <div className="userSocials">
+          <ImFacebook2 color="#1877F2" size={20} style={{ padding: "1.5px" }} />
+          <FaLinkedin color="#0762C8" size={20} />
+          <FaSquareXTwitter color="black" size={20} />
+        </div>
       </div>
     );
   };
@@ -389,7 +397,7 @@ export default function Dashboard() {
   return (
     <Layout title="Dashboard">
       <ConfettiModal isOpen={unlockedBadge} message={unlockedBadgeMessage} />
-                
+
       <DashboardHeader />
       <div className="dashboardContainer">
         {console.log(discussions)}

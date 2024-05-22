@@ -333,6 +333,12 @@
   gap: 0.5rem;
 }
 
+.userInfo .userSocials {
+  padding: 0 1rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
 .userInfo .about {
   font-style: italic;
 }
