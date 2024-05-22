@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DashboardHeader from "../components/DashboardHeader";
 import { Checkbox, Dropdown, Field } from "../components/Field";
 import Layout from "../components/Layout";
@@ -7,8 +7,10 @@ import SideNav from "../components/SideNav";
 import Button from "../components/Button";
 import AlertMessage from "../components/AlertMessage";
 import { config } from "../config";
+import { setUserLocation } from "../redux/actions/UserAction";
 
 export default function Places() {
+  const dispatch = useDispatch();
   const user_id = useSelector((state) => state.user.user_id);
 
   const [loading, setLoading] = useState(false);
@@ -110,6 +112,11 @@ export default function Places() {
       )
     ) {
       setErrorMsg("Please fill out all mandatory fields.");
+      return false;
+    }
+
+    if (places.length === 1 && primaryCheckedId === -1) {
+      setErrorMsg("You must have at least one primary place.");
       return false;
     }
 
@@ -238,6 +245,12 @@ export default function Places() {
 
       const updatedPlace = await response.json();
       console.log("Updated place:", updatedPlace);
+
+      // Update user location in Redux if the primary place is updated or first new place is created
+      if (places.length === 0 || primaryCheckedId === form.address_id) {
+        dispatch(setUserLocation(form.city, form.province));
+      }
+
       setSuccessMsg(
         isUpdating
           ? "Place updated successfully, reloading..."

@@ -1,4 +1,4 @@
-import { SET_USER, CLEAR_SESSION } from "../Types";
+import { SET_USER, SET_USER_LOCATION, CLEAR_SESSION } from "../Types";
 
 export const initialState = {
   isLoggedIn: false,
@@ -22,6 +22,12 @@ export default function UserReducer(state = initialState, action) {
         city: action.payload.city,
         province: action.payload.province,
         pfp_link: action.payload.pfp_link,
+      };
+    case SET_USER_LOCATION:
+      return {
+        ...state,
+        city: action.payload.city,
+        province: action.payload.province,
       };
     case CLEAR_SESSION:
       return initialState;
