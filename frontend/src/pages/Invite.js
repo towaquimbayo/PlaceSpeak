@@ -94,12 +94,18 @@ export default function Invite() {
           <p className="description">
             Click the button below to invite a neighbour. (This will unlock the Welcoming Whisperer Badge!) 
           </p>
+          <div>
+            <h3 style={{marginBottom: '1rem'}}>Invite John Doe</h3>
+            <p>John Doe is a new neighbour in your community. Invite them to join your neighbourhood!</p>
           <Button
             title="Invite Neighbour"
             text="Invite Neighbour"
             onClick={inviteNeighbor}
             loading={loading}
+            customStyle={{ marginTop: "1rem" }}
           />
+          </div>
+          
         </div>
       </div>
     </Layout>
