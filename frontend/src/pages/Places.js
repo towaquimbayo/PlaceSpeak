@@ -344,7 +344,7 @@ export default function Places() {
           <Field
             label="Apt / Suite"
             name="suite"
-            value={form.suite}
+            value={form.suite || ""}
             onChange={handleOnChange}
             optional
             autoComplete="address-line2"
