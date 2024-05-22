@@ -16,6 +16,7 @@ import Notifications from "./pages/Notifications";
 import Deactivate from "./pages/Deactivate";
 import Consultation from "./pages/Consultation";
 import Polls from "./pages/Polls";
+import Invite from "./pages/Invite";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
       <Route path="places" element={<Places />} />
       <Route path="verification" element={<Verification />} />
       <Route path="polls" element={<Polls />} />
+      <Route path="invite" element={<Invite />} />
       <Route path="*" element={<Dashboard />} />
 
       {/* The following routes are not yet implemented */}
