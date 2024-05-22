@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { IoMdHome, IoMdPin } from "react-icons/io";
-import { MdExplore, MdPrivacyTip, MdTopic, MdVerified } from "react-icons/md";
+import { MdExplore, MdPrivacyTip, MdTopic, MdVerified, MdPoll } from "react-icons/md";
 import { IoNewspaper, IoNotifications, IoPeople } from "react-icons/io5";
 import { FaAward, FaUser, FaUserTimes } from "react-icons/fa";
 
@@ -28,6 +28,10 @@ export default function SideNav() {
         <NavLink className="sideNavLink" to="/explore">
           <MdExplore />
           Explore
+        </NavLink>
+        <NavLink className="sideNavLink" to="/polls">
+          <MdPoll />
+          Polls
         </NavLink>
       </div>
 

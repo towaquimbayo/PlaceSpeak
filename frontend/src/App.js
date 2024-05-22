@@ -15,6 +15,7 @@ import TopicPrivacy from "./pages/TopicPrivacy";
 import Notifications from "./pages/Notifications";
 import Deactivate from "./pages/Deactivate";
 import Consultation from "./pages/Consultation";
+import Polls from "./pages/Polls";
 
 export default function App() {
   return (
@@ -25,6 +26,8 @@ export default function App() {
       <Route path="profile" element={<Profile />} />
       <Route path="achievements" element={<Achievements />} />
       <Route path="places" element={<Places />} />
+      <Route path="verification" element={<Verification />} />
+      <Route path="polls" element={<Polls />} />
 
       {/* The following routes are not yet implemented */}
       <Route path="consultation" element={<Consultation />} />
@@ -32,7 +35,6 @@ export default function App() {
       <Route path="neighborhood" element={<Neighborhood />} />
       <Route path="news" element={<News />} />
       <Route path="explore" element={<Explore />} />
-      <Route path="verification" element={<Verification />} />
       <Route path="topic-privacy" element={<TopicPrivacy />} />
       <Route path="notifications" element={<Notifications />} />
       <Route path="deactivate" element={<Deactivate />} />
