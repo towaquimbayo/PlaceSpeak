@@ -305,9 +305,13 @@ export default function Places() {
     try {
       const endpoint = config.url;
       const response = await fetch(
-        `${endpoint}/api/users/address/${user_id}/${form.address_id}`,
+        `${endpoint}/api/users/address/${user_id}`,
         {
+          headers: { "Content-Type": "application/json" },
           method: "DELETE",
+          body: JSON.stringify({
+            address_id: form.address_id
+          }),
         }
       );
 
