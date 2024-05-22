@@ -88,7 +88,27 @@ export default function Places() {
   function validateForm() {
     let valid = true;
 
-    if (Object.values(form).some((value) => value === "" || value === null)) {
+    // if (Object.values(form).some((value) => value === "" || value === null)) {
+    //   setErrorMsg("Please fill out all mandatory fields.");
+    //   return false;
+    // }
+
+    // Check mandatory fields, excluding 'suite'
+    const mandatoryFields = [
+      "name",
+      "country",
+      "postalCode",
+      "province",
+      "city",
+      "street",
+      "propertyType",
+      "ownershipType",
+    ];
+    if (
+      mandatoryFields.some(
+        (field) => form[field] === "" || form[field] === null
+      )
+    ) {
       setErrorMsg("Please fill out all mandatory fields.");
       return false;
     }

@@ -171,8 +171,8 @@ class Address(models.Model):
 	country					= 		models.CharField(max_length=32)
 	street					= 		models.CharField(max_length=255)
 	city 						=			models.CharField(max_length=20)
-	province 				= 		models.CharField(max_length=10)
-	postalCode 				= 		models.CharField(max_length=6)
+	province 				= 		models.CharField(max_length=20)
+	postalCode 				= 		models.CharField(max_length=10)
 	primaryAddress =			models.BooleanField(default=False) # flag for primary address
 	propertyType 		= 		models.CharField(max_length=50, choices=PropertyType.choices, blank=True, null=True)
 	ownershipType = models.CharField(max_length=50, choices=OwnershipType.choices, blank=True, null=True)
