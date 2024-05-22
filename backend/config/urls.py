@@ -65,4 +65,5 @@ urlpatterns = [
 		
     # Address endpoints
 	path('api/users/address/<str:user_id>', UserAddressAPI.as_view()),
+	path('api/users/address/<str:user_id>/create', UserAddressAPI.as_view()),
 ]

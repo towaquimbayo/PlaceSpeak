@@ -88,8 +88,9 @@ export default function Places() {
         //     // },
         //   ],
         // };
-        console.log(data);
-        console.log("Places:", data.places);
+
+        // console.log(data);
+        // console.log("Places:", data.places);
         if (data.places.length > 0) {
           setPlaces(data.places);
           setPrimaryPlace(data.primary);
@@ -111,22 +112,24 @@ export default function Places() {
     setSuccessMsg("");
 
     // @TODO: Use same endpoint for creating and updating places
-    // use form.id to determine if it's a new place or an existing one
+    // use form.address_id to determine if it's a new place or an existing one
     // if form.id is 0, it's a new place, otherwise it's an existing one
 
     try {
       setLoading(true);
-      setForm({ ...form, user_id: user_id }); // add user_id to form data
+      // setForm({ ...form, user_id: user_id }); // add user_id to form data
       const endpoint = config.url;
-      const response = await fetch(`${endpoint}/api/places/new`, {
+      const response = await fetch(`${endpoint}/api/users/address/${user_id}/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       if (!response.ok) {
-        throw new Error(`Error fetching user places: ${response.statusText}`);
+        throw new Error(`Error creating new place: ${response.statusText}`);
       }
 
+      const newPlace = await response.json();
+      setPlaces([...places, newPlace]); // add the new place to the places array
       setSuccessMsg("New place created successfully.");
       setIsNewPlace(false);
       setForm(places.find((place) => place.address_id === primaryPlace));

@@ -278,6 +278,38 @@ class UserAddressAPI(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
     
+    def post(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)  # Use pk to get the user information
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        name = data.get('name')
+        street_address = data.get('street')
+        city = data.get('city')
+        country = data.get('country')
+        province = data.get('province')
+        zip_code = data.get('postalCode')
+        primary_address = data.get('primaryAddress', False)
+        property_type = data.get('propertyType')
+        ownership_type = data.get('ownershipType')
+
+        new_address = user.add_address(
+            name=name,
+            street_address=street_address,
+            city=city,
+            country=country,
+            province=province,
+            zip_code=zip_code,
+            primary_address=primary_address,
+            property_type=property_type,
+            ownership_type=ownership_type
+        )
+
+        serializer = AddressSerializer(new_address)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     
 class UserAchievementAPI(APIView):
     def post(self, request):
