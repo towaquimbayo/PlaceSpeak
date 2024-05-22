@@ -3,6 +3,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
+import { ImFacebook2 } from "react-icons/im";
+import { FaSquareXTwitter } from "react-icons/fa6";
 import Select from "react-select";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
@@ -10,13 +13,11 @@ import SideNav from "../components/SideNav";
 import Button from "../components/Button";
 import { config } from "../config";
 import "../css/dashboard.css";
-import ConfettiExplosion from 'react-confetti-explosion';
-import ReactModal from "react-modal";
-
+import { ConfettiModal } from "../components/ConfettiModal";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const { isLoggedIn, userId, firstName, pfp_link } = useSelector((state) => state.user);
+  const { isLoggedIn, user_id, firstName, pfp_link } = useSelector((state) => state.user);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -107,17 +108,19 @@ export default function Dashboard() {
     const title = e.target[0].value;
     const content = e.target[1].value;
 
+    let responseText = "";
+
     const endpoint = config.url;
     try {
       const response = await fetch(`${endpoint}/api/posts/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, title, content }),
+        body: JSON.stringify({ user_id: user_id, title, content }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        return data;
+        responseText += data;
       } else {
         console.error("Failed to add discussion:", response);
         return null;
@@ -127,7 +130,37 @@ export default function Dashboard() {
       return null;
     } finally {
       setLoading(false);
-      window.location.reload();
+    }
+
+    try {
+      const badgeResponse = await fetch(`${endpoint}/api/${user_id}/verify-new-neighbor/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (badgeResponse.ok) {
+        const badgeData = await badgeResponse.json();
+        responseText += badgeData;
+        if (badgeData.badge_granted) {
+          setUnlockedBadge(true);
+          setUnlockedBadgeMessage("You just unlocked the New Neighbour Badge!");
+          // Wait 3 seconds before hiding the badge message, then refresh the page
+          setTimeout(() => {
+            setUnlockedBadge(false);
+            setUnlockedBadgeMessage("");
+            window.location.reload();
+          }, 3000);
+        } else {
+          window.location.reload();
+        }
+        return responseText;
+      } else {
+        console.error("Failed to verify new neighbor badge:", badgeResponse);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error verifying new neighbor badge:", error);
+      return null;
     }
   };
 
@@ -145,7 +178,7 @@ export default function Dashboard() {
       const response = await fetch(`${endpoint}/api/comments/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id: postId, user_id: userId, content }),
+        body: JSON.stringify({ post_id: postId, user_id: user_id, content }),
       });
 
       if (response.ok) {
@@ -162,15 +195,13 @@ export default function Dashboard() {
     }
 
     try {
-      const badgeResponse = await fetch(`${endpoint}/api/${userId}/verify-new-neighbor/`, {
+      const badgeResponse = await fetch(`${endpoint}/api/${user_id}/verify-new-neighbor/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id: postId }),
       });
 
       if (badgeResponse.ok) {
         const badgeData = await badgeResponse.json();
-        console.log("New neighbor badge:", badgeData);
         responseText += badgeData;
         if (badgeData.badge_granted) {
           setUnlockedBadge(true);
@@ -243,6 +274,11 @@ export default function Dashboard() {
         <div className="userContact">
           <p className="contact email">{user.email}</p>
           <p className="contact phone">{user.phone}</p>
+        </div>
+        <div className="userSocials">
+          <ImFacebook2 color="#1877F2" size={20} style={{ padding: "1.5px" }} />
+          <FaLinkedin color="#0762C8" size={20} />
+          <FaSquareXTwitter color="black" size={20} />
         </div>
       </div>
     );
@@ -360,56 +396,8 @@ export default function Dashboard() {
 
   return (
     <Layout title="Dashboard">
-      <ReactModal
-        isOpen={unlockedBadge}
-        contentLabel="Badge Unlocked"
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
+      <ConfettiModal isOpen={unlockedBadge} message={unlockedBadgeMessage} />
 
-          content: {
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "2rem",
-            backgroundColor: "#fff",
-            border: "none",
-            borderRadius: "0.5rem",
-            boxShadow: "0 0 1rem rgba(0, 0, 0, 0.5)",
-          },
-        }}
-        closeTimeoutMS={3000}
-      >
-        <h2>{unlockedBadgeMessage}</h2>
-        {unlockedBadge && <ConfettiExplosion
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-          duration={3000}
-      />}
-      <button onClick={() => setUnlockedBadge(false)} style={
-        {
-          backgroundColor: "#FF4D00",
-          color: "white",
-          padding: "0.5rem 1rem",
-          borderRadius: "0.5rem",
-          border: "none",
-          cursor: "pointer",
-          marginTop: "4rem",
-        }
-      
-      }>Close</button>
-      </ReactModal>
-                
       <DashboardHeader />
       <div className="dashboardContainer">
         {console.log(discussions)}

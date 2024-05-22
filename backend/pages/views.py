@@ -381,8 +381,6 @@ class UpdateEmailVerificationStatus(APIView):
             return Response({'error': 'Verified email status not provided'}, status=status.HTTP_400_BAD_REQUEST)
         
         
-
-
 class UpdatePhoneVerificationStatus(APIView):
     """
     UpdatePhoneVerificationStatus class
