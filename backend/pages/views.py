@@ -966,3 +966,34 @@ class GetCommentsByPost(APIView):
         ]
 
         return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+class VoteInPoll(APIView):
+    """
+    API endpoint to vote in a poll.
+
+    (Currently, this only increments the poll count for the user. You can add more functionality as needed.)
+    
+    Args:
+        request (Request): Incoming HTTP request with user_id in JSON format.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            poll_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id']
+        missing_fields = [field for field in required_fields if field not in poll_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        # Fetch user and increment their poll count
+        user = User.objects.get(pk=poll_data['user_id'])
+        user.polls_answered_count += 1
+        user.save()
+
+        return Response({'message': 'Poll vote added successfully.'}, status=status.HTTP_200_OK)
