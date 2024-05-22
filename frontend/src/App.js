@@ -28,6 +28,7 @@ export default function App() {
       <Route path="places" element={<Places />} />
       <Route path="verification" element={<Verification />} />
       <Route path="polls" element={<Polls />} />
+      <Route path="*" element={<Dashboard />} />
 
       {/* The following routes are not yet implemented */}
       <Route path="consultation" element={<Consultation />} />
