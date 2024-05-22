@@ -1,28 +1,27 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
 import SideNav from "../components/SideNav";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { config } from "../config";
-import { useEffect, useState } from "react";
 import { ConfettiModal } from "../components/ConfettiModal";
 import Button from "../components/Button";
+import { config } from "../config";
 
 export default function Verification() {
-  const navigate = useNavigate();
-  const { isLoggedIn, user_id, firstName, pfp_link } = useSelector((state) => state.user);
-  const [fetching, setFetching] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const user_id = useSelector((state) => state.user.user_id);
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
 
   const verifyEmail = async () => {
     try {
-      const response = await fetch(`${config.url}/api/users/${user_id}/update-email-verification/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verified_email: true }),
-      });
+      const response = await fetch(
+        `${config.url}/api/users/${user_id}/update-email-verification/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verified_email: true }),
+        }
+      );
 
       if (response.ok) {
         setUnlockedBadge(true);
@@ -40,18 +39,19 @@ export default function Verification() {
       }
     } catch (error) {
       console.error("Error during email verification:", error);
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
   const verifyPhone = async () => {
     try {
-      const response = await fetch(`${config.url}/api/users/${user_id}/update-phone-verification/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verified_phone: true }),
-      });
+      const response = await fetch(
+        `${config.url}/api/users/${user_id}/update-phone-verification/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verified_phone: true }),
+        }
+      );
 
       if (response.ok) {
         setUnlockedBadge(true);
@@ -69,18 +69,19 @@ export default function Verification() {
       }
     } catch (error) {
       console.error("Error during phone verification:", error);
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
   const verifyAddress = async () => {
     try {
-      const response = await fetch(`${config.url}/api/users/${user_id}/update-address-verification/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verified_address: true }),
-      });
+      const response = await fetch(
+        `${config.url}/api/users/${user_id}/update-address-verification/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verified_address: true }),
+        }
+      );
 
       if (response.ok) {
         setUnlockedBadge(true);
@@ -98,17 +99,18 @@ export default function Verification() {
       }
     } catch (error) {
       console.error("Error during address verification:", error);
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
   const verifyBadge = async () => {
     try {
-      const response = await fetch(`${config.url}/api/${user_id}/verify-trusted-neighbour/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${config.url}/api/${user_id}/verify-trusted-neighbour/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
@@ -127,10 +129,8 @@ export default function Verification() {
       }
     } catch (error) {
       console.error("Error during badge unlock:", error);
-    } finally {
-      setLoading(false);
     }
-  }
+  };
 
   return (
     <Layout title="Verification">
@@ -141,17 +141,28 @@ export default function Verification() {
         <div className="dashboardContent">
           <h2>Verification</h2>
           <p className="description">
-            Click the buttons below to verify your account details.
+            Participants are encouraged to further verify their location using
+            the verification options provided below. Verification gives further
+            assurance to proponents that they are hearing from the right people
+            relevant area(s).
           </p>
-          <Button className="button" onClick={verifyEmail} customStyle={{'marginBottom': '1rem'}}>
-            Verify Email
-          </Button>
-          <Button className="button" onClick={verifyPhone} customStyle={{'marginBottom': '1rem'}}>
-            Verify Phone
-          </Button>
-          <Button className="button" onClick={verifyAddress}>
-            Verify Address
-          </Button>
+          <Button
+            title="Verify Email"
+            text="Verify Email"
+            onClick={verifyEmail}
+            customStyle={{ marginBottom: "1rem" }}
+          />
+          <Button
+            title="Verify Phone"
+            text="Verify Phone"
+            onClick={verifyPhone}
+            customStyle={{ marginBottom: "1rem" }}
+          />
+          <Button
+            title="Verify Address"
+            text="Verify Address"
+            onClick={verifyAddress}
+          />
         </div>
       </div>
     </Layout>
