@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import DashboardHeader from "../components/DashboardHeader";
-import { Dropdown, Field } from "../components/Field";
+import { Checkbox, Dropdown, Field } from "../components/Field";
 import Layout from "../components/Layout";
 import SideNav from "../components/SideNav";
 import Button from "../components/Button";
@@ -20,6 +20,7 @@ export default function Places() {
   const [isAutofilled, setIsAutofilled] = useState(false);
   const [places, setPlaces] = useState([]);
   const [primaryPlaceId, setPrimaryPlaceId] = useState(null);
+  const [primaryCheckedId, setPrimaryCheckedId] = useState(null);
   const initialForm = {
     address_id: 0,
     name: "",
@@ -71,10 +72,14 @@ export default function Places() {
         if (data.places.length > 0) {
           setPlaces(data.places);
           setPrimaryPlaceId(data.primary);
+          setPrimaryCheckedId(data.primary);
           setForm(
             data.places.find((place) => place.address_id === data.primary)
           );
-        } else setPrimaryPlaceId(0);
+        } else {
+          setPrimaryPlaceId(0);
+          setPrimaryCheckedId(0);
+        }
       } catch (error) {
         console.error("Fetch places error:", error);
         setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -98,6 +103,7 @@ export default function Places() {
       "propertyType",
       "ownershipType",
     ];
+
     if (
       mandatoryFields.some(
         (field) => form[field] === "" || form[field] === null
@@ -216,7 +222,10 @@ export default function Places() {
       const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
         method: isUpdating ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, primaryPlaceId }),
+        body: JSON.stringify({
+          ...form,
+          primaryAddress: primaryCheckedId === form.address_id,
+        }),
       });
 
       if (!response.ok) {
@@ -241,12 +250,13 @@ export default function Places() {
       } else {
         // Add the new place to the places array
         setPlaces([...places, updatedPlace]);
+        // If this is the first place created, set it as the primary place
+        if (primaryPlaceId === 0) setPrimaryPlaceId(updatedPlace.address_id);
         setSuccessMsg("New place created successfully.");
-        setForm(updatedPlace);  // Set the form to the newly created place
       }
+      setForm(places.find((place) => place.address_id === primaryPlaceId));
+      setPrimaryPlaceId(primaryCheckedId);
       setIsCreateNew(false);
-      console.log('error here')
-      // setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
       console.error(`${isUpdating ? "Update" : "Create"} place error:`, error);
@@ -290,8 +300,8 @@ export default function Places() {
   function placeForm() {
     return (
       <form onSubmit={handleSubmit}>
-        <div className="formRow">
-          {isCreateNew ? (
+        {isCreateNew ? (
+          <div className="formRow">
             <Field
               label="Name"
               name="name"
@@ -299,22 +309,39 @@ export default function Places() {
               value={form.name}
               onChange={handleOnChange}
             />
-          ) : (
-            <Dropdown
-              label="Name"
-              name="name"
-              value={placeNameOptions.find(
-                (option) => option.value === form.address_id
-              )}
-              options={placeNameOptions}
-              onChange={(option) => {
-                setForm(
-                  places.find((place) => place.address_id === option.value)
-                );
-              }}
-            />
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            <div className="formRow">
+              <Dropdown
+                label="Name"
+                name="name"
+                value={placeNameOptions.find(
+                  (option) => option.value === form.address_id
+                )}
+                options={placeNameOptions}
+                onChange={(option) => {
+                  setForm(
+                    places.find((place) => place.address_id === option.value)
+                  );
+                  setPrimaryCheckedId(primaryPlaceId);
+                }}
+              />
+            </div>
+            <div className="formRow">
+              <Checkbox
+                label="Set as Primary Place"
+                name="primaryPlace"
+                isChecked={primaryCheckedId === form.address_id}
+                onChange={() => {
+                  setPrimaryCheckedId(
+                    primaryCheckedId === form.address_id ? -1 : form.address_id
+                  );
+                }}
+              />
+            </div>
+          </>
+        )}
         <div className="formRow">
           <Field
             label="Search Address"
@@ -435,6 +462,7 @@ export default function Places() {
                   setForm(
                     places.find((place) => place.address_id === primaryPlaceId)
                   );
+                  setPrimaryCheckedId(primaryPlaceId);
                   setErrorMsg("");
                   setSuccessMsg("");
                 }}

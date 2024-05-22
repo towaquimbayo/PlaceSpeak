@@ -172,7 +172,6 @@ export function Checkbox({
   name,
   onChange = () => {},
   isChecked = false,
-  error = "",
 }) {
   return (
     <div className="checkbox" onClick={() => onChange({ target: { name } })}>
@@ -183,7 +182,6 @@ export function Checkbox({
         checked={isChecked}
       />
       <span>{label}</span>
-      {error && <span className="fieldErrorMsg">{error}</span>}
     </div>
   );
 }
