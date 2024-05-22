@@ -15,8 +15,10 @@ export default function Invite() {
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
 
+  const neighborNames = ["John Doe", "Alice Smith", "Bob Johnson"]
+
   // Dummy function to simulate inviting a neighbor
-  const inviteNeighbor = async () => {
+  const inviteNeighbor = async (name) => {
     setLoading(true);
     try {
       const response = await fetch(`${config.url}/api/invite`, {
@@ -27,7 +29,7 @@ export default function Invite() {
 
       if (response.ok) {
         setUnlockedBadge(true);
-        setUnlockedBadgeMessage("Successfully invited John Doe!");
+        setUnlockedBadgeMessage("Successfully invited " + name + "!");
         setTimeout(() => {
           setUnlockedBadge(false);
           setUnlockedBadgeMessage("");
@@ -92,20 +94,22 @@ export default function Invite() {
         <div className="dashboardContent">
           <h2>Invite Neighbour</h2>
           <p className="description">
-            Click the button below to invite a neighbour. (This will unlock the Welcoming Whisperer Badge!) 
+            Click any button below to invite a neighbour. (This will unlock the Welcoming Whisperer Badge!) 
           </p>
-          <div>
-            <h3 style={{marginBottom: '1rem'}}>Invite John Doe</h3>
-            <p>John Doe is a new neighbour in your community. Invite them to join your neighbourhood!</p>
-          <Button
-            title="Invite Neighbour"
-            text="Invite Neighbour"
-            onClick={inviteNeighbor}
-            loading={loading}
-            customStyle={{ marginTop: "1rem" }}
-          />
-          </div>
-          
+          {neighborNames.map((name, index) => (
+            <div style={{marginBottom: '1rem', border: '1px lightgray solid', borderRadius: '8px', padding: '16px'}}>
+              <h3 style={{marginBottom: '1rem'}}>Invite {name}</h3>
+              <p>{name} is a new neighbour in your community. Invite them to join your neighbourhood!</p>
+              <Button
+                title="Invite Neighbour"
+                text="Invite Neighbour"
+                onClick={() => inviteNeighbor(name)}
+                loading={loading}
+                customStyle={{ marginTop: "1rem" }}
+              />
+            </div>  
+          ))}
+                  
         </div>
       </div>
     </Layout>
