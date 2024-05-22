@@ -15,7 +15,7 @@ export default function Places() {
   const [fetching, setFetching] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [isNewPlace, setIsNewPlace] = useState(false);
+  const [isCreateNew, setIsCreateNew] = useState(false);
   const [places, setPlaces] = useState([]);
   const [primaryPlace, setPrimaryPlace] = useState(null);
   const initialForm = {
@@ -121,7 +121,7 @@ export default function Places() {
         setPlaces([...places, updatedPlace]);
         setSuccessMsg("New place created successfully.");
       }
-      setIsNewPlace(false);
+      setIsCreateNew(false);
       setForm(places.find((place) => place.address_id === primaryPlace));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
@@ -142,7 +142,7 @@ export default function Places() {
     return (
       <form className="accountForm" onSubmit={handleSubmit}>
         <div className="formRow">
-          {isNewPlace ? (
+          {isCreateNew ? (
             <Field
               label="Name"
               name="name"
@@ -168,18 +168,18 @@ export default function Places() {
         </div>
         <div className="formRow">
           <Field
-            label="Country"
-            name="country"
-            placeholder="United States"
-            value={form.country}
+            label="Street Address"
+            name="street"
+            placeholder="123 Main St"
+            value={form.street}
             onChange={handleOnChange}
           />
           <Field
-            label="Postal Code"
-            name="postalCode"
-            placeholder="12345"
-            value={form.postalCode}
+            label="Apt / Suite"
+            name="suite"
+            value={form.suite}
             onChange={handleOnChange}
+            optional
           />
         </div>
         <div className="formRow">
@@ -200,18 +200,18 @@ export default function Places() {
         </div>
         <div className="formRow">
           <Field
-            label="Street Address"
-            name="street"
-            placeholder="123 Main St"
-            value={form.street}
+            label="Country"
+            name="country"
+            placeholder="United States"
+            value={form.country}
             onChange={handleOnChange}
           />
           <Field
-            label="Apt / Suite"
-            name="suite"
-            value={form.suite}
+            label="Postal Code"
+            name="postalCode"
+            placeholder="12345"
+            value={form.postalCode}
             onChange={handleOnChange}
-            optional
           />
         </div>
         <div className="formRow">
@@ -239,7 +239,7 @@ export default function Places() {
           />
         </div>
         <div style={{ marginTop: "1rem" }}>
-          {isNewPlace ? (
+          {isCreateNew ? (
             <div className="formBtnGroup">
               <Button
                 title="Create a New Place"
@@ -251,7 +251,7 @@ export default function Places() {
                 title="Cancel"
                 text="Cancel"
                 onClick={() => {
-                  setIsNewPlace(false);
+                  setIsCreateNew(false);
                   setForm(
                     places.find((place) => place.address_id === primaryPlace)
                   );
@@ -280,7 +280,7 @@ export default function Places() {
       <div className="dashboardContainer">
         <SideNav />
         <div className="dashboardContent">
-          {isNewPlace ? (
+          {isCreateNew ? (
             <h2>Create a New Place</h2>
           ) : (
             <>
@@ -291,7 +291,7 @@ export default function Places() {
                   text="Add Place"
                   onClick={() => {
                     setForm(initialForm);
-                    setIsNewPlace(true);
+                    setIsCreateNew(true);
                     setErrorMsg("");
                     setSuccessMsg("");
                   }}
@@ -310,7 +310,7 @@ export default function Places() {
           {successMsg && <AlertMessage type="success" msg={successMsg} />}
           {fetching ? (
             <p id="loadingText">Loading...</p>
-          ) : (places && places.length > 0) || isNewPlace ? (
+          ) : (places && places.length > 0) || isCreateNew ? (
             placeForm()
           ) : (
             <p>
