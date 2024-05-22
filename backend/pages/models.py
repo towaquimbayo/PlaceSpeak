@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 # initial commit - beginning work on DB object models 
@@ -75,7 +75,7 @@ class User(models.Model):
 		return self.addresses.filter(primaryAddress=True).first()
 
 
-	def add_address(self, name, street_address, city, country, province, zip_code, primary_address=False, property_type=None, ownership_type=None):
+	def add_address(self, name, street_address, city, country, province, zip_code, suite, primary_address=False, property_type=None, ownership_type=None):
 		"""
 		Adds a new address to the user's addresses.
 
@@ -114,6 +114,53 @@ class User(models.Model):
 
 
 		return address
+	
+	def delete_address(self, address_id):
+		try:
+			with transaction.atomic():
+				address_to_delete = self.addresses.get(pk=address_id)
+				is_primary = address_to_delete.primaryAddress
+
+				# remove the address from the user's addresses
+				self.addresses.remove(address_to_delete)
+				address_to_delete.delete()
+
+				# if the deleted address was primary, set the next available address as the primary address
+				if is_primary:
+					next_address = self.addresses.first()
+					if next_address:
+						next_address.primaryAddress = True
+						next_address.save()
+
+				return "Address deleted successfully"
+		except Address.DoesNotExist:
+			return "Address does not exist"
+		except Exception as e:
+			return str(e)
+
+	def change_primary_address(self, new_primary_address_id):
+		try:
+			with transaction.atomic():
+				# find the new primary address (it has to belong to the user)
+				new_primary_address = self.addresses.get(pk=new_primary_address_id)
+
+				# unset the current primary address
+				current_primary_address = self.addresses.filter(primaryAddress=True)
+				if current_primary_address:
+					current_primary_address.primaryAddress = False
+					current_primary_address.save()
+				
+				# Set the new primary address
+				new_primary_address.primaryAddress = True
+				new_primary_address.save()
+
+				return "Primary Address changed successfully"
+		except Address.DoesNotExist:
+			return "New primary address does not exist"
+		except Exception as e:
+			return str(e)
+
+				
 	
 	def __str__(self):
 		return f"{self.first_name} {self.last_name} ({self.email}, pfp_link: {self.pfp_link})"
