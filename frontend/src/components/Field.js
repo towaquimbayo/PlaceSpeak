@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Select from "react-select";
+import { AddressAutofill } from "@mapbox/search-js-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../css/field.css";
 
@@ -12,20 +13,42 @@ export function Field({
   onChange = () => {},
   halfWidth = false,
   optional = false,
+  autoComplete = "off",
+  addressAutofill = false,
 }) {
+  const accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+
   return (
     <div className={`formGroup ${halfWidth ? "half" : ""}`}>
       <label htmlFor={name}>
         {label}
         {optional && <span>{"(optional)"}</span>}
       </label>
-      <input
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
+      {addressAutofill ? (
+        <AddressAutofill
+          accessToken={accessToken}
+          onChange={(value) => {
+            onChange({ target: { name, value } });
+          }}
+        >
+          <input
+            type={type}
+            name={name}
+            placeholder={placeholder}
+            value={value}
+            autoComplete={autoComplete}
+          />
+        </AddressAutofill>
+      ) : (
+        <input
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          autoComplete={autoComplete}
+        />
+      )}
     </div>
   );
 }
