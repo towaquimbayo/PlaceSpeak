@@ -167,22 +167,23 @@ export function Dropdown({
   );
 }
 
-// export function Checkbox({
-
-// }) {
-//   return (
-//     <div className="formGroup">
-//       <label htmlFor={name}>
-//         {label}
-//         {optional && <span>{"(optional)"}</span>}
-//       </label>
-//       <input
-//         type="checkbox"
-//         name={name}
-//         value={value}
-//         onChange={onChange}
-//       />
-//       {error && <span className="fieldErrorMsg">{error}</span>}
-//     </div>
-//   );
-// }
+export function Checkbox({
+  label,
+  name,
+  onChange = () => {},
+  isChecked = false,
+  error = "",
+}) {
+  return (
+    <div className="checkbox">
+      <input
+        type="checkbox"
+        name={name}
+        onChange={onChange}
+        checked={isChecked}
+      />
+      <span>{label}</span>
+      {error && <span className="fieldErrorMsg">{error}</span>}
+    </div>
+  );
+}
