@@ -140,7 +140,7 @@ export default function Places() {
 
   function placeForm() {
     return (
-      <form className="accountForm" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="formRow">
           {isCreateNew ? (
             <Field
@@ -215,7 +215,6 @@ export default function Places() {
           <Field
             label="Postal Code"
             name="postalCode"
-            placeholder="12345"
             value={form.postalCode}
             onChange={handleOnChange}
             autoComplete="postal-code"

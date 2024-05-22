@@ -25,6 +25,10 @@ body {
   background: #f8f8f8;
 }
 
+body:has(.mobileNavContainer.open) {
+  overflow: hidden;
+}
+
 input,
 button,
 textarea,
@@ -120,6 +124,7 @@ input.searchBar {
   -moz-transition: all 0.6s ease-in-out;
   -ms-transition: all 0.6s ease-in-out;
   -o-transition: all 0.6s ease-in-out;
+  overflow-y: auto;
   transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
   -moz-transform: translateX(-100%);

@@ -101,7 +101,7 @@ export default function Profile() {
 
   function accountForm() {
     return (
-      <form className="accountForm" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="formRow">
           <Field
             label="First Name"

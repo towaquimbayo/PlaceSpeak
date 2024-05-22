@@ -2,7 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { clearSession } from "../redux/actions/UserAction";
 import { IoMdHome, IoMdPin } from "react-icons/io";
-import { MdExplore, MdPrivacyTip, MdTopic, MdVerified } from "react-icons/md";
+import {
+  MdExplore,
+  MdPoll,
+  MdPrivacyTip,
+  MdTopic,
+  MdVerified,
+} from "react-icons/md";
 import {
   IoClose,
   IoNewspaper,
@@ -83,6 +89,10 @@ export default function MobileNav({ isMobileNavOpen, setIsMobileNavOpen }) {
           <NavLink className="sideNavLink" to="/explore">
             <MdExplore />
             Explore
+          </NavLink>
+          <NavLink className="sideNavLink" to="/polls">
+            <MdPoll />
+            Polls
           </NavLink>
         </div>
         <div className="navLinkGroup">

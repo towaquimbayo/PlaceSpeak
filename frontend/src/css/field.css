@@ -1,41 +1,41 @@
-.accountForm {
+form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.accountForm .formRow {
+form .formRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.accountForm .formRow .formGroup {
+form .formRow .formGroup {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
 }
 
-.accountForm .formGroup.half {
+form .formGroup.half {
   width: 50%;
   padding-right: 0.5rem;
 }
 
-.accountForm .formGroup label {
+form .formGroup label {
   font-size: 0.875rem;
   font-weight: 500;
   color: black;
 }
 
-.accountForm .formGroup label span {
+form .formGroup label span {
   color: #969696;
   padding-left: 0.25rem;
 }
 
-.accountForm .formGroup input,
-.accountForm .formGroup textarea {
+form .formGroup input,
+form .formGroup textarea {
   font-size: 0.9rem;
   line-height: 1.25rem;
   font-weight: 400;
@@ -51,19 +51,19 @@
   -o-transition: border-color 0.3s ease-in-out;
 }
 
-.accountForm .formGroup textarea {
+form .formGroup textarea {
   font-family: "Inter", sans-serif;
   resize: vertical;
   outline: none;
   min-height: 100px;
 }
 
-.accountForm .formGroup .passwordField input {
+form .formGroup .passwordField input {
   width: 100%;
   padding-right: 3rem;
 }
 
-.accountForm .formGroup .passwordField svg {
+form .formGroup .passwordField svg {
   position: absolute;
   margin-left: -2.25rem;
   margin-top: 8px;
@@ -72,22 +72,22 @@
   cursor: pointer;
 }
 
-.accountForm .formGroup input:focus,
-.accountForm .formGroup textarea:focus {
+form .formGroup input:focus,
+form .formGroup textarea:focus {
   outline: none;
   border-color: var(--primaryColor);
 }
 
-.accountForm .formGroup input.error,
-.accountForm .formGroup textarea.error {
+form .formGroup input.error,
+form .formGroup textarea.error {
   border-color: var(--errorColor);
 }
 
 @media (max-width: 992px) {
-  .accountForm .formRow {
+  form .formRow {
     flex-direction: column;
   }
-  .accountForm .formGroup.half {
+  form .formGroup.half {
     width: 100%;
     padding-right: 0;
   }
