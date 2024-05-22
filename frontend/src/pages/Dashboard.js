@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiArrowFatUpFill, PiArrowFatDownFill, PiDotsThreeBold } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
 import { FaLinkedin } from "react-icons/fa";
@@ -15,8 +14,6 @@ import { config } from "../config";
 import "../css/dashboard.css";
 import { ConfettiModal } from "../components/ConfettiModal";
 export default function Dashboard() {
-  const navigate = useNavigate();
-
   const { isLoggedIn, user_id, firstName, pfp_link } = useSelector((state) => state.user);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
@@ -24,10 +21,6 @@ export default function Dashboard() {
   const [expandedDiscussionId, setExpandedDiscussionId] = useState(null);
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
-
-  useEffect(() => {
-    if (!isLoggedIn) navigate("/login");
-  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     const endpoint = config.url;
