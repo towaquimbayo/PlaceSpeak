@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { PiArrowFatUpLight, PiArrowFatDownLight, PiDotsThreeBold } from "react-icons/pi";
+import { PiArrowFatUpLight, PiArrowFatDownLight, PiArrowFatUpFill, PiArrowFatDownFill, PiDotsThreeBold } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
 import { FaLinkedin } from "react-icons/fa";
 import { ImFacebook2 } from "react-icons/im";
@@ -164,6 +164,46 @@ export default function Dashboard() {
     }
   };
 
+  const handleDiscussionUpvote = async (postId) => {
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/posts/upvote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user_id, post_id: postId }),
+      });
+
+      if (response.ok) {
+        // Refresh the discussions after upvoting
+        window.location.reload();
+      } else {
+        console.error("Failed to upvote post:", response);
+      }
+    } catch (error) {
+      console.error("Error upvoting post:", error);
+    }
+  };
+
+  const handleDiscussionDownvote = async (postId) => {
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/posts/downvote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user_id, post_id: postId }),
+      });
+
+      if (response.ok) {
+        // Refresh the discussions after downvoting
+        window.location.reload();
+      } else {
+        console.error("Failed to downvote post:", response);
+      }
+    } catch (error) {
+      console.error("Error downvoting post:", error);
+    }
+  };
+
   const addComment = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -226,6 +266,50 @@ export default function Dashboard() {
     }
   };
 
+  const handleCommentUpvote = async (commentId) => {
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/comments/upvote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user_id, comment_id: commentId }),
+      });
+
+      if (response.ok) {
+        // Refresh the discussions after upvoting the comment
+        window.location.reload();
+      } else {
+        console.error("Failed to upvote comment:", response);
+      }
+    } catch (error) {
+      console.error("Error upvoting comment:", error);
+    }
+  };
+
+  const handleCommentDownvote = async (commentId) => {
+    const endpoint = config.url;
+    try {
+      const response = await fetch(`${endpoint}/api/comments/downvote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user_id, comment_id: commentId }),
+      });
+
+      if (response.ok) {
+        // Refresh the discussions after downvoting the comment
+        window.location.reload();
+      } else {
+        console.error("Failed to downvote comment:", response);
+      }
+    } catch (error) {
+      console.error("Error downvoting comment:", error);
+    }
+  };
+
+  const toggleComments = (discussionId) => {
+    setExpandedDiscussionId((prevId) => (prevId === discussionId ? null : discussionId));
+  };
+
   const UserInfo = ({ user }) => {
     const [badges, setBadges] = useState([]);
 
@@ -284,10 +368,6 @@ export default function Dashboard() {
     );
   };
 
-  const toggleComments = (discussionId) => {
-    setExpandedDiscussionId((prevId) => (prevId === discussionId ? null : discussionId));
-  };
-
   function allDiscussions() {
     if (discussions.length === 0) {
       return <p id="loadingText">No discussions available.</p>;
@@ -328,12 +408,18 @@ export default function Dashboard() {
                 <p className="bodyContent">{discussion.content}</p>
               </div>
               <div className="voteCont">
-                <button className="active">
-                  <PiArrowFatUpLight size={20} color="#858585" />
+                <button onClick={() => handleDiscussionUpvote(discussion.post_id)}>
+                  {discussion.upvoted_by.includes(user_id) ?
+                    <PiArrowFatUpFill size={20} color="#4990e2" /> :
+                    <PiArrowFatUpLight size={20} color="#858585" />
+                  }
                 </button>
-                <p>{discussion.upvotes - discussion.downvotes}</p>
-                <button>
-                  <PiArrowFatDownLight size={20} color="#858585" />
+                <p>{discussion.upvoted_by.length - discussion.downvoted_by.length}</p>
+                <button onClick={() => handleDiscussionDownvote(discussion.post_id)}>
+                  {discussion.downvoted_by.includes(user_id) ?
+                    <PiArrowFatDownFill size={20} color="#4990e2" /> :
+                    <PiArrowFatDownLight size={20} color="#858585" />
+                  }
                 </button>
               </div>
               <div className="discussionCardFooter">
@@ -362,12 +448,18 @@ export default function Dashboard() {
                                 <p className="date">{new Date(comment.created_date).toLocaleString()}</p>
                               </div>
                               <div className="commentHeaderRight voteCont">
-                                <button>
-                                  <PiArrowFatUpLight size={20} color="#858585" />
+                                <button onClick={() => handleCommentUpvote(comment.comment_id)}>
+                                  {comment.upvoted_by.includes(user_id) ?
+                                    <PiArrowFatUpFill size={20} color="#4990e2" /> :
+                                    <PiArrowFatUpLight size={20} color="#858585" />
+                                  }
                                 </button>
-                                <p>{comment.upvotes - comment.downvotes}</p>
-                                <button>
-                                  <PiArrowFatDownLight size={20} color="#858585" />
+                                <p>{comment.upvoted_by.length - comment.downvoted_by.length}</p>
+                                <button onClick={() => handleCommentDownvote(comment.comment_id)}>
+                                  {comment.downvoted_by.includes(user_id) ?
+                                    <PiArrowFatDownFill size={20} color="#4990e2" /> :
+                                    <PiArrowFatDownLight size={20} color="#858585" />
+                                  }
                                 </button>
                               </div>
                             </div>
