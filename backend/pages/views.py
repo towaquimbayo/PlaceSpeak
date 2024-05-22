@@ -353,6 +353,22 @@ class UserAddressAPI(APIView):
         # Serialize and return the updated address
         serializer = AddressSerializer(address)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, user_id):
+        address_id = request.data.get('address_id')
+
+        if not user_id or not address_id:
+            return Response({'error': 'user_id and address_id are required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(pk=user_id)
+            message = user.delete_address(address_id)
+            return Response({'message': message}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
     
     
