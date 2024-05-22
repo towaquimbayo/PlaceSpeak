@@ -238,26 +238,12 @@ export default function Places() {
 
       const updatedPlace = await response.json();
       console.log("Updated place:", updatedPlace);
-
-      if (isUpdating) {
-        // Update the existing place in the places array
-        setPlaces(
-          places.map((place) =>
-            place.address_id === form.address_id ? updatedPlace : place
-          )
-        );
-        setSuccessMsg("Place updated successfully.");
-      } else {
-        // Add the new place to the places array
-        setPlaces([...places, updatedPlace]);
-        // If this is the first place created, set it as the primary place
-        if (primaryPlaceId === 0) setPrimaryPlaceId(updatedPlace.address_id);
-        setSuccessMsg("New place created successfully.");
-      }
-      setForm(places.find((place) => place.address_id === primaryPlaceId));
-      setPrimaryPlaceId(primaryCheckedId);
-      setIsCreateNew(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      setSuccessMsg(
+        isUpdating
+          ? "Place updated successfully, reloading..."
+          : "Place created successfully, reloading..."
+      );
+      setTimeout(() => window.location.reload(), 3000);
     } catch (error) {
       console.error(`${isUpdating ? "Update" : "Create"} place error:`, error);
       setErrorMsg("An unexpected error occurred. Please try again later.");
@@ -371,7 +357,7 @@ export default function Places() {
             onChange={handleOnChange}
             optional
             autoComplete="address-line2"
-            disabled={!isAutofilled}
+            disabled={!isAutofilled && !form.street}
             error={fieldErrors?.suite}
           />
         </div>
@@ -414,7 +400,7 @@ export default function Places() {
             value={form.postalCode}
             onChange={handleOnChange}
             autoComplete="postal-code"
-            disabled={!isAutofilled}
+            disabled={!isAutofilled && !form.street}
             error={fieldErrors?.postalCode}
           />
         </div>

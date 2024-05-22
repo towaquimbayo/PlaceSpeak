@@ -329,7 +329,11 @@ class UserAddressAPI(APIView):
             address = user.addresses.get(pk=address_id)
         except Address.DoesNotExist:
             return Response({'error': 'Address not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+
+        # if the incoming address is primary, set all other addresses to not primary
+        if data.get('primaryAddress', False):
+            user.addresses.update(primaryAddress=False)
+
         # Update address fields
         address.name = data.get('name', address.name)
         address.street = data.get('street', address.street)
@@ -337,6 +341,7 @@ class UserAddressAPI(APIView):
         address.country = data.get('country', address.country)
         address.province = data.get('province', address.province)
         address.postalCode = data.get('postalCode', address.postalCode)
+        address.suite = data.get('suite', address.suite if address.suite else None)
         address.primaryAddress = data.get('primaryAddress', address.primaryAddress)
         address.propertyType = data.get('propertyType', address.propertyType)
         address.ownershipType = data.get('ownershipType', address.ownershipType)
