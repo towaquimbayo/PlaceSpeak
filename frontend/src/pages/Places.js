@@ -135,7 +135,6 @@ export default function Places() {
   function handleOnChange(e) {
     setSuccessMsg("");
     setErrorMsg("");
-    console.log("Form:", form.street, e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
