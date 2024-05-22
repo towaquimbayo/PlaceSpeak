@@ -12,7 +12,7 @@ export default function Profile() {
   const user_id = useSelector((state) => state.user.user_id);
 
   const [form, setForm] = useState({
-    userId: user_id,
+    user_id: user_id,
     firstName: "",
     lastName: "",
     email: "",
@@ -46,12 +46,12 @@ export default function Profile() {
         const data = await response.json();
         console.log("Data:", data);
         setForm({
-          userId: user_id,
+          user_id: user_id,
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
           phone: data.phone,
-          password: "",
+          password: data.password,
           about: data.about,
           linkedIn: data.linkedIn,
           twitter: data.twitter,
@@ -80,7 +80,6 @@ export default function Profile() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-
       if (!response.ok) {
         throw new Error(`Error updating user details: ${response.statusText}`);
       }

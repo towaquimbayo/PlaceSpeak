@@ -180,7 +180,6 @@ class UpdateUserAPI(APIView):
         try:
             # Validate request data as a dictionary
             user_data = request.data
-            print(user_data)
 
         except (TypeError, ValueError):
             return Response({'error': 'Request body must be valid JSON.'})
@@ -211,6 +210,7 @@ class UpdateUserAPI(APIView):
         user.linkedin = user_data['linkedIn']
         user.twitter = user_data['twitter']
         user.facebook = user_data['facebook']
+        user.password = user_data['password']
         # Update other relevant fields as needed
 
         user.save()  # Save changes to the database
