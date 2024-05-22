@@ -51,6 +51,12 @@ form .formGroup textarea {
   -o-transition: border-color 0.3s ease-in-out;
 }
 
+form .formGroup input.disabled,
+form .formGroup textarea.disabled {
+  background-color: #ececec;
+  cursor: not-allowed;
+}
+
 form .formGroup textarea {
   font-family: "Inter", sans-serif;
   resize: vertical;

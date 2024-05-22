@@ -13,10 +13,24 @@ export function Field({
   onChange = () => {},
   halfWidth = false,
   optional = false,
+  disabled = false,
   autoComplete = "off",
   addressAutofill = false,
+  onRetrieve = () => {},
 }) {
   const accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+  const inputField = (
+    <input
+      className={disabled ? "disabled" : ""}
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      autoComplete={autoComplete}
+      disabled={disabled}
+    />
+  );
 
   return (
     <div className={`formGroup ${halfWidth ? "half" : ""}`}>
@@ -30,24 +44,12 @@ export function Field({
           onChange={(value) => {
             onChange({ target: { name, value } });
           }}
+          onRetrieve={onRetrieve}
         >
-          <input
-            type={type}
-            name={name}
-            placeholder={placeholder}
-            value={value}
-            autoComplete={autoComplete}
-          />
+          {inputField}
         </AddressAutofill>
       ) : (
-        <input
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          autoComplete={autoComplete}
-        />
+        inputField
       )}
     </div>
   );

@@ -13,9 +13,10 @@ export default function Places() {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [isCreateNew, setIsCreateNew] = useState(false);
+  const [isAutofilled, setIsAutofilled] = useState(false);
   const [places, setPlaces] = useState([]);
   const [primaryPlace, setPrimaryPlace] = useState(null);
   const initialForm = {
@@ -29,8 +30,11 @@ export default function Places() {
     suite: "",
     propertyType: "",
     ownershipType: "",
+    longitude: 0,
+    latitude: 0,
   };
   const [form, setForm] = useState(initialForm);
+  const [searchAddress, setSearchAddress] = useState("");
   const placeNameOptions = places.map((place) => ({
     value: place.address_id,
     label: place.name,
@@ -135,7 +139,30 @@ export default function Places() {
   function handleOnChange(e) {
     setSuccessMsg("");
     setErrorMsg("");
-    setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === "addressSearch") {
+      setSearchAddress(e.target.value.trim());
+    } else {
+      setForm({ ...form, [e.target.name]: e.target.value.trim() });
+    }
+  }
+
+  // When the address field is autofilled, retrieve the full address details
+  function handleOnRetrieve(data) {
+    console.log("Retrieved Autofilled Address:", data);
+    const fieldData = data.features[0].properties;
+    const coordinates = data.features[0].geometry.coordinates;
+    setIsAutofilled(true);
+    setSearchAddress("");
+    setForm({
+      ...form,
+      street: fieldData.address_line1,
+      city: fieldData.address_level2,
+      province: fieldData.address_level1,
+      country: fieldData.country,
+      postalCode: fieldData.postcode,
+      longitude: coordinates[0],
+      latitude: coordinates[1],
+    });
   }
 
   function placeForm() {
@@ -168,13 +195,24 @@ export default function Places() {
         </div>
         <div className="formRow">
           <Field
-            label="Street Address"
+            label="Search Address"
+            name="addressSearch"
+            placeholder="Start typing your address..."
+            value={searchAddress}
+            onChange={handleOnChange}
+            onRetrieve={handleOnRetrieve}
+            addressAutofill
+          />
+        </div>
+        <div className="formRow">
+          <Field
+            label="Street"
             name="street"
             placeholder="123 Main St"
             value={form.street}
             onChange={handleOnChange}
             autoComplete="address-line1"
-            addressAutofill
+            disabled
           />
           <Field
             label="Apt / Suite"
@@ -183,6 +221,7 @@ export default function Places() {
             onChange={handleOnChange}
             optional
             autoComplete="address-line2"
+            disabled={!isAutofilled}
           />
         </div>
         <div className="formRow">
@@ -193,6 +232,7 @@ export default function Places() {
             value={form.province}
             onChange={handleOnChange}
             autoComplete="address-level1"
+            disabled
           />
           <Field
             label="City"
@@ -201,6 +241,7 @@ export default function Places() {
             value={form.city}
             onChange={handleOnChange}
             autoComplete="address-level2"
+            disabled
           />
         </div>
         <div className="formRow">
@@ -211,6 +252,7 @@ export default function Places() {
             value={form.country}
             onChange={handleOnChange}
             autoComplete="country-name"
+            disabled
           />
           <Field
             label="Postal Code"
@@ -218,6 +260,7 @@ export default function Places() {
             value={form.postalCode}
             onChange={handleOnChange}
             autoComplete="postal-code"
+            disabled={!isAutofilled}
           />
         </div>
         <div className="formRow">
@@ -258,6 +301,7 @@ export default function Places() {
                 text="Cancel"
                 onClick={() => {
                   setIsCreateNew(false);
+                  setIsAutofilled(false);
                   setForm(
                     places.find((place) => place.address_id === primaryPlace)
                   );
