@@ -368,6 +368,23 @@ class UserAddressAPI(APIView):
             return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self, request, user_id):
+        new_primary_address_id = request.data.get('address_id')
+        print(new_primary_address_id)
+        print(user_id)
+
+        if not user_id or not new_primary_address_id:
+            return Response({'error': 'user_id and new_primary_address_id are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user= User.objects.get(pk=user_id)
+            message = user.change_primary_address(new_primary_address_id)
+            return Response({'message': message}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
     

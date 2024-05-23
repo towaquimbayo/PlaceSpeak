@@ -145,7 +145,7 @@ class User(models.Model):
 				new_primary_address = self.addresses.get(pk=new_primary_address_id)
 
 				# unset the current primary address
-				current_primary_address = self.addresses.filter(primaryAddress=True)
+				current_primary_address = self.addresses.filter(primaryAddress=True).first()
 				if current_primary_address:
 					current_primary_address.primaryAddress = False
 					current_primary_address.save()
