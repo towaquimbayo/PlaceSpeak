@@ -532,10 +532,10 @@ class PopulateBadges(APIView):
     """
     def post(self, request):
         try:
-            # Inquirer Badge
-            inquirer_badge = Badge.objects.create(
-                name="Inquirer Badge",
-                img_link="inquirer_badge_img_link",
+            # Insightful Badge
+            insightful_badge = Badge.objects.create(
+                name="Insightful Badge",
+                img_link="insightful_badge_img_link",
                 rarity="Common",
                 description="Awarded after their first insightful comment or question. This badge acknowledges the initiation into the realm of discussions.",
                 points=100,  # Set appropriate points
@@ -673,9 +673,9 @@ class VerifyNewNeighborBadge(APIView):
 
 
 
-class VerifyInquirerBadge(APIView):
+class VerifyInsightfulBadge(APIView):
     """
-    Verifies if a user meets the requirements for the Inquirer Badge and grants the badge if applicable.
+    Verifies if a user meets the requirements for the Insightful Badge and grants the badge if applicable.
 
     Requirements:
     - A comment created by the user has received a certain number of upvotes and is considered insightful (over 80% approval)
@@ -688,20 +688,20 @@ class VerifyInquirerBadge(APIView):
             # Retrieve the user's comments from the Comment table
             comments = Comment.objects.filter(user=user)
 
-            # Check if the user's comment complies with the requirements
-            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / len(comment.downvoted_by.all()) >= 4) for comment in comments):
-                # Create or update User_Badge entry for Inquirer Badge
-                inquirer_badge = Badge.objects.get(name="Inquirer Badge")  # Assuming the badge already exists
-                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=inquirer_badge)
+            # Check if the user's comment complies with the requirements (over 80% approval)
+            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / (len(comment.downvoted_by.all()) + len(comment.upvoted_by.all())) >= 0.8) for comment in comments):
+                # Create or update User_Badge entry for Insightful Badge
+                insightful_badge = Badge.objects.get(name="Insightful Badge")  # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=insightful_badge)
 
                 # Set the granted date of the badge only if it's a new entry
                 if created:
                     user_badge.granted_date = datetime.datetime.now()
                     user_badge.save()
 
-                return Response({"message": "User meets the requirements for Inquirer Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+                return Response({"message": "User meets the requirements for Insightful Badge", "badge_granted": created}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "User does not meet the requirements for Inquirer Badge"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "User does not meet the requirements for Insightful Badge"}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -721,7 +721,7 @@ class VerifyWelcomingWhispererBadge(APIView):
             user = User.objects.get(user_id=user_id)
 
             # Check all users invitedById field and check if they were invited by the current user
-            invited_users = User.objects.filter(invited_by=user.id)
+            invited_users = User.objects.filter(invited_by=user.user_id)
 
             # Check if any user has completed their first activity
             new_users = [invited_user for invited_user in invited_users if invited_user.post_count > 0 or invited_user.comment_count > 0 or invited_user.polls_answered_count > 0]
@@ -1221,3 +1221,73 @@ class DownvoteComment(APIView):
 
         return Response({'message': message}, status=status.HTTP_200_OK)
     
+
+class InviteNeighbor(APIView):
+    """
+    API endpoint to invite a neighbor to join PlaceSpeak. (Currently, it mocks the functionality by assigning the current user as the inviter_id for user 1)
+    
+    Args:
+        request (Request): Incoming HTTP request with user_id.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            invite_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id']
+        missing_fields = [field for field in required_fields if field not in invite_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = invite_data['user_id']
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Mock functionality: Assign the current user as the inviter_id for user 1
+        user1 = User.objects.get(user_id=1)
+        user1.invited_by_id = user_id
+        user1.save()
+
+        return Response({'message': 'Neighbor invited successfully.'}, status=status.HTTP_200_OK)
+
+
+class AgeAccount(APIView):
+    """
+    API endpoint to age a user's account by 365 days. This is a dummy function to allow testing of the Legacy Citizen Badge.
+    
+    Args:
+        request (Request): Incoming HTTP request with user_id.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            account_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id']
+        missing_fields = [field for field in required_fields if field not in account_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = account_data['user_id']
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Age the user's account by 365 days
+        user.account_created -= datetime.timedelta(days=365)
+        user.save()
+
+        return Response({'message': 'User account aged successfully.'}, status=status.HTTP_200_OK)
