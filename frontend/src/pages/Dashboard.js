@@ -325,6 +325,7 @@ export default function Dashboard() {
       fetchBadges();
     }, [user.id]);
 
+    // Verify insightful badge on component mount
     useEffect(() => {
       const verifyInsightfulBadge = async () => {
       try {

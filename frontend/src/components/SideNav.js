@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { IoMdHome, IoMdPin } from "react-icons/io";
+import { IoMdHome, IoMdMedal, IoMdPin } from "react-icons/io";
 import { MdExplore, MdPrivacyTip, MdTopic, MdVerified, MdPoll, MdPeople } from "react-icons/md";
 import { IoNewspaper, IoNotifications, IoPeople } from "react-icons/io5";
 import { FaAward, FaUser, FaUserTimes } from "react-icons/fa";
@@ -36,6 +36,10 @@ export default function SideNav() {
         <NavLink className="sideNavLink" to="/invite">
           <MdPeople />
           Invite
+        </NavLink>
+        <NavLink className="sideNavLink" to="/legacy-citizen">
+          <IoMdMedal />
+          Legacy Citizen
         </NavLink>
       </div>
 

@@ -17,6 +17,7 @@ import Deactivate from "./pages/Deactivate";
 import Consultation from "./pages/Consultation";
 import Polls from "./pages/Polls";
 import Invite from "./pages/Invite";
+import LegacyCitizen from "./pages/LegacyCitizen";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="verification" element={<Verification />} />
       <Route path="polls" element={<Polls />} />
       <Route path="invite" element={<Invite />} />
+      <Route path="legacy-citizen" element={<LegacyCitizen />} />
       <Route path="*" element={<Dashboard />} />
 
       {/* The following routes are not yet implemented */}
