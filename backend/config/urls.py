@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserAddressAPI, UserBadgesAPI, UserPrimaryAddressAPI
-from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts, VoteInPoll, InviteNeighbor
+from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts, VoteInPoll, InviteNeighbor, AgeAccount
 from pages.views import VerifyInsightfulBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
 from pages.views import UpvotePost, DownvotePost, UpvoteComment, DownvoteComment
 
@@ -74,4 +74,5 @@ urlpatterns = [
     # Extra endpoints (mock APIs)
     path('api/poll', VoteInPoll.as_view(), name='vote_in_poll'),
     path('api/invite', InviteNeighbor.as_view(), name='invite_neighbor'),
+    path('api/age-account', AgeAccount.as_view(), name='age_account'),
 ]

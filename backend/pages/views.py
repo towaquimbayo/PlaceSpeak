@@ -1239,3 +1239,38 @@ class InviteNeighbor(APIView):
         user1.save()
 
         return Response({'message': 'Neighbor invited successfully.'}, status=status.HTTP_200_OK)
+
+
+class AgeAccount(APIView):
+    """
+    API endpoint to age a user's account by 365 days. This is a dummy function to allow testing of the Legacy Citizen Badge.
+    
+    Args:
+        request (Request): Incoming HTTP request with user_id.
+    """
+    def post(self, request):
+        try:
+            # Validate request data as a dictionary
+            account_data = request.data
+
+        except (TypeError, ValueError):
+            return Response({'error': 'Request body must be valid JSON.'})
+
+        # Check for required fields
+        required_fields = ['user_id']
+        missing_fields = [field for field in required_fields if field not in account_data]
+        if missing_fields:
+            return Response({'error': f"Missing required fields: {', '.join(missing_fields)}"})
+
+        user_id = account_data['user_id']
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Age the user's account by 365 days
+        user.account_created -= datetime.timedelta(days=365)
+        user.save()
+
+        return Response({'message': 'User account aged successfully.'}, status=status.HTTP_200_OK)
