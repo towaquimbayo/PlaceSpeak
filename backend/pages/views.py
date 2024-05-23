@@ -115,6 +115,8 @@ class LoginUserAPI(APIView):
         if user_data['password'] != user.password:
             return Response({'error': 'Incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
         
+        user.update_login_streak()
+        
         primary_add = user.primaryAddress()
         return Response({
             'message': 'User authenticated successfully.', 

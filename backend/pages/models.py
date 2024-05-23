@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.db.models import F
 from django.utils import timezone
 
 # initial commit - beginning work on DB object models 
@@ -46,6 +47,29 @@ class User(models.Model):
 	posts_list = models.ManyToManyField('Post', related_name='users')
 	comments_list = models.ManyToManyField('Comment', related_name='users')
 
+	# fields to provide functionality for login_streak
+	login_streak_start = models.DateTimeField(null=True, blank=True)
+	last_logged_in = models.DateTimeField(null=True, blank=True)
+
+	def update_login_streak(self):
+		"""
+		Update the login streak based on the last login time.
+		If the time since the last login exceeds 24 hours, reset the streak.
+		"""
+		if self.last_logged_in:
+				time_since_last_login = timezone.now() - self.last_logged_in
+				if time_since_last_login.total_seconds() > 24 * 60 * 60:
+						# Reset the streak if more than 24 hours have passed
+						self.login_streak_start = timezone.now()
+		else:
+				# Set the streak start time if it's the first login
+				self.login_streak_start = timezone.now()
+		# Update the last_logged_in time to the current time
+		self.last_logged_in = timezone.now()
+		self.save()
+
+
+
 	def isFullyVerified(self):
 		return self.verified_address and self.verified_email and self.verified_phone
 	
@@ -56,6 +80,34 @@ class User(models.Model):
 			ub.save()
 		else:
 			print("User is not fully verified, cannot award badge.")
+
+	def update_days_active(self):
+		# Get the current date
+		current_date = timezone.now().date()
+
+		# Calculate the number of days since the account was created
+		days_active = (current_date - self.account_created.date()).days + 1
+
+		# Update the days_active field in the achievement record
+		self.achievement.days_active = days_active
+		
+		# Save the updated achievement record
+		self.achievement.save(update_fields=['days_active'])
+		
+	def update_num_badges(self):
+		# get the current number of badges that the user has
+		num_badges = self.badges.count()
+
+		# update the num_badges field in the achievement record
+		self.achievement.num_badges = num_badges
+
+		# save the updated achievement record
+		self.achievement.save(update_fields=['num_badges'])
+
+
+	def award_points(self, points):
+		self.achievement.quest_points = F('quest_points') + points
+		self.achievement.save(update_fields=['quest_points'])
 
 	def awardBadge(self, name):
 		b = Badge.objects.get(name=name)
