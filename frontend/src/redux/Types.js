@@ -1,3 +1,4 @@
 export const SET_USER = "SET_USER";
+export const UPDATE_USER_NAME = "UPDATE_USER_NAME";
 export const SET_USER_LOCATION = "SET_USER_LOCATION";
 export const CLEAR_SESSION = "CLEAR_SESSION";

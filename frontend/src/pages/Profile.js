@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Button";
 import DashboardHeader from "../components/DashboardHeader";
 import { Field, Password, Textarea } from "../components/Field";
@@ -7,8 +7,10 @@ import Layout from "../components/Layout";
 import SideNav from "../components/SideNav";
 import AlertMessage from "../components/AlertMessage";
 import { config } from "../config";
+import { updateUserName } from "../redux/actions/UserAction";
 
 export default function Profile() {
+  const dispatch = useDispatch();
   const user_id = useSelector((state) => state.user.user_id);
 
   const [form, setForm] = useState({
@@ -83,6 +85,8 @@ export default function Profile() {
       if (!response.ok) {
         throw new Error(`Error updating user details: ${response.statusText}`);
       }
+
+      dispatch(updateUserName(form.firstName, form.lastName));
       setSuccessMsg("Your profile has been updated successfully.");
     } catch (error) {
       console.error("Error:", error);

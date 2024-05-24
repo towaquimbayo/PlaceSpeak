@@ -1,4 +1,9 @@
-import { SET_USER, SET_USER_LOCATION, CLEAR_SESSION } from "../Types";
+import {
+  SET_USER,
+  UPDATE_USER_NAME,
+  SET_USER_LOCATION,
+  CLEAR_SESSION,
+} from "../Types";
 
 export const initialState = {
   isLoggedIn: false,
@@ -22,6 +27,12 @@ export default function UserReducer(state = initialState, action) {
         city: action.payload.city,
         province: action.payload.province,
         pfp_link: action.payload.pfp_link,
+      };
+    case UPDATE_USER_NAME:
+      return {
+        ...state,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
       };
     case SET_USER_LOCATION:
       return {

@@ -1,4 +1,9 @@
-import { SET_USER, SET_USER_LOCATION, CLEAR_SESSION } from "../Types";
+import {
+  SET_USER,
+  UPDATE_USER_NAME,
+  SET_USER_LOCATION,
+  CLEAR_SESSION,
+} from "../Types";
 
 export const setUser =
   (isLoggedIn, user_id, firstName, lastName, city, province, pfp_link) =>
@@ -16,6 +21,13 @@ export const setUser =
       },
     });
   };
+
+export const updateUserName = (firstName, lastName) => (dispatch) => {
+  dispatch({
+    type: UPDATE_USER_NAME,
+    payload: { firstName, lastName },
+  });
+};
 
 export const setUserLocation = (city, province) => (dispatch) => {
   dispatch({
