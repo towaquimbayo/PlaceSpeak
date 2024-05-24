@@ -118,7 +118,8 @@ export default function Places() {
       return false;
     }
 
-    if (places.length === 1 && primaryCheckedId === -1) {
+    // Check if there is at least one primary place
+    if (primaryCheckedId === -1 && form.address_id === primaryPlaceId) { 
       setErrorMsg("You must have at least one primary place.");
       return false;
     }
@@ -297,32 +298,6 @@ export default function Places() {
     });
   }
 
-  async function updatePrimaryAddress(newPrimaryId) {
-    try {
-      const endpoint = config.url;
-      const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
-        method: "PATCH",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          address_id: newPrimaryId,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error updating primary address: ${response.statusText}`)
-      }
-
-      const result = await response.json();
-      console.log("Primary address updated:", result)
-      setPrimaryPlaceId(newPrimaryId)
-    }
-    catch(error) {
-      console.error("Update primary address error:", error);
-      setErrorMsg("An unexpected error occured while updating the primary address. Please try again later.")
-      setPrimaryCheckedId(primaryPlaceId); // revert to the previous primary address
-    }
-  }
-
   async function handleDelete() {
     setErrorMsg("");
     setSuccessMsg("");
@@ -397,10 +372,9 @@ export default function Places() {
                 name="primaryPlace"
                 isChecked={primaryCheckedId === form.address_id}
                 onChange={() => {
-                  const newPrimaryId = form.address_id
-                  console.log(newPrimaryId);
-                  setPrimaryCheckedId(newPrimaryId);
-                  updatePrimaryAddress(newPrimaryId);
+                  setPrimaryCheckedId(
+                    primaryCheckedId === form.address_id ? -1 : form.address_id
+                  );
                 }}
               />
             </div>
