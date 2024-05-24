@@ -63,6 +63,7 @@ export function Password({
   placeholder,
   value,
   onChange = () => {},
+  error = "",
 }) {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -82,6 +83,7 @@ export function Password({
           <FaEye onClick={() => setShowPassword(true)} />
         )}
       </div>
+      {error && <span className="fieldErrorMsg">{error}</span>}
     </div>
   );
 }
@@ -93,6 +95,7 @@ export function Textarea({
   placeholder,
   value,
   onChange = () => {},
+  error = "",
 }) {
   return (
     <div className="formGroup">
@@ -104,6 +107,7 @@ export function Textarea({
         value={value}
         onChange={onChange}
       ></textarea>
+      {error && <span className="fieldErrorMsg">{error}</span>}
     </div>
   );
 }

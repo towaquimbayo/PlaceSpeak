@@ -96,7 +96,8 @@ export default function Places() {
   }, [user_id]);
 
   function validateForm() {
-    let valid = true;
+    const errors = {};
+
     // Check mandatory fields, excluding 'suite'
     const mandatoryFields = [
       "name",
@@ -119,85 +120,50 @@ export default function Places() {
     }
 
     // Check if there is at least one primary place
-    if (primaryCheckedId === -1 && form.address_id === primaryPlaceId) { 
+    if (primaryCheckedId === -1 && form.address_id === primaryPlaceId) {
       setErrorMsg("You must have at least one primary place.");
       return false;
     }
 
     if (form.name.length > 50) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        name: "Please enter a name under 50 characters.",
-      }));
-      valid = false;
+      errors.name = "Please enter a name under 50 characters.";
     }
 
     if (form.street.length > 100) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        street: "Please enter a street under 100 characters.",
-      }));
-      valid = false;
+      errors.street = "Please enter a street under 100 characters.";
     }
 
     if (form.suite && form.suite.length > 50) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        suite: "Please enter an apt/suite under 50 characters.",
-      }));
-      valid = false;
+      errors.suite = "Please enter an apt/suite under 50 characters.";
     }
 
     if (form.city.length > 50) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        city: "Please enter a city under 50 characters.",
-      }));
-      valid = false;
+      errors.city = "Please enter a city under 50 characters.";
     }
 
     if (form.province.length > 50) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        province: "Please enter a province under 50 characters.",
-      }));
-      valid = false;
+      errors.province = "Please enter a province under 50 characters.";
     }
 
     if (form.country.length > 100) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        country: "Please enter a country under 100 characters.",
-      }));
-      valid = false;
+      errors.country = "Please enter a country under 100 characters.";
     }
 
     if (form.postalCode.length > 10) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        postalCode: "Please enter a postal code under 10 characters.",
-      }));
-      valid = false;
+      errors.postalCode = "Please enter a postal code under 10 characters.";
     }
 
     if (form.propertyType.length === 0) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        propertyType: "Please select a property type.",
-      }));
-      valid = false;
+      errors.propertyType = "Please select a property type.";
     }
 
     if (form.ownershipType.length === 0) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        ownershipType: "Please select an ownership type.",
-      }));
-      valid = false;
+      errors.ownershipType = "Please select an ownership type.";
     }
 
     // Check if there are any errors in the fieldErrors object
-    if (!valid) {
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       setErrorMsg("Please ensure all fields are filled out correctly.");
       return false;
     }
@@ -241,7 +207,9 @@ export default function Places() {
 
       if (!response.ok) {
         throw new Error(
-          `Error ${isUpdating ? "updating" : "creating"} place: ${response.statusText}`
+          `Error ${isUpdating ? "updating" : "creating"} place: ${
+            response.statusText
+          }`
         );
       }
 
@@ -305,16 +273,13 @@ export default function Places() {
 
     try {
       const endpoint = config.url;
-      const response = await fetch(
-        `${endpoint}/api/users/address/${user_id}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          method: "DELETE",
-          body: JSON.stringify({
-            address_id: form.address_id
-          }),
-        }
-      );
+      const response = await fetch(`${endpoint}/api/users/address/${user_id}`, {
+        headers: { "Content-Type": "application/json" },
+        method: "DELETE",
+        body: JSON.stringify({
+          address_id: form.address_id,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Error deleting place: ${response.statusText}`);
@@ -498,7 +463,7 @@ export default function Places() {
                 setIsAutofilled(false);
                 setForm(
                   places.find((place) => place.address_id === primaryPlaceId) ||
-                  initialForm
+                    initialForm
                 );
                 setPrimaryCheckedId(primaryPlaceId);
                 setErrorMsg("");
