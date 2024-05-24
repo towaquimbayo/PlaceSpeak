@@ -99,7 +99,7 @@ export default function Dashboard() {
     setLoading(true);
 
     const title = e.target[0].value;
-    const content = e.target[1].value;
+    const content = e.target[3].value;
 
     let responseText = "";
 
@@ -328,29 +328,29 @@ export default function Dashboard() {
     // Verify insightful badge on component mount
     useEffect(() => {
       const verifyInsightfulBadge = async () => {
-      try {
-        const response = await fetch(`${config.url}/api/${user.id}/verify-insightful/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        });
+        try {
+          const response = await fetch(`${config.url}/api/${user.id}/verify-insightful/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
 
-        if (response.ok) {
-          const responseData = await response.json();
-          if (responseData.badge_granted) {
-            setUnlockedBadge(true);
-            setUnlockedBadgeMessage("Congratulations! You just unlocked the Insightful Badge!");
-            setTimeout(() => {
-              setUnlockedBadge(false);
-              setUnlockedBadgeMessage("");
-            }, 3000);
+          if (response.ok) {
+            const responseData = await response.json();
+            if (responseData.badge_granted) {
+              setUnlockedBadge(true);
+              setUnlockedBadgeMessage("Congratulations! You just unlocked the Insightful Badge!");
+              setTimeout(() => {
+                setUnlockedBadge(false);
+                setUnlockedBadgeMessage("");
+              }, 3000);
+            }
+          } else {
+            console.error("Failed to verify Insightful badge:", response);
           }
-        } else {
-          console.error("Failed to verify Insightful badge:", response);
+        } catch (error) {
+          console.error("Error verifying Insightful badge:", error);
         }
-      } catch (error) {
-        console.error("Error verifying Insightful badge:", error);
       }
-    }
       verifyInsightfulBadge();
     });
 
