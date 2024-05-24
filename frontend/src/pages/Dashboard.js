@@ -10,14 +10,17 @@ import Layout from "../components/Layout";
 import DashboardHeader from "../components/DashboardHeader";
 import SideNav from "../components/SideNav";
 import Button from "../components/Button";
+import AlertMessage from "../components/AlertMessage";
+import { ConfettiModal } from "../components/ConfettiModal";
 import { config } from "../config";
 import "../css/dashboard.css";
-import { ConfettiModal } from "../components/ConfettiModal";
+
 export default function Dashboard() {
   const { isLoggedIn, user_id, firstName, pfp_link } = useSelector((state) => state.user);
   const [discussions, setDiscussions] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [expandedDiscussionId, setExpandedDiscussionId] = useState(null);
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
@@ -100,6 +103,24 @@ export default function Dashboard() {
 
     const title = e.target[0].value;
     const content = e.target[3].value;
+
+    if (!title || !content) {
+      setErrorMsg("Title and content cannot be empty.");
+      setLoading(false);
+      return;
+    }
+
+    if (title.length > 128) {
+      setErrorMsg("Title cannot be more than 128 characters.");
+      setLoading(false);
+      return;
+    }
+
+    if (content.length > 3000) {
+      setErrorMsg("Content cannot be more than 3000 characters.");
+      setLoading(false);
+      return;
+    }
 
     let responseText = "";
 
@@ -508,6 +529,10 @@ export default function Dashboard() {
     );
   }
 
+  function handleOnChange(e) {
+    setErrorMsg("");
+  }
+
   return (
     <Layout title="Dashboard">
       <ConfettiModal isOpen={unlockedBadge} message={unlockedBadgeMessage} />
@@ -517,6 +542,7 @@ export default function Dashboard() {
         {console.log(discussions)}
         <SideNav />
         <div>
+          {errorMsg && <AlertMessage type="error" msg={errorMsg} />}
           <div className="dashboardContent">
             <h2>Discussions</h2>
             <p className="description">
@@ -532,7 +558,11 @@ export default function Dashboard() {
                 alt="avatar"
                 width={38}
               />
-              <input type="text" placeholder="Start a new discussion..." />
+              <input
+                type="text"
+                placeholder="Start a new discussion..."
+                onChange={handleOnChange}
+              />
               <Select
                 options={[{
                   value: "1",
@@ -576,7 +606,11 @@ export default function Dashboard() {
                 onChange={() => { }}
               />
             </div>
-            <textarea placeholder={`What's the discussion about, ${firstName}?`} rows={4} />
+            <textarea
+              placeholder={`What's the discussion about, ${firstName}?`}
+              rows={4}
+              onChange={handleOnChange}
+            />
             <div>
               <Button
                 type="submit"
