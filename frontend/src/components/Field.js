@@ -95,11 +95,15 @@ export function Textarea({
   placeholder,
   value,
   onChange = () => {},
+  optional = false,
   error = "",
 }) {
   return (
     <div className="formGroup">
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name}>
+        {label}
+        {optional && <span>{"(optional)"}</span>}
+      </label>
       <textarea
         name={name}
         placeholder={placeholder}

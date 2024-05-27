@@ -73,8 +73,16 @@ export default function Profile() {
   function validateForm() {
     const errors = {};
 
+    const mandatoryFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "password",
+    ];
+
     // check if any of the fields are empty
-    if (Object.values(form).some((field) => field === "")) {
+    if (mandatoryFields.some((field) => !form[field])) {
       setErrorMsg("Please fill out all mandatory fields.");
       return false;
     }
@@ -107,17 +115,19 @@ export default function Profile() {
       errors.password = "Password must be between 8 and 50 characters.";
     }
 
-    if (form.about.length < 10 || form.about.length > 500) {
+    if (form.about && (form.about.length < 10 || form.about.length > 500)) {
       errors.about = "About must be between 10 and 500 characters.";
     }
 
     if (
+      form.linkedIn &&
       RegExp(/^(https:\/\/www.linkedin.com\/)/).test(form.linkedIn) === false
     ) {
       errors.linkedIn = "Please enter a valid LinkedIn URL.";
     }
 
     if (
+      form.twitter &&
       RegExp(/^(https:\/\/twitter.com\/)/).test(form.twitter) === false &&
       RegExp(/^(https:\/\/x.com\/)/).test(form.twitter) === false
     ) {
@@ -125,6 +135,7 @@ export default function Profile() {
     }
 
     if (
+      form.facebook &&
       RegExp(/^(https:\/\/www.facebook.com\/)/).test(form.facebook) === false
     ) {
       errors.facebook = "Please enter a valid Facebook URL.";
@@ -238,6 +249,7 @@ export default function Profile() {
             value={form.about}
             onChange={handleOnChange}
             error={fieldErrors?.about}
+            optional
           />
         </div>
         <div className="formRow">
@@ -248,6 +260,7 @@ export default function Profile() {
             value={form.linkedIn}
             onChange={handleOnChange}
             error={fieldErrors?.linkedIn}
+            optional
           />
           <Field
             label="X / Twitter"
@@ -256,6 +269,7 @@ export default function Profile() {
             value={form.twitter}
             onChange={handleOnChange}
             error={fieldErrors?.twitter}
+            optional
           />
         </div>
         <div className="formRow">
@@ -267,6 +281,7 @@ export default function Profile() {
             onChange={handleOnChange}
             halfWidth
             error={fieldErrors?.facebook}
+            optional
           />
         </div>
         <div style={{ marginTop: "1rem" }}>
