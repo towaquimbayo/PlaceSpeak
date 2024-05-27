@@ -117,7 +117,7 @@ export default function Verification() {
         if (responseData.badge_granted) {
           setUnlockedBadge(false);
           setUnlockedBadge(true);
-          setUnlockedBadgeMessage("Badge unlocked successfully!");
+          setUnlockedBadgeMessage("Trusted Neighbour Badge unlocked successfully!");
           setTimeout(() => {
             setUnlockedBadge(false);
             setUnlockedBadgeMessage("");
@@ -125,6 +125,7 @@ export default function Verification() {
         }
       } else {
         const data = await response.json();
+        setUnlockedBadgeMessage("Verify fully to receive a verification badge!")
         console.error("Badge unlock failed:", data);
       }
     } catch (error) {

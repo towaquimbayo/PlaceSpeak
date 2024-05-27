@@ -89,20 +89,20 @@ class User(models.Model):
 		days_active = (current_date - self.account_created.date()).days + 1
 
 		# Update the days_active field in the achievement record
-		self.achievement.days_active = days_active
-		
-		# Save the updated achievement record
-		self.achievement.save(update_fields=['days_active'])
+		if self.achievement:
+				self.achievement.days_active = days_active
+				self.achievement.save(update_fields=['days_active'])
 		
 	def update_num_badges(self):
 		# get the current number of badges that the user has
-		num_badges = self.badges.count()
+		if self.achievement:
+			self.achievement.num_badges = self.badges.count()
+			self.achievement.save(update_fields=['num_badges'])
 
-		# update the num_badges field in the achievement record
-		self.achievement.num_badges = num_badges
-
-		# save the updated achievement record
-		self.achievement.save(update_fields=['num_badges'])
+	def update_num_achievements(self):
+		if self.achievement:
+			self.achievement.num_achievements = self.badges.count()  # Adjust logic as needed
+			self.achievement.save(update_fields=['num_achievements'])
 
 
 	def award_points(self, points):

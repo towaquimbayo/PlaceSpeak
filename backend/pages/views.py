@@ -116,6 +116,7 @@ class LoginUserAPI(APIView):
             return Response({'error': 'Incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
         
         user.update_login_streak()
+        user.update_days_active()
         
         primary_add = user.primaryAddress()
         return Response({
