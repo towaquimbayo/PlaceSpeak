@@ -398,10 +398,6 @@ export default function Dashboard() {
             ))}
           </div>
         )}
-        <div className="userContact">
-          <p className="contact email">{user.email}</p>
-          <p className="contact phone">{user.phone}</p>
-        </div>
         <div className="userSocials">
           <ImFacebook2 color="#1877F2" size={20} style={{ padding: "1.5px" }} />
           <FaLinkedin color="#0762C8" size={20} />

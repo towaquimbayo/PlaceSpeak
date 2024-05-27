@@ -320,14 +320,6 @@
   height: 100%;
 }
 
-.userInfo .userContact {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-decoration: underline;
-}
-
 .userInfo .name {
   font-size: 1.25rem;
   font-weight: 600;
@@ -344,7 +336,7 @@
 }
 
 .userInfo .userSocials {
-  padding: 0 1rem 1rem;
+  padding: 1rem;
   display: flex;
   gap: 0.5rem;
 }
