@@ -117,7 +117,7 @@ export default function Verification() {
         if (responseData.badge_granted) {
           setUnlockedBadge(false);
           setUnlockedBadge(true);
-          setUnlockedBadgeMessage("Trusted Neighbour Badge unlocked successfully!");
+          setUnlockedBadgeMessage("Trusted User Badge unlocked successfully!");
           setTimeout(() => {
             setUnlockedBadge(false);
             setUnlockedBadgeMessage("");

@@ -626,7 +626,7 @@ class VerifyTrustedNeighbourBadge(APIView):
             # Check if the user's identity and address have been verified
             if user.verified_email and user.verified_phone and user.verified_address:
                 # Create or update User_Badge entry for Trusted Neighbour Badge
-                trusted_neighbour_badge = Badge.objects.get(name="Trusted Neighbour Badge") # Assuming the badge already exists
+                trusted_neighbour_badge = Badge.objects.get(name="Trusted User Badge") # Assuming the badge already exists
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=trusted_neighbour_badge)
 
                 # Set the granted date of the badge
