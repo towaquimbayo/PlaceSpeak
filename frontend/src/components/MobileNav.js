@@ -9,6 +9,8 @@ import {
   MdPrivacyTip,
   MdTopic,
   MdVerified,
+  MdLogout,
+  MdLogin,
 } from "react-icons/md";
 import {
   IoClose,
@@ -16,6 +18,7 @@ import {
   IoNotifications,
   IoPeople,
 } from "react-icons/io5";
+import { RiDiscussFill } from "react-icons/ri";
 import { FaAward, FaUser, FaUserTimes } from "react-icons/fa";
 import { useEffect } from "react";
 
@@ -47,28 +50,6 @@ export default function MobileNav({ isMobileNavOpen, setIsMobileNavOpen }) {
         <IoClose size={30} onClick={() => setIsMobileNavOpen(false)} />
       </div>
       <div className="mobileNavLinks">
-        <NavLink className="navLink" to="/topics" activeclassname="active">
-          Topics
-        </NavLink>
-        <NavLink
-          className="navLink"
-          to="/consultation"
-          activeclassname="active"
-        >
-          Consultation
-        </NavLink>
-        {isLoggedIn ? (
-          <Link
-            className="navLink"
-            onClick={async () => dispatch(clearSession())}
-          >
-            Logout
-          </Link>
-        ) : (
-          <NavLink className="navLink" to="/login" activeclassname="active">
-            Login
-          </NavLink>
-        )}
         <div className="navLinkGroup">
           <h3>General</h3>
           <NavLink className="sideNavLink" to="/">
@@ -103,6 +84,10 @@ export default function MobileNav({ isMobileNavOpen, setIsMobileNavOpen }) {
             <IoMdMedal />
             Legacy Citizen
           </NavLink>
+          <NavLink className="sideNavLink" to="/consultation">
+            <RiDiscussFill />
+            Consultation
+          </NavLink>
         </div>
         <div className="navLinkGroup">
           <h3>Account</h3>
@@ -134,6 +119,20 @@ export default function MobileNav({ isMobileNavOpen, setIsMobileNavOpen }) {
             <FaUserTimes />
             Deactivate
           </NavLink>
+          {isLoggedIn ? (
+            <Link
+              className="sideNavLink"
+              onClick={async () => dispatch(clearSession())}
+            >
+              <MdLogout />
+              Logout
+            </Link>
+          ) : (
+            <NavLink className="sideNavLink" to="/login">
+              <MdLogin />
+              Login
+            </NavLink>
+          )}
         </div>
       </div>
     </div>
