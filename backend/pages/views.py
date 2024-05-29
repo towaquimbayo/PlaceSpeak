@@ -701,7 +701,7 @@ class VerifyInsightfulBadge(APIView):
             comments = Comment.objects.filter(user=user)
 
             # Check if the user's comment complies with the requirements (over 80% approval)
-            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / (len(comment.downvoted_by.all()) + len(comment.upvoted_by.all())) >= 0.8) for comment in comments):
+            if any((len(comment.upvoted_by.all()) >= 5 and len(comment.upvoted_by.all()) / (len(comment.downvoted_by.all()) + len(comment.upvoted_by.all())) >= 0.8) for comment in comments) and not user.has_badge("Insightful Badge"):
                 # Create or update User_Badge entry for Insightful Badge
                 insightful_badge = Badge.objects.get(name="Insightful Badge")  # Assuming the badge already exists
                 user_badge, created = User_Badge.objects.get_or_create(user=user, badge=insightful_badge)

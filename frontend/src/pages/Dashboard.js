@@ -25,6 +25,11 @@ export default function Dashboard() {
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
 
+  // state to keep track that the verification route is only pinged once, and not multiple times when the component remounts
+  const [badgeVerificationAttempted, setBadgeVerificationAttempted] = useState(false); 
+
+  // const badgeVerificationAttempted = useRef(false);
+
   useEffect(() => {
     const endpoint = config.url;
 
@@ -327,6 +332,7 @@ export default function Dashboard() {
   const UserInfo = ({ user }) => {
     const [badges, setBadges] = useState([]);
 
+
     useEffect(() => {
       const fetchBadges = async () => {
         try {
@@ -346,7 +352,7 @@ export default function Dashboard() {
       fetchBadges();
     }, [user.id]);
 
-    // Verify insightful badge on component mount
+    // Verify insightful badge on component mount, ensuring it's only called once
     useEffect(() => {
       const verifyInsightfulBadge = async () => {
         try {
@@ -372,8 +378,13 @@ export default function Dashboard() {
           console.error("Error verifying Insightful badge:", error);
         }
       }
-      verifyInsightfulBadge();
-    });
+      // Only verify the badge if it hasn't been attempted yet
+      if (!badgeVerificationAttempted) {
+        console.log(badgeVerificationAttempted);
+        verifyInsightfulBadge();
+        setBadgeVerificationAttempted(true); // Mark the badge verification as attempted
+      }
+    }, [badgeVerificationAttempted]);
 
     return (
       <div className="userInfo">
