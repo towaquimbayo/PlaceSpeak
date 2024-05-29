@@ -128,8 +128,8 @@ export default function Profile() {
 
     if (
       form.twitter &&
-      RegExp(/^(https:\/\/twitter.com\/)/).test(form.twitter) === false &&
-      RegExp(/^(https:\/\/x.com\/)/).test(form.twitter) === false
+      RegExp(/^(https:\/\/www.twitter.com\/)/).test(form.twitter) === false &&
+      RegExp(/^(https:\/\/www.x.com\/)/).test(form.twitter) === false
     ) {
       errors.twitter = "Please enter a valid X/Twitter URL.";
     }
