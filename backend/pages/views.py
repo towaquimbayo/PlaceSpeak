@@ -455,8 +455,6 @@ class UpdateEmailVerificationStatus(APIView):
         if verified_email is not None:
             user.verified_email = verified_email
             user.save()
-            if user.isFullyVerified():
-                user.awardVerificationBadge()
             return Response({'message': 'Email verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified email status not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -474,8 +472,6 @@ class UpdatePhoneVerificationStatus(APIView):
         if verified_phone is not None:
             user.verified_phone = verified_phone
             user.save()
-            if user.isFullyVerified():
-                user.awardVerificationBadge()
             return Response({'message': 'Phone verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified phone status not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -493,8 +489,6 @@ class UpdateAddressVerificationStatus(APIView):
         if verified_address is not None:
             user.verified_address = verified_address
             user.save()
-            if user.isFullyVerified():
-                user.awardVerificationBadge()
             return Response({'message': 'Address verification status updated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Verified address status not provided'}, status=status.HTTP_400_BAD_REQUEST)
