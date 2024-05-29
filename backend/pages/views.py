@@ -115,8 +115,8 @@ class LoginUserAPI(APIView):
         if user_data['password'] != user.password:
             return Response({'error': 'Incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
         
-        user.update_login_streak()
-        user.update_days_active()
+        user.update_user_record()
+
         
         primary_add = user.primaryAddress()
         return Response({
@@ -611,9 +611,9 @@ class PopulateBadges(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class VerifyTrustedNeighbourBadge(APIView):
+class VerifyTrustedUserBadge(APIView):
     """
-    Verifies if a user meets the requirements for the Trusted Neighbour Badge and grants the badge if applicable.
+    Verifies if a user meets the requirements for the Trusted User Badge and grants the badge if applicable.
 
     Requirements:
     - User must have verified email, phone, and address.
@@ -623,19 +623,22 @@ class VerifyTrustedNeighbourBadge(APIView):
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
 
+            if user.has_badge("Trusted User Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
+
             # Check if the user's identity and address have been verified
-            if user.verified_email and user.verified_phone and user.verified_address:
-                # Create or update User_Badge entry for Trusted Neighbour Badge
-                trusted_neighbour_badge = Badge.objects.get(name="Trusted User Badge") # Assuming the badge already exists
-                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=trusted_neighbour_badge)
+            if user.verified_email and user.verified_phone and user.verified_address and not user.has_badge("Trusted User Badge"):
+                # Create or update User_Badge entry for Trusted User Badge
+                trusted_user_badge = Badge.objects.get(name="Trusted User Badge") # Assuming the badge already exists
+                user_badge, created = User_Badge.objects.get_or_create(user=user, badge=trusted_user_badge)
 
                 # Set the granted date of the badge
                 user_badge.granted_date = datetime.datetime.now()
                 user_badge.save()
 
-                return Response({"message": "User meets the requirements for Trusted Neighbour Badge", "badge_granted": created}, status=status.HTTP_200_OK)
+                return Response({"message": "User meets the requirements for Trusted User Badge", "badge_granted": created}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "User does not meet the requirements for Trusted Neighbour Badge"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "User does not meet the requirements for Trusted User Badge"}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -653,6 +656,9 @@ class VerifyNewNeighborBadge(APIView):
         try:
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
+
+            if user.has_badge("New Neighbour Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
 
             # Check if the user has completed their first post or comment
             if user.post_count > 0 or user.comment_count > 0:
@@ -688,6 +694,9 @@ class VerifyInsightfulBadge(APIView):
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
 
+            if user.has_badge("Insightful Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
+
             # Retrieve the user's comments from the Comment table
             comments = Comment.objects.filter(user=user)
 
@@ -722,6 +731,9 @@ class VerifyWelcomingWhispererBadge(APIView):
         try:
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
+
+            if user.has_badge("Welcoming Whisperer Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
 
             # Check all users invitedById field and check if they were invited by the current user
             invited_users = User.objects.filter(invited_by=user.user_id)
@@ -760,6 +772,9 @@ class VerifyLegacyCitizenBadge(APIView):
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
 
+            if user.has_badge("Legacy Citizen Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
+
             # Check if account was created over 1 year ago and user has a few posts/comments
             if user.account_created < timezone.now() - datetime.timedelta(days=365) and (user.post_count > 10 or user.comment_count > 10):
                 # Create or update User_Badge entry for Legacy Citizen Badge
@@ -791,6 +806,9 @@ class VerifyNewVoiceBadge(APIView):
         try:
             # Retrieve the user object based on the user_id
             user = User.objects.get(user_id=user_id)
+
+            if user.has_badge("New Voice Badge"):
+                return Response({"message": "User alerady has this badge"}, status=status.HTTP_200_OK)
 
             # Check if the user has participated in at least one poll
             if user.polls_answered_count > 0:

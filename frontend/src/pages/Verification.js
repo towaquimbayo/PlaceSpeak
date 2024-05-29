@@ -7,6 +7,8 @@ import { ConfettiModal } from "../components/ConfettiModal";
 import Button from "../components/Button";
 import { config } from "../config";
 
+const waitInterval = 2000;
+
 export default function Verification() {
   const user_id = useSelector((state) => state.user.user_id);
   const [unlockedBadge, setUnlockedBadge] = useState(false);
@@ -29,7 +31,7 @@ export default function Verification() {
         setTimeout(() => {
           setUnlockedBadge(false);
           setUnlockedBadgeMessage("");
-        }, 3000);
+        }, waitInterval);
 
         // Check if badge was unlocked
         verifyBadge();
@@ -59,7 +61,7 @@ export default function Verification() {
         setTimeout(() => {
           setUnlockedBadge(false);
           setUnlockedBadgeMessage("");
-        }, 3000);
+        }, waitInterval);
 
         // Check if badge was unlocked
         verifyBadge();
@@ -89,7 +91,7 @@ export default function Verification() {
         setTimeout(() => {
           setUnlockedBadge(false);
           setUnlockedBadgeMessage("");
-        }, 3000);
+        }, waitInterval);
 
         // Check if badge was unlocked
         verifyBadge();
@@ -105,7 +107,7 @@ export default function Verification() {
   const verifyBadge = async () => {
     try {
       const response = await fetch(
-        `${config.url}/api/${user_id}/verify-trusted-neighbour/`,
+        `${config.url}/api/${user_id}/verify-trusted-user/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -121,7 +123,7 @@ export default function Verification() {
           setTimeout(() => {
             setUnlockedBadge(false);
             setUnlockedBadgeMessage("");
-          }, 3000);
+          }, waitInterval);
         }
       } else {
         const data = await response.json();

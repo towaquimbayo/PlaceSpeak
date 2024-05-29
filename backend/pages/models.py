@@ -68,14 +68,26 @@ class User(models.Model):
 		self.last_logged_in = timezone.now()
 		self.save()
 
+	def has_badge(self, badge_name):
+		"""
+		Check if the user already has a badge with the given name.
+
+		Args:
+			badge_name (str): The name of the badge to check.
+		
+		Returns:
+			bool: True if the user already has this specific badge, False otherwise
+		"""
+		return self.badges.filter(name=badge_name).exists()
+
 
 
 	def isFullyVerified(self):
 		return self.verified_address and self.verified_email and self.verified_phone
 	
 	def awardVerificationBadge(self):
-		if self.isFullyVerified():
-			b = Badge.objects.get(badge_id=1)  # Use double quotes for model access
+		if self.isFullyVerified() and not self.has_badge("Trusted User Badge"):
+			b = Badge.objects.get(name="Trusted User Badge")  # Use double quotes for model access
 			ub = User_Badge.objects.create(user=self, badge=b, granted_date=timezone.now())
 			ub.save()
 		else:
@@ -103,6 +115,15 @@ class User(models.Model):
 		if self.achievement:
 			self.achievement.num_achievements = self.badges.count()  # Adjust logic as needed
 			self.achievement.save(update_fields=['num_achievements'])
+
+	# function that groups all updates into one, (make sure all records are consistent at login)
+	def update_user_record(self):
+		self.update_num_achievements()
+		self.update_days_active()
+		self.update_num_badges()
+
+		self.update_login_streak()
+
 
 
 	def award_points(self, points):

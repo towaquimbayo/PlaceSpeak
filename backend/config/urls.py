@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from pages.views import AddComment, AllBadgesAPI, GetCommentsByPost, GetPostsByUser, UpdateEmailVerificationStatus, UpdatePhoneVerificationStatus, UpdateAddressVerificationStatus, PopulateBadges, UserAddressAPI, UserBadgesAPI, UserPrimaryAddressAPI
 from pages.views import UserAPI, UpdateUserAPI, UserAchievementAPI, LoginUserAPI, RegisterUserAPI, AddPost, GetAllPosts, VoteInPoll, InviteNeighbor, AgeAccount
-from pages.views import VerifyInsightfulBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedNeighbourBadge, VerifyWelcomingWhispererBadge
+from pages.views import VerifyInsightfulBadge, VerifyLegacyCitizenBadge, VerifyNewNeighborBadge, VerifyNewVoiceBadge, VerifyTrustedUserBadge, VerifyWelcomingWhispererBadge
 from pages.views import UpvotePost, DownvotePost, UpvoteComment, DownvoteComment
 
 urlpatterns = [
@@ -34,7 +34,7 @@ urlpatterns = [
     path('api/populate/badges/', PopulateBadges.as_view(), name='populate_badges'),
 
     # Badge check/unlock endpoints
-    path('api/<str:user_id>/verify-trusted-neighbour/', VerifyTrustedNeighbourBadge.as_view(), name='verify_trusted_neighbour'),
+    path('api/<str:user_id>/verify-trusted-user/', VerifyTrustedUserBadge.as_view(), name='verify_trusted_user'),
     path('api/<str:user_id>/verify-new-voice/', VerifyNewVoiceBadge.as_view(), name='verify_new_voice'),
     path('api/<str:user_id>/verify-legacy-citizen/', VerifyLegacyCitizenBadge.as_view(), name='verify_legacy_citizen'),
     path('api/<str:user_id>/verify-new-neighbor/', VerifyNewNeighborBadge.as_view(), name='verify_new_neighbor'),
