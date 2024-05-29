@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { PiArrowFatUpLight, PiArrowFatDownLight, PiArrowFatUpFill, PiArrowFatDownFill, PiDotsThreeBold } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
@@ -25,8 +25,8 @@ export default function Dashboard() {
   const [unlockedBadge, setUnlockedBadge] = useState(false);
   const [unlockedBadgeMessage, setUnlockedBadgeMessage] = useState("");
 
-  // state to keep track that the verification route is only pinged once, and not multiple times when the component remounts
-  const [badgeVerificationAttempted, setBadgeVerificationAttempted] = useState(false); 
+  // Ref to keep track of badge verification
+  const badgeVerificationAttempted = useRef(false);
 
   // const badgeVerificationAttempted = useRef(false);
 
@@ -354,37 +354,36 @@ export default function Dashboard() {
 
     // Verify insightful badge on component mount, ensuring it's only called once
     useEffect(() => {
-      const verifyInsightfulBadge = async () => {
-        try {
-          const response = await fetch(`${config.url}/api/${user.id}/verify-insightful/`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          });
+      if (!badgeVerificationAttempted.current) {
+        badgeVerificationAttempted.current = true;
+        const verifyInsightfulBadge = async () => {
+          try {
+            const response = await fetch(`${config.url}/api/${user.id}/verify-insightful/`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            });
 
-          if (response.ok) {
-            const responseData = await response.json();
-            if (responseData.badge_granted) {
-              setUnlockedBadge(true);
-              setUnlockedBadgeMessage("Congratulations! You just unlocked the Insightful Badge!");
-              setTimeout(() => {
-                setUnlockedBadge(false);
-                setUnlockedBadgeMessage("");
-              }, 3000);
+            if (response.ok) {
+              const responseData = await response.json();
+              if (responseData.badge_granted) {
+                setUnlockedBadge(true);
+                setUnlockedBadgeMessage("Congratulations! You just unlocked the Insightful Badge!");
+                setTimeout(() => {
+                  setUnlockedBadge(false);
+                  setUnlockedBadgeMessage("");
+                }, 3000);
+              }
+            } else {
+              console.error("Failed to verify Insightful badge:", response);
             }
-          } else {
-            console.error("Failed to verify Insightful badge:", response);
+          } catch (error) {
+            console.error("Error verifying Insightful badge:", error);
           }
-        } catch (error) {
-          console.error("Error verifying Insightful badge:", error);
         }
+        // Only verify the badge if it hasn't been attempted yet
+          verifyInsightfulBadge();
       }
-      // Only verify the badge if it hasn't been attempted yet
-      if (!badgeVerificationAttempted) {
-        console.log(badgeVerificationAttempted);
-        verifyInsightfulBadge();
-        setBadgeVerificationAttempted(true); // Mark the badge verification as attempted
-      }
-    }, [badgeVerificationAttempted]);
+    })
 
     return (
       <div className="userInfo">
