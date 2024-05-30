@@ -18,7 +18,7 @@ export default function Achievements() {
     days_active: 0,
   });
   const [badges, setBadges] = useState([]);
-  const totalAchievements = 180;
+  const totalAchievements = 6;
 
   useEffect(() => {
     const fetchData = async () => {
