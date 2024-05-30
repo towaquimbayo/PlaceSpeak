@@ -358,7 +358,7 @@ export default function Dashboard() {
         badgeVerificationAttempted.current = true;
         const verifyInsightfulBadge = async () => {
           try {
-            const response = await fetch(`${config.url}/api/${user.id}/verify-insightful/`, {
+            const response = await fetch(`${config.url}/api/${user_id}/verify-insightful/`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
             });
