@@ -3,7 +3,7 @@
 # PlaceSpeak
 
 ![PlaceSpeak Thumbnail](screenshots/placespeak-thumbnail.jpg)
-PlaceSpeak is a location-based civic engagement platform designed to consult with people within specific geographic boundaries. It empowers residents to make a meaningful impact on the communities where they live, work, and play. Users can connect with their neighborhoods online through proof of residency, participate in discussions, and contribute to local decisions. Our team added a gamification layer to enhance user engagement and reduce churn.
+A location-based civic engagement platform designed to consult with people within specific geographic boundaries. It empowers residents to make a meaningful impact on the communities where they live, work, and play. Users can connect with their neighborhoods online through proof of residency, participate in discussions, and contribute to local decisions. Our team added a gamification layer to enhance user engagement and reduce churn.
 
 _Check out the live project [_here_](https://placespeak.towaquimbayo.com/)._
 
