@@ -12,6 +12,11 @@ _Check out the live project [_here_](https://placespeak.towaquimbayo.com/)._
 * [Screenshots](#screenshots)
 * [Acknowledgements](#acknowledgements)
 * [Technologies](#technologies)
+* [Usage](#usage)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Environment Variables Setup](#environment-variables-setup)
+  * [Run The App](#run-the-app)
 * [Features](#features)
   * [User Authentication and Management](#user-authentication-and-management)
   * [Gamification System](#gamification-system)
@@ -55,7 +60,102 @@ _Check out the live project [_here_](https://placespeak.towaquimbayo.com/)._
 * Django REST-Framework `v3.15.1`
 * PyJWT `v2.8.0`
 * SQLAlchemy `v2.0.28`
+* PostgreSQL
 * Vercel
+
+## Usage
+
+<details>
+  <summary>Prerequisites</summary>
+
+### Prerequisites
+
+* [VSCode](https://code.visualstudio.com/download/)
+* [Git](https://git-scm.com/downloads/)
+* [Node.js](https://nodejs.org/en/download/)
+* [Python 3.1](https://www.python.org/downloads/)
+
+</details>
+
+<details>
+  <summary>Installation</summary>
+
+### Installation
+
+1. Install latest npm package version.
+
+  ```sh
+  npm install npm@latest -g
+  ```
+
+2. Clone the repository to local machine.
+
+  ```sh
+  git clone https://github.com/towaquimbayo/PlaceSpeak.git
+  ```
+
+3. Installing required dependencies requires Node, npm, and Python.
+
+  Change directory to Frontend and install dependencies:
+
+  ```sh
+  cd frontend
+  npm install
+  ```
+
+  Change directory to Backend and install python modules:
+
+  ```sh
+  cd backend
+  pip install -r requirements.txt
+  ```
+
+</details>
+
+<details>
+  <summary>Environment Variables Setup</summary>
+
+### Environment Variables Setup
+
+For the project to run correctly, environment variables are required for both the frontend and backend directories. Rename the `.env.example` to `.env`.
+
+#### Frontend (React.js)
+
+Sign up for a free Mapbox account and create an access token by following the documentation at <https://docs.mapbox.com/help/getting-started/access-tokens/>.
+
+#### Backend (Python Django)
+
+Sign up for a free Vercel account and create a new Postgres database and fill in your database credentials by following the documentation at <https://vercel.com/docs/storage/vercel-postgres/quickstart>.
+
+</details>
+
+<details>
+  <summary>Run The App</summary>
+
+### Run The App
+
+In order to run the application, you would need the client (frontend) and server (backend) running concurrently in different terminal sessions.
+
+#### Client-Side Usage (Frontend) on PORT: 3000
+
+Change directory to client (`frontend`) and execute `npm start` to run locally in development mode or production mode. For production, make sure to build the app to the `build` folder by executing `npm run build` as this would correctly bundle React in production mode and optimize the build for the best performance.
+
+```sh
+cd frontend
+npm start
+```
+
+#### Server-Side Usage (Backend) on PORT: 8000
+
+Change directory to server (`backend`) and execute `python manage.py runserver` to run locally in development mode. For production, make sure to configure your Vercel and hosting configuration details in the `Config` folder and `Vercel.json`.
+
+```sh
+cd backend
+python manage.py migrate // if neccessary
+python manage.py runserver
+```
+
+</details>
 
 ## Features
 
