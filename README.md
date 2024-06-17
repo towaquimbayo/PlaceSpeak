@@ -82,13 +82,13 @@ _Check out the live project [_here_](https://placespeak.towaquimbayo.com/)._
 
 ### Installation
 
-1. Install latest npm package version.
+1. Install the latest npm package version.
 
   ```sh
   npm install npm@latest -g
   ```
 
-2. Clone the repository to local machine.
+2. Clone the repository to your local machine.
 
   ```sh
   git clone https://github.com/towaquimbayo/PlaceSpeak.git
@@ -96,14 +96,14 @@ _Check out the live project [_here_](https://placespeak.towaquimbayo.com/)._
 
 3. Installing required dependencies requires Node, npm, and Python.
 
-  Change directory to Frontend and install dependencies:
+  Change the directory to Frontend and install dependencies:
 
   ```sh
   cd frontend
   npm install
   ```
 
-  Change directory to Backend and install python modules:
+  Change the directory to Backend and install python modules:
 
   ```sh
   cd backend
@@ -138,7 +138,7 @@ In order to run the application, you would need the client (frontend) and server
 
 #### Client-Side Usage (Frontend) on PORT: 3000
 
-Change directory to client (`frontend`) and execute `npm start` to run locally in development mode or production mode. For production, make sure to build the app to the `build` folder by executing `npm run build` as this would correctly bundle React in production mode and optimize the build for the best performance.
+Change the directory to the client (`frontend`) and execute `npm start` to run locally in development mode or production mode. For production, make sure to build the app to the `build` folder by executing `npm run build` as this would correctly bundle React in production mode and optimize the build for the best performance.
 
 ```sh
 cd frontend
@@ -147,11 +147,11 @@ npm start
 
 #### Server-Side Usage (Backend) on PORT: 8000
 
-Change directory to server (`backend`) and execute `python manage.py runserver` to run locally in development mode. For production, make sure to configure your Vercel and hosting configuration details in the `Config` folder and `Vercel.json`.
+Change the directory to the server (`backend`) and execute `python manage.py runserver` to run locally in development mode. For production, make sure to configure your Vercel and hosting configuration details in the `Config` folder and `Vercel.json`.
 
 ```sh
 cd backend
-python manage.py migrate // if neccessary
+python manage.py migrate // if necessary
 python manage.py runserver
 ```
 
@@ -164,7 +164,7 @@ python manage.py runserver
 Ensuring secure access and comprehensive management of user accounts to protect user data and provide seamless user experiences.
 
 * __Secure Authentication__: Simple email and password-based authentication provides secure access to the platform, protecting user data and ensuring privacy.
-* __Login/Signup__: A straightforward process for users to create new accounts or log in to existing ones, facilitating easy access to the platform.
+* __Login/Signup__: A straightforward process for users to create new accounts or login to existing ones, facilitating easy access to the platform.
 * __Account Management__: Users can view and edit their personal information, including name, email, password, phone number, and social media accounts, enabling them to keep their profiles up to date.
 
 ### Gamification System
@@ -180,16 +180,16 @@ Incentivizing user engagement and participation through a comprehensive gamifica
   * __Legacy Citizen Badge__: Awarded after using the platform regularly for a year.
 * __Badge Management__: Robust backend logic to manage badge releases for activities such as verification, polls, and user interactions, ensuring a smooth and efficient gamification process.
 * __Points-Rewarding System__: Users accumulate quest points for engaging with the platform, enhancing long-term engagement by providing immediate rewards and goals.
-* __Achievements Display__: An intuitive interface allows users to view their earbed badges, achievements, quest points, and number of active days on the platform, fostering a sense of accomplishment and ongoing participation through immediate visual feedback.
+* __Achievements Display__: An intuitive interface allows users to view their earned badges, achievements, quest points, and number of active days on the platform, fostering a sense of accomplishment and ongoing participation through immediate visual feedback.
 * __Provisional Schema__: Implemented new Badges and User Badges tables to support gamification features, ensuring seamless integration and future scalability. This backend enhancement is crucial for maintaining a robust and scalable system.
 
 ### Places Management
 
 Managing and validating user-defined geographic boundaries to ensure accurate and relevant community engagement.
 
-* __Add, Remove, and Edit Places__: Users can manage their places, which is crucial for defining neighborhood boundaries and ensuring accurate participation in local discussions.
+* __Add, Remove, and Edit Places__: Users can manage their places, which is crucial for defining neighbourhood boundaries and ensuring accurate participation in local discussions.
 * __Primary Place__: Users can designate a primary place that affects the threads and discussions visible to them, ensuring they are engaged with relevant local content.
-* __Address Validation and Autofill__: Using Mapbox APIs tools, addresses are automatically validated and converted into geo coordinates. Users receive suggestions while typing their address, ensuring accurate and validated fields without manual checks. This feature is critical for ensuring that consultations include all valid users in an area.
+* __Address Validation and Autofill__: Using Mapbox API tools, addresses are automatically validated and converted into geo coordinates. Users receive suggestions while typing their address, ensuring accurate and validated fields without manual checks. This feature is critical for ensuring that consultations include all valid users in an area.
 
 ### Community Discussions
 
